@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [WelcomeController::class, 'index']);
+Route::get('/masuk', [AuthController::class, 'masuk'])->name('masuk');
+Route::post('/masuk', [AuthController::class, 'postMasuk'])->name('post_masuk');
+Route::get('/keluar', [AuthController::class, 'keluar'])->name('keluar');
