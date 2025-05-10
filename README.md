@@ -1,66 +1,120 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🛠️ SIMPEL-POL: Sistem Manajemen Pelaporan dan Perbaikan Fasilitas Kampus
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+<div align="center">
+  
+  ![SIMPEL-POL Logo](https://via.placeholder.com/300x150?text=SIMPEL-POL)
+  
+  **Sistem Terpadu untuk Manajemen, Pelaporan, dan Perbaikan Fasilitas Kampus**  
+  *Politeknik Negeri Malang*
 
-## About Laravel
+  [![Status Pengembangan](https://img.shields.io/badge/Status-Aktif-success)](https://github.com/polinema/simpel-pol)
+  [![Versi](https://img.shields.io/badge/Versi-1.0.0-blue)](https://github.com/polinema/simpel-pol/releases)
+  [![Lisensi](https://img.shields.io/badge/Lisensi-MIT-yellow)](LICENSE)
+  
+</div>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📋 Deskripsi Proyek
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**SIMPEL-POL** (_Sistem Manajemen Pelaporan dan Perbaikan Fasilitas Kampus_) adalah platform digital terintegrasi yang dikembangkan khusus untuk lingkungan Politeknik Negeri Malang. Sistem ini dirancang untuk mengelola, memantau, dan memudahkan seluruh civitas akademika dalam melaporkan kerusakan atau gangguan pada fasilitas kampus secara cepat dan efisien.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Dengan antarmuka yang intuitif dan sistem pelacakan yang transparan, SIMPEL-POL menghubungkan tiga kelompok pengguna utama: admin, pelapor (mahasiswa, dosen, dan tenaga kependidikan), dan teknisi. Kolaborasi ini memastikan setiap masalah ditangani secara tepat waktu, dengan prioritas yang jelas, dan dapat dipantau progresnya untuk menciptakan lingkungan kampus yang selalu prima.
 
-## Learning Laravel
+## ✨ Fitur Utama
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Berdasarkan diagram sistem, SIMPEL-POL memiliki fitur-fitur berikut:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 👨‍💻 Untuk Admin
+- **Manajemen Pengguna**: Kelola akun dan hak akses pengguna sistem
+- **Manajemen Data Fasilitas Kampus**: Pengelolaan database fasilitas kampus
+- **Manajemen Data Gedung**: Pengelolaan informasi gedung dan ruangan
+- **Pengelolaan Laporan Kerusakan**: Proses dan distribusi laporan kerusakan
+- **Manajemen Data Prioritas Perbaikan**: Pengaturan level prioritas perbaikan
+- **Laporan dan Statistik Sistem**: Akses data analitik sistem secara komprehensif
+- **Manajemen Periode**: Pengaturan periode pelaporan dan maintenance
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 👨‍🎓 Untuk Mahasiswa, Dosen, dan Tenaga Kependidikan
+- **Manajemen Akun & Profil**: Kelola informasi profil pengguna
+- **Pelaporan Kerusakan Fasilitas**: Buat dan kirim laporan kerusakan fasilitas
+- **Melihat Status Laporan Perbaikan**: Pantau progres perbaikan secara real-time
+- **Memberikan Umpan Balik**: Sampaikan feedback terhadap perbaikan yang dilakukan
+- **Menentukan Prioritas Perbaikan**: Indikasi tingkat urgensi dari kerusakan
 
-## Laravel Sponsors
+### 🔧 Untuk Teknisi
+- **Laporan Perbaikan Fasilitas**: Akses dan terima penugasan perbaikan
+- **Riwayat Laporan Perbaikan**: Lacak histori penanganan kerusakan
+- **Mengelola Laporan Kerusakan Fasilitas**: Proses laporan kerusakan yang masuk
+- **Menentukan Rekomendasi Perbaikan**: Berikan solusi perbaikan optimal
+- **Menugaskan Teknisi untuk Perbaikan**: Distribusi tugas perbaikan
+- **Analisis dan Laporan Statistik Fasilitas**: Evaluasi data perbaikan fasilitas
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## 🚀 Cara Menggunakan
 
-### Premium Partners
+### 1. Akses Sistem
+```
+https://simpel-pol.polinema.ac.id
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### 2. Autentikasi
+Gunakan kredensial kampus Anda (NIM/NIP dan kata sandi)
 
-## Contributing
+### 3. Buat Laporan
+- Pilih kategori kerusakan
+- Unggah foto (opsional)
+- Tentukan lokasi
+- Berikan deskripsi singkat
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 4. Pantau Status
+Status laporan dapat dipantau melalui fitur "Melihat Status Laporan Perbaikan", dan Anda dapat memberikan umpan balik setelah perbaikan selesai dilakukan.
 
-## Code of Conduct
+Alur proses pelaporan:
+1. **Pelaporan** oleh mahasiswa/dosen/tenaga kependidikan
+2. **Pengelolaan laporan** oleh admin
+3. **Penugasan teknisi** untuk perbaikan
+4. **Perbaikan** oleh teknisi
+5. **Umpan balik** dari pelapor
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 💻 Teknologi yang Digunakan
 
-## Security Vulnerabilities
+- **Frontend**: React.js, Redux, Material UI
+- **Backend**: Node.js, Express, MongoDB
+- **Mobile**: React Native
+- **Authentication**: JWT, OAuth2
+- **Cloud**: AWS/GCP
+- **CI/CD**: GitHub Actions
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📊 Peta Jalan Pengembangan
 
-## License
+| Fase | Target | Status |
+|------|--------|--------|
+| 1.0 | Sistem dasar pelaporan | ✅ Selesai |
+| 1.5 | Integrasi notifikasi | ✅ Selesai |
+| 2.0 | Aplikasi mobile | 🚧 Dalam Pengerjaan |
+| 2.5 | Dashboard analitik | 📅 Q3 2025 |
+| 3.0 | Sistem prediktif | 📅 Q4 2025 |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🤝 Kontribusi
+
+SIMPEL-POL adalah proyek open-source yang dikembangkan oleh Tim TI Politeknik Negeri Malang. Kami menyambut kontribusi dari seluruh civitas akademika untuk penyempurnaan sistem.
+
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah [Lisensi MIT](LICENSE) - lihat file LICENSE untuk detail.
+
+## 📞 Kontak
+
+Untuk pertanyaan dan dukungan, silakan hubungi:
+
+- **Email**: simpel-pol@polinema.ac.id
+- **Telepon**: (0341) 404424 ext. 1234
+- **Lokasi**: Gedung TI Lantai 2, Politeknik Negeri Malang
+
+---
+
+<div align="center">
+  
+  **Dikembangkan dengan ❤️ oleh Tim TI Politeknik Negeri Malang**
+  
+  [Website](https://www.polinema.ac.id) • [GitHub](https://github.com/polinema) • [Instagram](https://www.instagram.com/polinema_campus)
+  
+</div>
