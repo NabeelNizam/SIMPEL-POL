@@ -8,21 +8,17 @@
     <div class="w-12 h-1 bg-orange-500 mx-auto my-2 rounded"></div>
     
     <div class="grid grid-cols-2 gap-6 mt-6">
-      <a href="#" class="user-role flex flex-col items-center space-y-2 p-4 rounded-lg border-2 border-transparent hover:border-gray-300 active:border-gray-400 focus:border-gray-400 focus:outline-none transition-all duration-200 hover:scale-105" data-role="sarpras">
-        <img src="https://img.icons8.com/color/96/computer-support.png" alt="Sarana Prasarana" class="w-20 h-20" />
-        <span class="text-sm font-medium">Sarana Prasarana</span>
+      <a href="#" class="user-role flex flex-col items-center space-y-2 p-2 rounded-lg border-2 border-transparent hover:border-gray-300 active:border-gray-400 focus:border-gray-400 focus:outline-none transition-all duration-200 hover:scale-105" data-role="sarpras">
+        <img src="/img/sarpras2.svg" alt="Sarana Prasarana" class="w-40 h-40" />
       </a>
-      <a href="#" class="user-role flex flex-col items-center space-y-2 p-4 rounded-lg border-2 border-transparent hover:border-gray-300 active:border-gray-400 focus:border-gray-400 focus:outline-none transition-all duration-200 hover:scale-105" data-role="teknisi">
-        <img src="https://img.icons8.com/color/96/maintenance.png" alt="Teknisi" class="w-20 h-20" />
-        <span class="text-sm font-medium">Teknisi</span>
+      <a href="#" class="user-role flex flex-col items-center space-y-2 p-2 rounded-lg border-2 border-transparent hover:border-gray-300 active:border-gray-400 focus:border-gray-400 focus:outline-none transition-all duration-200 hover:scale-105" data-role="teknisi">
+        <img src="/img/teknisi.svg" alt="Teknisi" class="w-40 h-40" />
       </a>
-      <a href="#" class="user-role flex flex-col items-center space-y-2 p-4 rounded-lg border-2 border-transparent hover:border-gray-300 active:border-gray-400 focus:border-gray-400 focus:outline-none transition-all duration-200 hover:scale-105" data-role="dosen">
-        <img src="https://img.icons8.com/color/96/training.png" alt="Dosen / Tendik" class="w-20 h-20" />
-        <span class="text-sm font-medium">Dosen / Tendik</span>
+      <a href="#" class="user-role flex flex-col items-center space-y-2 p-2 rounded-lg border-2 border-transparent hover:border-gray-300 active:border-gray-400 focus:border-gray-400 focus:outline-none transition-all duration-200 hover:scale-105" data-role="dosen">
+        <img src="/img/dosentendik.svg" alt="Dosen / Tendik" class="w-40 h-40" />
       </a>
-      <a href="#" class="user-role flex flex-col items-center space-y-2 p-4 rounded-lg border-2 border-transparent hover:border-gray-300 active:border-gray-400 focus:border-gray-400 focus:outline-none transition-all duration-200 hover:scale-105" data-role="mahasiswa">
-        <img src="https://img.icons8.com/color/96/student-male--v1.png" alt="Mahasiswa" class="w-20 h-20" />
-        <span class="text-sm font-medium">Mahasiswa</span>
+      <a href="#" class="user-role flex flex-col items-center space-y-2 p-2 rounded-lg border-2 border-transparent hover:border-gray-300 active:border-gray-400 focus:border-gray-400 focus:outline-none transition-all duration-200 hover:scale-105" data-role="mahasiswa">
+        <img src="/img/mahasiswa.svg" alt="Mahasiswa" class="w-40 h-40" />
       </a>
     </div>
     
