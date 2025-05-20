@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Mahasiswa;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -27,7 +29,15 @@ class UserFactory extends Factory
             'id_role' => 1,
             'password' => '$2a$12$aZ6CFpNbp6fQKXiG0evCLuqKRwnMnPiWCg1nu3j2/tVZXu5MLIVEe', // password
             'remember_token' => Str::random(10),
+            'id_jurusan' => 1
         ];
+    }
+    public function configure()
+    {
+        return $this->afterCreating(function (User $user) {
+            $mahasiswa = Mahasiswa::factory()->create();
+            $user->identifier()->associate($mahasiswa); // Set the user_id in the related model;
+        });
     }
 
     /**
