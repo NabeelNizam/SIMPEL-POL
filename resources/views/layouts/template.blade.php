@@ -63,15 +63,7 @@
 </head>
 <body class="bg-gray-50">
     <div class="flex h-screen overflow-hidden">
-        @if(Auth::user()->id_role == 2)
-            @include('layouts.sidebarAdmin')
-        @elseif(Auth::user()->id_role == 3)
-            @include('layouts.sidebarTeknisi')
-        @elseif(Auth::user()->id_role == 4)
-            @include('layouts.sidebarSarpras')
-        @elseif(Auth::user()->id_role == 1)
-            @include('layouts.sidebarUser')
-        @endif
+        @include('layouts.sidebar')
 
         <!-- Main Content Container -->
         <div class="main-content flex-1 flex flex-col overflow-hidden">
