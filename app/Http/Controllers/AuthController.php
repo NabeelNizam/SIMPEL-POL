@@ -25,7 +25,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+        return redirect('login');
     }
 
     public function register()
@@ -34,30 +34,44 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    public function postMasuk(Request $request): RedirectResponse
-    {
-        try {
-            $request->validate([
-                'username' => 'required|string|max:255',
-                'password' => 'required|string|max:255',
-            ], [
-                'username.required' => 'Harap isikan nama Anda!',
-                'password.required' => 'Isi kata sandi terlebih dahulu!',
-            ]);
 
-            // $user = DB::table('users')->where('username', $request->username)->first();
-            $user = User::where('username', $request->username)->first();
+public function postMasuk(Request $request)
+{
+    $request->validate([
+        'username' => 'required|string|max:255',
+        'password' => 'required|string|max:255',
+    ]);
 
-            if ($user && Hash::check($request->password, $user->password)) {
-                Auth::loginUsingId($user->id_user, true);
-                $request->session()->regenerate();
+    if ($request->ajax() || $request->wantsJson()) {
+        $credentials = $request->only('username', 'password');
+
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user(); // pastikan relasi dimuat
+            $role = strtoupper($user->role->nama_role ?? '');
+
+            $redirectUrl = url('/');
+            if ($role == 'ADMIN') {
+                $redirectUrl = url('/admin');
+            } elseif ($role == 'MAHASISWA') {
+                $redirectUrl = url('/user');
             }
 
-            return back()->withErrors(['error' => 'Nama pengguna atau kata sandi salah.'])->withInput($request->except('password'));
-        } catch (ValidationException $validation) {
-            return back()->withErrors($validation->errors())->withInput($request->except('password'));
-        } catch (Exception $exception) {
-            return back()->withErrors(['error' => 'Terjadi kesalahan pada sistem.'])->withInput($request->except('password'));
+            return response()->json([
+                'status' => true,
+                'message' => 'Login Berhasil',
+                'redirect' => $redirectUrl
+            ]);
         }
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Username atau password salah'
+        ]);
     }
+
+    return redirect('login');
+}
+
+
+
 }

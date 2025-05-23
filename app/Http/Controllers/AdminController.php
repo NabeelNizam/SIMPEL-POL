@@ -20,7 +20,7 @@ class AdminController extends Controller
         $activeMenu = 'user';
 
 
-        return view('admin.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
+        return view('admin.dashboard', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
     }
     public function user()
     {
