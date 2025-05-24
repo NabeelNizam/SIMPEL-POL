@@ -11,11 +11,11 @@ class Role extends Model
     use HasFactory;
 
     protected $primaryKey = 'id_role';
-    // protected $table = 'roles';
+    protected $table = 'roles';
 
     protected $guarded = [];
 
-    public function users():HasMany
+    public function user():HasMany
     {
         return $this->hasMany(User::class, 'id_role', 'id_role');
     }

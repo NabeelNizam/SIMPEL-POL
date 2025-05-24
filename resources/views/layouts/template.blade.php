@@ -63,8 +63,7 @@
 </head>
 <body class="bg-gray-50">
     <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar Component -->
-        @include('layouts.sidebarAdmin')
+        @include('layouts.sidebar')
 
         <!-- Main Content Container -->
         <div class="main-content flex-1 flex flex-col overflow-hidden">
