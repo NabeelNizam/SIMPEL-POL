@@ -14,7 +14,7 @@
             <a href="{{ url('/user/export_pdf') }}" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
                 <i class="fas fa-file-pdf"></i> Ekspor PDF
             </a>
-            <button onclick="modalAction('{{ url('/user/create_ajax') }}')" class="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-green-700">
+            <button onclick="modalAction('{{ route('admin.create_ajax') }}')" class="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-green-700">
                 <i class="fas fa-plus"></i> Tambah
             </button>
         </div>
@@ -74,7 +74,14 @@
     <div id="custom-pagination-menu" class="mt-4"></div>
 </div>
 
-<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true"></div>
+<div id="myModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90">
+    <div class="bg-white w-full max-w-3xl rounded-lg shadow-lg relative">
+        <div class="modal-content">
+            {{-- Konten modal akan dimuat di sini melalui AJAX --}}
+        </div>
+        <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl font-bold">&times;</button>
+    </div>
+</div>
 @endsection
 
 
@@ -107,9 +114,47 @@
 @push('js')
 <script>
     function modalAction(url = '') {
-        $('#myModal').load(url, function () {
-            $('#myModal').modal('show');
+    // Hapus konten modal sebelumnya
+    document.querySelector('#myModal .modal-content').innerHTML = '';
+
+    // Tampilkan loading spinner
+    document.querySelector('#myModal .modal-content').innerHTML = `
+        <div class="flex justify-center items-center p-12">
+            <svg class="animate-spin h-12 w-12 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        </div>
+    `;
+
+    // Tampilkan modal
+    document.querySelector('#myModal').classList.remove('hidden');
+
+    // Muat konten modal melalui AJAX
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(html => {
+            document.querySelector('#myModal .modal-content').innerHTML = html;
+        })
+        .catch(error => {
+            document.querySelector('#myModal .modal-content').innerHTML = `
+                <div class="p-6">
+                    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                        <p>Gagal memuat konten. Error: ${error.message}</p>
+                    </div>
+                </div>
+            `;
         });
+}
+
+    function closeModal() {
+        document.querySelector('#myModal').classList.add('hidden');
+        document.querySelector('#myModal .modal-content').innerHTML = '';
     }
 
     var dataUser;
@@ -189,7 +234,7 @@
             .attr('class', 'px-3 py-1 rounded-md text-sm bg-blue-600 text-white border border-blue-600');
 
     });
-    
+
         $('#table-search').keyup(function () {
             dataUser.search($(this).val()).draw();
         });
@@ -204,6 +249,56 @@
             dataUser.search('').draw();
             dataUser.ajax.reload();
         });
+
+        function removeUser(id) {
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Data pengguna akan dihapus secara permanen!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/admin/${id}/remove_ajax`, // Pastikan URL sesuai dengan route
+                method: 'DELETE', // Gunakan metode DELETE
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Sertakan CSRF token
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire(
+                            'Terhapus!',
+                            response.message,
+                            'success'
+                        );
+
+                        // Reload DataTable atau hapus baris dari tabel
+                        if (typeof dataUser !== 'undefined') {
+                            dataUser.ajax.reload();
+                        }
+                    } else {
+                        Swal.fire(
+                            'Gagal!',
+                            response.message,
+                            'error'
+                        );
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire(
+                        'Error!',
+                        'Terjadi kesalahan saat menghapus data.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+}
 
        
     });
