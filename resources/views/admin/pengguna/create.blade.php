@@ -27,6 +27,11 @@
         </div>
 
         <div>
+            <label class="block text-sm font-medium mb-1">Nomor Identitas <span class="text-red-500">*</span></label>
+            <input type="text" name="identifier" id="identifier" class="w-full border rounded-md px-3 py-2 text-sm" placeholder="NIM atau NIP">
+            <span id="identifier-error" class="text-xs text-red-500 mt-1"></span>
+        </div>
+         <div>
             <label class="block text-sm font-medium mb-1">Username <span class="text-red-500">*</span></label>
             <input type="text" name="username" id="username" class="w-full border rounded-md px-3 py-2 text-sm" placeholder="Username">
             <span id="username-error" class="text-xs text-red-500 mt-1"></span>
@@ -77,17 +82,17 @@
 $(document).ready(function() {
     // Reset semua error message saat form dimuat
     clearErrorMessages();
-    
+
     // Submit form menggunakan AJAX
     $("#btn-simpan").click(function() {
         // Reset pesan error sebelum validasi baru
         clearErrorMessages();
-        
+
         // Tampilkan loading state
         let btnSimpan = $(this);
         btnSimpan.prop('disabled', true);
         btnSimpan.html('<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
-        
+
         $("#form-tambah-pengguna").on("submit", function(event) {
     event.preventDefault(); // Mencegah form refresh halaman
 
@@ -171,7 +176,7 @@ $(document).ready(function() {
             }
         });
     });
-    
+
     // Fungsi untuk menampilkan error validasi
     function displayValidationErrors(errors) {
         $.each(errors, function(field, messages) {
@@ -180,13 +185,13 @@ $(document).ready(function() {
             $("#" + field).addClass('border-red-500');
         });
     }
-    
+
     // Fungsi untuk membersihkan pesan error
     function clearErrorMessages() {
         $(".text-red-500").html("");
         $("input, select").removeClass('border-red-500');
     }
-    
+
     // Membersihkan error ketika input diubah
     $("input, select").on('input change', function() {
         let fieldId = $(this).attr('id');
