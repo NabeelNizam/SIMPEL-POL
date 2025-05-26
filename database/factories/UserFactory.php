@@ -27,7 +27,7 @@ class UserFactory extends Factory
             'no_hp' => fake()->phoneNumber(),
             'foto_profil' => fake()->image(),
             'id_role' => 1,
-            'password' => '$2a$12$aZ6CFpNbp6fQKXiG0evCLuqKRwnMnPiWCg1nu3j2/tVZXu5MLIVEe', // password
+            'password' => 'password', // password
             'remember_token' => Str::random(10),
             'id_jurusan' => 1
         ];
