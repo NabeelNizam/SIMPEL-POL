@@ -78,7 +78,7 @@
         @elseif(Auth::user()->id_role == 1) {{-- Mahasiswa --}}
             <div class="h-full overflow-y-auto">
                 <nav class="p-4 space-y-4 text-sm text-gray-700">
-                    <a href="#"
+                    <a href="{{ route('dashboard.mahasiswa') }}"
                     class="flex items-center p-2 rounded {{ ($activeMenu == 'home') ? 'bg-blue-800 text-white' : 'hover:bg-gray-100' }}">
                         <img src="{{ ($activeMenu == 'home') ? asset('icons/solid/Home.svg') : asset('icons/light/Home.svg') }}"
                             alt="Dashboard Icon" class="mr-2 w-5">
@@ -87,12 +87,12 @@
 
                     <div>
                         <p class="mb-1 text-xs text-gray-500 uppercase">Pelaporan</p>
-                        <a href="#"
+                        <a href="{{ route('form-pelaporan.index') }}"
                         class="flex items-center p-2 rounded {{ ($activeMenu == 'form-pelaporan') ? 'bg-blue-800 text-white' : 'hover:bg-gray-100' }}">
                             <img src="{{ asset('icons/light/Document.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">
                             Form Pelaporan
                         </a>
-                        <a href="#"
+                        <a href="{{ route('riwayat-pelaporan.index') }}"
                         class="flex items-center p-2 rounded {{ ($activeMenu == 'riwayat-pelaporan') ? 'bg-blue-800 text-white' : 'hover:bg-gray-100' }}">
                             <img src="{{ asset('icons/light/Document.svg') }}" alt="Riwayat Pelaporan" class="mr-2 w-5">
                             Riwayat Pelaporan

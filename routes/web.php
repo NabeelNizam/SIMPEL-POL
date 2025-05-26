@@ -3,6 +3,8 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\RiwayatPelaporanController;
+use App\Http\Controllers\SOPController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,4 +30,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['authorize:ADMIN']], functio
 });
 Route::group(['prefix' => 'user', 'middleware' => ['authorize:MAHASISWA']], function () {
     Route::get('/', [MahasiswaController::class, 'index'])->name('dashboard.mahasiswa');
+    // Routes untuk SOP
+    Route::get('/sop/download/{filename}', [MahasiswaController::class, 'SOPdownload'])->name('download.sop');
 });
