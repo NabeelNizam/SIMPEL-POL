@@ -3,6 +3,8 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\SarprasController;
+use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,4 +30,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['authorize:ADMIN']], functio
 });
 Route::group(['prefix' => 'user', 'middleware' => ['authorize:MAHASISWA']], function () {
     Route::get('/', [MahasiswaController::class, 'index'])->name('dashboard.mahasiswa');
+});
+Route::middleware(['authorize:SARPRAS'])->group(function () {
+    Route::prefix('sarpras')->group(function () {
+        Route::get('/bobot', [SarprasController::class, 'bobot']);
+    });
+
+    Route::prefix('kriteria')->group(function () {
+        Route::post('/list', [KriteriaController::class, 'list']);
+    });
 });
