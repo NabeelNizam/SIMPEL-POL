@@ -189,11 +189,7 @@
             .attr('class', 'px-3 py-1 rounded-md text-sm bg-blue-600 text-white border border-blue-600');
 
     });
-
-
-
-
-
+    
         $('#table-search').keyup(function () {
             dataUser.search($(this).val()).draw();
         });

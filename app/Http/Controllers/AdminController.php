@@ -61,20 +61,17 @@ class AdminController extends Controller
             })
             ->addColumn('aksi', function ($user) {
     $btn  = '<button onclick="modalAction(\'' . url('/user/' . $user->id_user . '/show_ajax') . '\')" class="text-blue-500 hover:text-blue-700 mx-1" title="Detail">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </button>';
-    $btn .= '<button onclick="modalAction(\'' . url('/user/' . $user->id_user . '/edit_ajax') . '\')" class="text-yellow-500 hover:text-yellow-700 mx-1" title="Edit">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h2m-2 14h2m-7-7h14m-7-7v14" />
-                </svg>
-            </button>';
-    $btn .= '<button onclick="modalAction(\'' . url('/user/' . $user->id_user . '/delete_ajax') . '\')" class="text-red-500 hover:text-red-700 mx-1" title="Hapus">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>';
+            <img src="' . asset('icons/solid/Detail.svg') . '" class="h-5 w-5 inline" alt="Detail">
+        </button>';
+
+$btn .= '<button onclick="modalAction(\'' . url('/user/' . $user->id_user . '/edit_ajax') . '\')" class="text-yellow-500 hover:text-yellow-700 mx-1" title="Edit">
+            <img src="' . asset('icons/solid/Edit.svg') . '" class="h-5 w-5 inline" alt="Edit">
+        </button>';
+
+$btn .= '<button onclick="modalAction(\'' . url('/user/' . $user->id_user . '/delete_ajax') . '\')" class="text-red-500 hover:text-red-700 mx-1" title="Hapus">
+            <img src="' . asset('icons/solid/Delete.svg') . '" class="h-5 w-5 inline" alt="Hapus">
+        </button>';
+
     return $btn;
 })
             ->rawColumns(['aksi'])
