@@ -18,8 +18,8 @@ class Jurusan extends Model
     {
         return $this->hasMany(User::class, 'id_jurusan', 'id_jurusan');
     }
-    // public function gedung():HasMany
-    // {
-    //     return $this->hasMany(Gedung::class, 'id_jurusan', 'id_jurusan');
-    // }
+    public function gedung():HasMany
+    {
+        return $this->hasMany(Gedung::class, 'id_jurusan', 'id_jurusan');
+    }
 }
