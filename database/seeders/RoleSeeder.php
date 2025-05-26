@@ -14,11 +14,11 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         Role::create([
-            'id_role' => 1,
+            'id_role' => 2,
             'nama_role' => 'ADMIN',
         ]);
         Role::create([
-            'id_role' => 2,
+            'id_role' => 1,
             'nama_role' => 'MAHASISWA',
         ]);
         Role::create([

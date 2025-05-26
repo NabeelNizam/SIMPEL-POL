@@ -21,8 +21,8 @@ class PerbaikanFactory extends Factory
         return [
             'deskripsi_perbaikan' => fake()->sentence(5),
             'tingkat_kerusakan' => 'RINGAN',
-            'id_user_teknisi' => 2,
-            'id_user_sarpras' => 3,
+            'id_user_teknisi' => 3,
+            'id_user_sarpras' => 4,
             'tanggal_mulai' => fake()->date(),
             'tanggal_selesai' => fake()->date(),
         ];

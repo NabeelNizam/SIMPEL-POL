@@ -26,7 +26,7 @@ class AduanFactory extends Factory
             'status' => 'MENUNGGU_VERIFIKASI',
             'bukti_foto' => 'bukti_foto.jpg',
             'id_fasilitas' => rand(1, 3),
-            'id_user_pelapor' => rand(3, 4),
+            'id_user_pelapor' => rand(4, 5),
         ];
     }
     public function configure()
