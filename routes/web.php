@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GedungController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::group(['prefix' => 'admin', 'middleware' => ['authorize:ADMIN']], function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/manageUser', [AdminController::class, 'user']);
+    Route::get('/manageGedung', [GedungController::class, 'index']);
+    Route::post('/listGedung', [GedungController::class, 'list']);
+    Route::get('/show_profil', [GedungController::class, 'profil']);
 });
 Route::group(['prefix' => 'user', 'middleware' => ['authorize:MAHASISWA']], function () {
     Route::get('/', [MahasiswaController::class, 'index'])->name('dashboard.mahasiswa');
