@@ -8,18 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Gedung extends Model
 {
     use HasFactory;
-
+    protected $guarded = ['id'];
     protected $table = 'gedung';
-
     protected $primaryKey = 'id_gedung';
-    protected $fillable = [
-        'kode_gedung',
-        'nama_gedung',
-        'id_jurusan'
-    ];
 
+    public function lantai()
+    {
+        return $this->hasMany(Lantai::class);
+    }
     public function jurusan()
     {
-        return $this->belongsTo(Jurusan::class, 'id_jurusan', 'id_jurusan');
+        return $this->belongsTo(Jurusan::class);
     }
+
 }

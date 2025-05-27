@@ -2,28 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
+
 
 class AdminController extends Controller
 {
     public function index()
     {
         $breadcrumb = (object) [
-            'title' => 'Daftar User',
-            'list' => ['Home', 'User']
+            'title' => 'Dashboard Admin',
+            'list' => ['Home', 'dashboard']
         ];
 
         $page = (object) [
             'title' => 'Daftar user yang terdaftar dalam sistem'
         ];
 
-        $activeMenu = 'user';
+        $activeMenu = 'dashboard';
 
 
         return view('admin.dashboard', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
     }
-    
-    public function user()  
+    public function pengguna()
     {
         $breadcrumb = (object) [
             'title' => 'Manajemen Pengguna',
@@ -34,10 +37,48 @@ class AdminController extends Controller
             'title' => 'Daftar pengguna yang terdaftar dalam sistem'
         ];
 
-        $activeMenu = 'user';
+        $activeMenu = 'pengguna';
 
+        $role = Role::all();
 
-        return view('admin.user', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
+        return view('admin.pengguna.user', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu, 'role' => $role]);
     }
+
+
+    public function list(Request $request)
+    {
+        $users = User::select('id_user', 'username', 'nama', 'id_role', 'email')
+            ->with('role');
+
+        if ($request->id_role) {
+            $users->where('id_role', $request->id_role);
+        }
+
+        return DataTables::of($users)
+            ->addIndexColumn()
+            ->addColumn('role', function ($user) {
+                return $user->role->nama_role ?? '-';
+            })
+            ->addColumn('aksi', function ($user) {
+    $btn  = '<button onclick="modalAction(\'' . url('/user/' . $user->id_user . '/show_ajax') . '\')" class="text-blue-500 hover:text-blue-700 mx-1" title="Detail">
+            <img src="' . asset('icons/solid/Detail.svg') . '" class="h-5 w-5 inline" alt="Detail">
+        </button>';
+
+$btn .= '<button onclick="modalAction(\'' . url('/user/' . $user->id_user . '/edit_ajax') . '\')" class="text-yellow-500 hover:text-yellow-700 mx-1" title="Edit">
+            <img src="' . asset('icons/solid/Edit.svg') . '" class="h-5 w-5 inline" alt="Edit">
+        </button>';
+
+$btn .= '<button onclick="modalAction(\'' . url('/user/' . $user->id_user . '/delete_ajax') . '\')" class="text-red-500 hover:text-red-700 mx-1" title="Hapus">
+            <img src="' . asset('icons/solid/Delete.svg') . '" class="h-5 w-5 inline" alt="Hapus">
+        </button>';
+
+    return $btn;
+})
+            ->rawColumns(['aksi'])
+            ->make(true);
+    }
+
+
+
 
 }
