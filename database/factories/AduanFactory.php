@@ -34,8 +34,6 @@ class AduanFactory extends Factory
         return $this->afterCreating(function (Aduan $aduan) {
             UmpanBalik::factory()->create(['id_aduan' => $aduan->id_aduan]);
             Prioritas::factory()->create(['id_aduan' => $aduan->id_aduan]);
-            Perbaikan::factory()->create(['id_aduan' => $aduan->id_aduan]);
-
         });
     }
 }
