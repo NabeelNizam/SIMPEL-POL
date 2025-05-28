@@ -31,59 +31,60 @@ class AdminController extends Controller
 
         return view('admin.dashboard', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
     }
-    public function pengguna()
-    {
-        $breadcrumb = (object) [
-            'title' => 'Manajemen Pengguna',
-            'list' => ['Home', 'Manajemen Data Pengguna']
-        ];
+public function pengguna(Request $request)
+{
+    $breadcrumb = (object) [
+        'title' => 'Manajemen Pengguna',
+        'list' => ['Home', 'Manajemen Data Pengguna']
+    ];
 
-        $page = (object) [
-            'title' => 'Daftar pengguna yang terdaftar dalam sistem'
-        ];
+    $page = (object) [
+        'title' => 'Daftar pengguna yang terdaftar dalam sistem'
+    ];
 
-        $activeMenu = 'pengguna';
+    $activeMenu = 'pengguna';
 
-        $role = Role::all();
+    $role = Role::all();
+    $query = User::with('role');
 
-        return view('admin.pengguna.user', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu, 'role' => $role]);
+    // Filter berdasarkan role
+    if ($request->id_role) {
+        $query->where('id_role', $request->id_role);
     }
 
-
-    public function list(Request $request)
-    {
-        $users = User::select('id_user', 'username', 'nama', 'id_role', 'email')
-            ->with('role');
-
-        if ($request->id_role) {
-            $users->where('id_role', $request->id_role);
-        }
-
-        return DataTables::of($users)
-            ->addIndexColumn()
-            ->addColumn('role', function ($user) {
-                return $user->role->nama_role ?? '-';
-            })
-            ->addColumn('aksi', function ($user) {
-            $btn  = '<button onclick="modalAction(\'' . route('admin.show_ajax', $user->id_user) . '\')" class="text-blue-500 hover:text-blue-700 mx-1" title="Detail">
-                    <img src="' . asset('icons/solid/Detail.svg') . '" class="h-5 w-5 inline" alt="Detail">
-                </button>';
-
-            $btn .= '<button onclick="modalAction(\'' . route('admin.edit_ajax', $user->id_user) . '\')" class="text-yellow-500 hover:text-yellow-700 mx-1" title="Edit">
-                        <img src="' . asset('icons/solid/Edit.svg') . '" class="h-5 w-5 inline" alt="Edit">
-                    </button>';
-
-            $btn .= '<button onclick="modalAction(\'' . route('admin.delete_ajax', $user->id_user) . '\')" class="text-red-500 hover:text-red-700 mx-1" title="Hapus">
-                        <img src="' . asset('icons/solid/Delete.svg') . '" class="h-5 w-5 inline" alt="Hapus">
-                    </button>';
-
-
-        return $btn;
-    })
-            ->rawColumns(['aksi'])
-            ->make(true);
+    // Filter berdasarkan pencarian
+    if ($request->search) {
+        $query->where(function ($q) use ($request) {
+            $q->where('nama', 'like', "%{$request->search}%")
+              ->orWhere('email', 'like', "%{$request->search}%");
+        });
     }
 
+    // Sorting
+    $sortColumn = $request->sort_column ?? 'nama'; // Default sorting by nama
+    $sortDirection = $request->sort_direction ?? 'asc'; // Default sorting direction
+    $query->orderBy($sortColumn, $sortDirection);
+
+    $perPage = $request->input('per_page', 10); // default 10
+    $users = $query->paginate($perPage);
+
+    $users->appends(request()->query());
+    
+
+    if ($request->ajax()) {
+    $html = view('admin.pengguna.user_table', compact('users'))->render();
+    return response()->json(['html' => $html]);
+}
+
+    return view('admin.pengguna.user', [
+    'breadcrumb' => $breadcrumb,
+    'page' => $page,
+    'activeMenu' => $activeMenu,
+    'role' => $role,
+    'users' => $users,
+]);
+
+}
     public function create_ajax(){
         $role = Role::all();
         $jurusan = Jurusan::all();
@@ -92,6 +93,28 @@ class AdminController extends Controller
         'jurusan' => $jurusan
     ]);
     }
+    public function edit_ajax($id){
+        $role = Role::all();
+         $user = User::findOrFail($id);
+        $jurusan = Jurusan::all();
+        return view('admin.pengguna.edit', [
+        'role' => $role,
+        'jurusan' => $jurusan, 'user' => $user
+    ]);
+    }
+    public function show_ajax($id)
+{
+    $role = Role::all();
+         $user = User::findOrFail($id);
+        $jurusan = Jurusan::all();
+        return view('admin.pengguna.detail', [
+        'role' => $role,
+        'jurusan' => $jurusan, 'user' => $user]);
+}
+    public function import_ajax(){
+        return view('admin.pengguna.import');
+    }
+
    public function store_ajax(Request $request)
 {
     // Validasi input umum
