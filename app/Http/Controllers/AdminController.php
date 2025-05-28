@@ -89,9 +89,9 @@ public function pengguna(Request $request)
         $role = Role::all();
         $jurusan = Jurusan::all();
         return view('admin.pengguna.create', [
-        'role' => $role,
-        'jurusan' => $jurusan
-    ]);
+            'role' => $role,
+            'jurusan' => $jurusan
+        ]);
     }
     public function edit_ajax($id){
         $role = Role::all();
@@ -128,86 +128,79 @@ public function pengguna(Request $request)
         'password' => 'required|string|min:6',
     ];
 
-    // Cek apakah role Mahasiswa
-    $isMahasiswa = strtolower(Role::find($request->id_role)->nama_role) === 'mahasiswa';
+        // Cek apakah role Mahasiswa
+        $isMahasiswa = strtolower(Role::find($request->id_role)->nama_role) === 'mahasiswa';
 
-    // Tambahkan validasi nim atau nip sesuai role
-    if ($isMahasiswa) {
-        $rules['nim'] = 'required|string|max:50|unique:mahasiswa,nim';
-    } else {
-        $rules['nip'] = 'required|string|max:50|unique:pegawai,nip';
-    }
-
-    $validator = Validator::make($request->all(), $rules);
-
-    if ($validator->fails()) {
-        return response()->json([
-            'success' => false,
-            'errors' => $validator->errors()
-        ], 422);
-    }
-
-    try {
-        // Simpan user
-        $user = User::create([
-            'nama' => $request->nama,
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'no_hp' => $request->telepon,
-            'id_jurusan' => $request->jurusan,
-            'id_role' => $request->id_role,
-            'foto_profil' => 'default.png'
-        ]);
-
-        // Simpan ke tabel sesuai role
+        // Tambahkan validasi nim atau nip sesuai role
         if ($isMahasiswa) {
-            Mahasiswa::create([
-                'id_user' => $user->id_user,
-                'nim'     => $request->nim
-            ]);
+            $rules['identifier'] = 'required|string|max:50|unique:mahasiswa,nim';
         } else {
-            Pegawai::create([
-                'id_user' => $user->id_user,
-                'nip'     => $request->nip
-            ]);
+            $rules['identifier'] = 'required|string|max:50|unique:pegawai,nip';
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Pengguna berhasil ditambahkan.'
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-        ], 500);
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            // Simpan user
+            $user = User::create([
+                'nama' => $request->nama,
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'no_hp' => $request->telepon,
+                'id_jurusan' => $request->jurusan,
+                'id_role' => $request->id_role,
+                'foto_profil' => fake()->image()
+            ]);
+
+            if ($isMahasiswa) {
+                $identifier = Mahasiswa::create([
+                    'id_user' => $user->id_user,
+                    'nim' => $request->identifier
+                ]);
+            } else {
+                Pegawai::create([
+                    'id_user' => $user->id_user,
+                    'nip' => $request->identifier
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengguna berhasil ditambahkan.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
-}
 
 
-public function remove_ajax($id)
-{
-    try {
-        $user = User::findOrFail($id);
+    public function remove_ajax($id)
+    {
+        try {
+            $user = User::findOrFail($id);
 
-        $user->delete();
+            $user->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Pengguna berhasil dihapus.'
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-        ], 500);
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengguna berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
-}
-
-
-
-
-
-
 }
