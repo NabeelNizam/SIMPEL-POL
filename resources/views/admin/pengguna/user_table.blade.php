@@ -15,11 +15,11 @@
                 <x-table.cell>{{ $user->email }}</x-table.cell>
                 <x-table.cell>{{ $user->role->nama_role ?? '-' }}</x-table.cell>
                 <x-table.cell>
-                    <button onclick="modalAction('{{ route('admin.show_ajax', $user->id_user) }}')" class="text-blue-600 hover:underline text-sm">
+                    <button onclick="modalAction('{{ route('admin.pengguna.show_ajax', $user->id_user) }}')" class="text-blue-600 hover:underline text-sm">
                         <img src="{{asset('icons/solid/Detail.svg')}}" alt="" class="h-7 w-7 inline"></button>
-                    <button onclick="modalAction('{{ route('admin.edit_ajax', $user->id_user) }}')" class="text-blue-600 hover:underline text-sm ml-2">
+                    <button onclick="modalAction('{{ route('admin.pengguna.edit_ajax', $user->id_user) }}')" class="text-blue-600 hover:underline text-sm ml-2">
                         <img src="{{asset('icons/solid/Edit.svg')}}" alt="" class="h-7 w-7 inline"></button>
-                    <button onclick="removeUser('{{ $user->id_user }}')" class="text-red-600 hover:underline text-sm ml-2">
+                    <button onclick="modalAction('{{ route('admin.pengguna.confirm_ajax', $user->id_user) }}')" class="text-red-600 hover:underline text-sm ml-2">
                         <img src="{{asset('icons/solid/Delete.svg')}}" alt="" class="h-7 w-7 inline"></button>
                 </x-table.cell>
             </x-table.row>

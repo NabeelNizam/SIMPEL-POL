@@ -6,9 +6,9 @@
     </button>
 
     <h2 class="text-xl font-semibold mb-2 text-center">Tambah Pengguna</h2>
-    <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
+    <div class="w-12 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
-    <form id="form-tambah-pengguna" action="{{ route('admin.pengguna.store_ajax') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form id="form-tambah-pengguna" action="{{ route('admin.store_ajax') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         @csrf
 
         <div>

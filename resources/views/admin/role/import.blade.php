@@ -1,6 +1,6 @@
 <div class="bg-white rounded-lg shadow-lg w-full max-w-lg mx-auto p-6 relative">
     <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">Import Data Pengguna</h2>
-    <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
+    <div class="w-12 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
     <form action="{{ url('/user/import') }}" method="POST" enctype="multipart/form-data">
         @csrf

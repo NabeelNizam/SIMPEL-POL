@@ -114,6 +114,9 @@ public function pengguna(Request $request)
     public function import_ajax(){
         return view('admin.pengguna.import');
     }
+    public function confirm_ajax(){
+        return view('admin.pengguna.confirm');
+    }
 
    public function store_ajax(Request $request)
 {
