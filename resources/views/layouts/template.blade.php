@@ -17,7 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>SIMPEL-POL</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>
+    <style>       
     html {
         scroll-behavior: smooth;
     }
