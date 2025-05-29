@@ -27,12 +27,12 @@
                              <img src="{{ ($activeMenu == 'pengguna') ? asset('icons/solid/Users.svg') : asset('icons/light/Users.svg') }}" alt="Pengguna" class="mr-2 w-5">
                             Pengguna
                         </a>
-                        <a href="#" class="flex items-center p-2 w-full {{ ($activeMenu == 'role') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        <a href="{{ route('admin.role') }}" class="flex items-center p-2 w-full {{ ($activeMenu == 'role') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                          style="{{ ($activeMenu == 'role') ? 'border-color: #F99D1C;' : '' }}">
                            <img src="{{ ($activeMenu == 'role') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Role" class="mr-2 w-5">
                             Role
                         </a>
-                        <a href="#" class="flex items-center p-2 w-full {{ ($activeMenu == 'jurusan') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        <a href="{{ route('admin.jurusan') }}" class="flex items-center p-2 w-full {{ ($activeMenu == 'jurusan') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                          style="{{ ($activeMenu == 'jurusan') ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ ($activeMenu == 'jurusan') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Jurusan" class="mr-2 w-5">
                             Jurusan
@@ -41,7 +41,7 @@
 
                     <div>
                         <p class="mb-1 text-xs text-gray-500 uppercase">Manajemen Data Fasilitas</p>
-                        <a href="#" class="flex items-center p-2 w-full {{ ($activeMenu == 'fasilitas') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        <a href="{{ route('admin.fasilitas') }}" class="flex items-center p-2 w-full {{ ($activeMenu == 'fasilitas') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                          style="{{ ($activeMenu == 'fasilitas') ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ ($activeMenu == 'fasilitas') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Fasilitas" class="mr-2 w-5">
                             Fasilitas
