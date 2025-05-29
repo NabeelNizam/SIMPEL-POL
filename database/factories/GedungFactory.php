@@ -18,7 +18,7 @@ class GedungFactory extends Factory
      */
     public function definition(): array
     {
-        $random = fake()->lastName();
+        $random = fake()->unique()->lastName();
         return [
             'nama_gedung' => $random,
             'kode_gedung' => substr($random, 0, 2). fake()->numerify('##'),

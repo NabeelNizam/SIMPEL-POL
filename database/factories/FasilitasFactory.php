@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Http\Enums\Kondisi;
 use App\Models\Fasilitas;
+use App\Models\Perbaikan;
 use App\Models\Ruangan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -29,7 +30,10 @@ class FasilitasFactory extends Factory
             'kondisi' => Kondisi::BAIK,
         ];
     }
-    // public function configure()
-    // {
-    // }
+    public function configure()
+    {
+        return $this->afterCreating(function (Fasilitas $fasilitas) {
+            Perbaikan::factory()->create(['id_fasilitas' => $fasilitas->id_fasilitas]);
+        });
+    }
 }

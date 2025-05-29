@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
             'username' => 'nabeela',
             'no_hp' => fake()->phoneNumber(),
             'foto_profil' => fake()->image(),
-            'id_role' => 1,
+            'id_role' => 2,
             'password' => 'password', // password
             'remember_token' => Str::random(10),
             'id_jurusan' => 1
@@ -63,7 +63,7 @@ class UserSeeder extends Seeder
             'username' => 'orochi',
             'no_hp' => fake()->phoneNumber(),
             'foto_profil' => fake()->image(),
-            'id_role' => 1,
+            'id_role' => 4,
             'password' => 'password', // password
             'remember_token' => Str::random(10),
             'id_jurusan' => 1
