@@ -18,7 +18,7 @@ class RuanganFactory extends Factory
      */
     public function definition(): array
     {
-        $random = fake()->lastName();
+        $random = fake()->unique()->lastName();
         return [
             'nama_ruangan' => $random,
             'kode_ruangan' => substr($random, 0, 2). fake()->numerify('##'),
