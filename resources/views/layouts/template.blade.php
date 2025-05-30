@@ -11,10 +11,13 @@
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tailwindcss/forms@0.5.2/dist/forms.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.tailwindcss.min.css">
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>SIMPEL-POL</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>
+    <style>       
     html {
         scroll-behavior: smooth;
     }
@@ -59,6 +62,7 @@
             margin-left: 0; /* No margin on mobile by default */
         }
     }
+    
 </style>
 </head>
 <body class="bg-gray-50">
