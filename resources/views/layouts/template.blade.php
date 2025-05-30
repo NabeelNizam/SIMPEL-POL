@@ -17,22 +17,22 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>SIMPEL-POL</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Sidebar transitions */
-        .sidebar {
-            transition: transform 0.3s ease-in-out;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            transform: translateX(0); /* Default visible */
-            width: 16rem; /* w-64 = 16rem */
-            z-index: 40;
-        }
+    <style>       
+    html {
+        scroll-behavior: smooth;
+    }
+    
+    /* Sidebar transitions */
+    .sidebar {
+        transition: transform 0.3s ease-in-out;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translateX(0); /* Default visible */
+        width: 16rem; /* w-64 = 16rem */
+        z-index: 40;
+    }
 
         .sidebar.closed {
             transform: translateX(-100%); /* Hide when closed */

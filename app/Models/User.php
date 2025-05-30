@@ -23,7 +23,16 @@ class User extends Authenticatable
     protected $guarded = [];
     protected $primaryKey = 'id_user';
     protected $table = 'users';
-    protected $fillable = ['username', 'password', 'id_role', 'email', 'name'];
+    protected $fillable = [
+        'nama',
+        'username',
+        'email',
+        'password',
+        'no_hp',
+        'id_jurusan',
+        'id_role'
+    ];
+
     protected $with = ['role'];
     /**
      * The attributes that should be hidden for serialization.
@@ -50,23 +59,49 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'id_role', 'id_role');
     }
     public function getRole()
-{
-    return optional($this->role)->nama_role;
-}
+    {
+        return optional($this->role)->nama_role;
+    }
 
     public function hasRole($role)
     {
         return $this->role->nama_role == $role;
     }
-
-    public function identifier(): BelongsTo
+    public function mahasiswa()
     {
-        if ($this->role == 'MAHASISWA') {
-            // return $this->hasOne(Mahasiswa::class, 'id_user', 'id_user');
-            return $this->belongsTo(Mahasiswa::class, 'id_user', 'id_user');
-        }
-        // return $this->hasOne(Pegawai::class, 'id_user', 'id_user');
-        return $this->belongsTo(Pegawai::class, 'id_user', 'id_user');
+        return $this->hasOne(Mahasiswa::class, 'id_user', 'id_user');
     }
-    
+
+    public function pegawai()
+    {
+        return $this->hasOne(Pegawai::class, 'id_user', 'id_user');
+    }
+
+    protected $appends = ['identifier'];
+
+    public function getIdentifierAttribute()
+    {
+        return $this->role->nama_role == 'MAHASISWA'
+            ? $this->mahasiswa?->nim
+            : $this->pegawai?->nip;
+    }
+
+    public function setIdentifierAttribute($value)
+    {
+        if ($this->role->nama_role == 'MAHASISWA' && $this->mahasiswa) {
+            $this->mahasiswa->update(['nim' => $value]);
+        } elseif ($this->pegawai) {
+            $this->pegawai->update(['nip' => $value]);
+        }
+    }
+
+    public function setIdentifier($value)
+    {
+        if ($this->role->nama_role == 'MAHASISWA' && $this->mahasiswa) {
+            $this->mahasiswa->update(['nim' => $value]);
+        } elseif ($this->pegawai) {
+            $this->pegawai->update(['nip' => $value]);
+        }
+        return $this;
+    }
 }
