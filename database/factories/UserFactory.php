@@ -20,7 +20,11 @@ class UserFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    private $RAND_ELEMENTS = [2, 5, 6];
+    private $RAND_ELEMENTS = [
+        'mahasiswa' =>  1,
+        'dosen' =>    5,
+        'pegawai' =>  6,
+    ];
     public function definition(): array
     {
         $role = $this->faker->randomElement($this->RAND_ELEMENTS);
@@ -40,15 +44,14 @@ class UserFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (User $user) {
-            if ($user->id_role == 2) {
+            if ($user->id_role == $this->RAND_ELEMENTS['mahasiswa']) {
                 $mahasiswa = Mahasiswa::factory()->create([
-                    'id_user' => $user->id_user]);
-
+                    'id_user' => $user->id_user
+                ]);
             } else {
                 $pegawai = Pegawai::factory()->create(
                     ['id_user' => $user->id_user]
                 );
-
             }
         });
     }
