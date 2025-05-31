@@ -58,6 +58,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class, 'id_role', 'id_role');
     }
+    public function jurusan()
+    {
+        return $this->belongsTo(Jurusan::class, 'id_jurusan', 'id_jurusan');
+    }
     public function getRole()
     {
         return optional($this->role)->nama_role;
@@ -97,15 +101,5 @@ class User extends Authenticatable
         } elseif ($this->pegawai) {
             $this->pegawai->update(['nip' => $value]);
         }
-    }
-
-    public function setIdentifier($value)
-    {
-        if ($this->role->nama_role == 'MAHASISWA' && $this->mahasiswa) {
-            $this->mahasiswa->update(['nim' => $value]);
-        } elseif ($this->pegawai) {
-            $this->pegawai->update(['nip' => $value]);
-        }
-        return $this;
     }
 }
