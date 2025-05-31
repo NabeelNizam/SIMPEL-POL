@@ -6,6 +6,7 @@ use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\GedungController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
@@ -74,9 +75,24 @@ Route::prefix('fasilitas')->group(function () {
     Route::post('/{id}/edit_ajax', [FasilitasController::class, 'update_ajax'])->name('admin.fasilitas.update_ajax');
     Route::delete('/{id}/remove_ajax', [FasilitasController::class, 'remove_ajax'])->name('admin.fasilitas.delete_ajax');
 });
+Route::prefix('lokasi')->group(function () {
+    Route::get('/', [GedungController::class, 'index'])->name('admin.fasilitas');
+    Route::get('/create', [GedungController::class, 'create_ajax'])->name('admin.fasilitas.create_ajax');
+    Route::post('/store', [GedungController::class, 'store_ajax'])->name('admin.fasilitas.store_ajax');
+    Route::get('/import', [GedungController::class, 'import_ajax'])->name('admin.fasilitas.import_ajax');
+    Route::get('/{id}/show_ajax', [GedungController::class, 'show_ajax'])->name('admin.fasilitas.show_ajax');
+    Route::get('/{id}/edit_ajax', [GedungController::class, 'edit_ajax'])->name('admin.fasilitas.edit_ajax');
+    Route::post('/{id}/edit_ajax', [GedungController::class, 'update_ajax'])->name('admin.fasilitas.update_ajax');
+    Route::delete('/{id}/remove_ajax', [GedungController::class, 'remove_ajax'])->name('admin.fasilitas.delete_ajax');
+});
 
 
 });
 Route::group(['prefix' => 'user', 'middleware' => ['authorize:MAHASISWA']], function () {
     Route::get('/', [MahasiswaController::class, 'index'])->name('dashboard.mahasiswa');
+});
+Route::group(['prefix' => 'profil', 'middleware' => ['auth']], function () {
+    Route::get('/', [ProfilController::class, 'index'])->name('profil');
+    Route::get('/edit_ajax', [ProfilController::class, 'edit_ajax'])->name('profil.edit_ajax');
+    Route::put('/{id}/update_ajax', [ProfilController::class, 'update_ajax']);
 });
