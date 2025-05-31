@@ -42,7 +42,7 @@
         </div>
         <div>
             <p class="font-semibold">NIP/NIM</p>
-            <p>{{ $user->nip ?? '-' }}</p>
+            <p>{{ $user->identifier ?? '-' }}</p>
         </div>
     </div>
 </div>
