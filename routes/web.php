@@ -110,4 +110,3 @@ Route::group(['prefix' => 'profil', 'middleware' => ['auth']], function () {
         Route::get('/{id}/show_ajax', [RiwayatMahasiswaController::class, 'show_ajax'])->name('mahasiswa.riwayat.show_ajax');
         Route::get('/{id}/edit_ajax', [RiwayatMahasiswaController::class, 'edit_ajax'])->name('mahasiswa.riwayat.edit_ajax');
     });
-});

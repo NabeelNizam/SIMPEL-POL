@@ -66,10 +66,6 @@ class User extends Authenticatable
     {
         return optional($this->role)->nama_role;
     }
-    public function jurusan()
-    {
-        return $this->belongsTo(Jurusan::class, 'id_jurusan', 'id_jurusan');
-    }
 
     public function hasRole($role)
     {
