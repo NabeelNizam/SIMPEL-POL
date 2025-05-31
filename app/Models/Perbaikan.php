@@ -19,5 +19,9 @@ class Perbaikan extends Model
     {
         return $this->hasMany(Biaya::class, 'id_perbaikan', 'id_perbaikan');
     }
+    public function teknisi()
+    {
+        return $this->belongsTo(User::class, 'id_user_teknisi', 'id_user');
+    }
 
 }
