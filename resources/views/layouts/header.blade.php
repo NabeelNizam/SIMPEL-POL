@@ -11,6 +11,7 @@
 
         <!-- User Profile Dropdown (Right Side) -->
         <div class="flex items-center mr-6">
+            <i class="fas fa-bell mr-2"></i>
             <div class="relative">
                 <button type="button"
                     class="flex items-center space-x-3 bg-gray-100 hover:bg-gray-400 p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none cursor-pointer"
