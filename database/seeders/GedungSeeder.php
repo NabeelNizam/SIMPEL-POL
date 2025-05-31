@@ -13,6 +13,56 @@ class GedungSeeder extends Seeder
      */
     public function run(): void
     {
-        Gedung::factory()->count(10)->create();
+        Gedung::updateOrCreate(
+            [
+                'id_gedung' => 1,
+            ],
+            [
+                'kode_gedung' => 'GTI',
+                'nama_gedung' => 'Gedung Teknologi Informasi',
+                'id_jurusan' => 1
+            ]
+        );
+        Gedung::updateOrCreate(
+            [
+                'id_gedung' => 2,
+            ],
+            [
+                'kode_gedung' => 'GTS',
+                'nama_gedung' => 'Gedung Teknik Sipil',
+                'id_jurusan' => 1
+            ]
+        );
+        Gedung::updateOrCreate(
+            [
+                'id_gedung' => 3,
+            ],
+            [
+                'kode_gedung' => 'GTM',
+                'nama_gedung' => 'Gedung Teknik Mesin',
+                'id_jurusan' => 1
+            ]
+        );
+        Gedung::updateOrCreate(
+            [
+                'id_gedung' => 4,
+            ],
+            [
+                'kode_gedung' => 'GTK',
+                'nama_gedung' => 'Gedung Teknik Kimia',
+                'id_jurusan' => 1
+            ]
+        );
+        Gedung::updateOrCreate(
+            [
+                'id_gedung' => 5,
+            ],
+            [
+                'kode_gedung' => 'GTA',
+                'nama_gedung' => 'Gedung Teknik Akuntasi',
+                'id_jurusan' => 1
+            ]
+        );
+        
     }
 }
