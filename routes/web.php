@@ -6,7 +6,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\FormPelaporanController;
 use App\Http\Controllers\JurusanController;
+use App\Http\Controllers\GedungController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\RiwayatMahasiswaController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\WelcomeController;
@@ -86,6 +88,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['authorize:ADMIN']], functio
 Route::group(['prefix' => 'user', 'middleware' => ['authorize:MAHASISWA|DOSEN|TENDIK']], function () {
     // Routes dashboard
     Route::get('/', [MahasiswaController::class, 'index'])->name('dashboard.mahasiswa');
+});
+Route::group(['prefix' => 'profil', 'middleware' => ['auth']], function () {
+    Route::get('/', [ProfilController::class, 'index'])->name('profil');
+    Route::get('/edit_ajax', [ProfilController::class, 'edit_ajax'])->name('profil.edit_ajax');
+    Route::put('/{id}/update_ajax', [ProfilController::class, 'update_ajax']);
+});
     Route::get('/sop/download/{filename}', [MahasiswaController::class, 'SOPdownload'])->name('download.sop');
     // routes form
     Route::prefix('form')->group(function () {

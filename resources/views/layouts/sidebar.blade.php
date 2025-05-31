@@ -51,7 +51,7 @@
                             <img src="{{ ($activeMenu == 'kategori') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Kategori" class="mr-2 w-5">
                             Kategori Fasilitas
                         </a>
-                        <a href="#" class="flex items-center p-2 w-full {{ ($activeMenu == 'lokasi') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        <a href="lokasi" class="flex items-center p-2 w-full {{ ($activeMenu == 'lokasi') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                          style="{{ ($activeMenu == 'lokasi') ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ ($activeMenu == 'lokasi') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Lokasi" class="mr-2 w-5">
                             Lokasi
