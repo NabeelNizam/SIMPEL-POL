@@ -12,8 +12,8 @@ class MahasiswaController extends Controller
     public function index()
     {
         $breadcrumb = (object) [
-            'title' => 'Beranda mahasiswa',
-            'list' => ['Home', 'Beranda']
+            'title' => 'Dashboard',
+            'list' => ['Home']
         ];
 
         $page = (object) [
