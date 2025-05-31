@@ -38,13 +38,13 @@
 
         <div>
             <label class="block text-sm font-medium mb-1">Jurusan <span class="text-red-500">*</span></label>
-            <select name="jurusan" id="jurusan" class="w-full border rounded-md px-3 py-2 text-sm">
+            <select name="id_jurusan" id="id_jurusan" class="w-full border rounded-md px-3 py-2 text-sm">
                 <option value="">- Pilih Jurusan -</option>
                 @foreach($jurusan as $j)
                     <option value="{{ $j->id_jurusan }}" {{ $j->id_jurusan == $user->id_jurusan ? 'selected' : '' }}>{{ $j->nama_jurusan }}</option>
                 @endforeach
             </select>
-            <span id="jurusan-error" class="text-xs text-red-500 mt-1 error-text"></span>
+            <span id="id_jurusan-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
 
         <div>
