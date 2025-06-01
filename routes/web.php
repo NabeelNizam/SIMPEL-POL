@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AduanController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FasilitasController;
+use App\Http\Controllers\FormPelaporanController;
 use App\Http\Controllers\JurusanController;
+use App\Http\Controllers\GedungController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\RiwayatTeknisiController;
 use App\Http\Controllers\RoleController;
@@ -31,17 +34,17 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::group(['prefix' => 'admin', 'middleware' => ['authorize:ADMIN']], function () {
     //dashboard
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
-   // Route pengguna
+    // Route pengguna
     Route::prefix('pengguna')->group(function () {
-    Route::get('/', [AdminController::class, 'pengguna'])->name('admin.pengguna');
-    Route::get('/create', [AdminController::class, 'create_ajax'])->name('admin.pengguna.create_ajax');
-    Route::post('/store', [AdminController::class, 'store_ajax'])->name('admin.pengguna.store_ajax');
-    Route::get('/import', [AdminController::class, 'import_ajax'])->name('admin.pengguna.import_ajax');
-    Route::get('/{user}/confirm', [AdminController::class, 'confirm_ajax'])->name('admin.pengguna.confirm_ajax');
-    Route::get('/{user}/show_ajax', [AdminController::class, 'show_ajax'])->name('admin.pengguna.show_ajax');
-    Route::get('/{user}/edit_ajax', [AdminController::class, 'edit_ajax'])->name('admin.pengguna.edit_ajax');
-    Route::put('/{user}/edit_ajax', [AdminController::class, 'update_ajax'])->name('admin.pengguna.update_ajax');
-    Route::delete('/{user}/remove_ajax', [AdminController::class, 'remove_ajax'])->name('admin.pengguna.delete_ajax');
+      Route::get('/', [AdminController::class, 'pengguna'])->name('admin.pengguna');
+      Route::get('/create', [AdminController::class, 'create_ajax'])->name('admin.pengguna.create_ajax');
+      Route::post('/store', [AdminController::class, 'store_ajax'])->name('admin.pengguna.store_ajax');
+      Route::get('/import', [AdminController::class, 'import_ajax'])->name('admin.pengguna.import_ajax');
+      Route::get('/{user}/confirm', [AdminController::class, 'confirm_ajax'])->name('admin.pengguna.confirm_ajax');
+      Route::get('/{user}/show_ajax', [AdminController::class, 'show_ajax'])->name('admin.pengguna.show_ajax');
+      Route::get('/{user}/edit_ajax', [AdminController::class, 'edit_ajax'])->name('admin.pengguna.edit_ajax');
+      Route::put('/{user}/edit_ajax', [AdminController::class, 'update_ajax'])->name('admin.pengguna.update_ajax');
+      Route::delete('/{user}/remove_ajax', [AdminController::class, 'remove_ajax'])->name('admin.pengguna.delete_ajax');
     });
 
     // Route role

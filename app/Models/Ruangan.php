@@ -20,4 +20,9 @@ class Ruangan extends Model
     {
         return $this->hasMany(Fasilitas::class, 'id_ruangan', 'id_ruangan');
     }
+
+    public function lantai()
+    {
+        return $this->belongsTo(Lantai::class, 'id_lantai', 'id_lantai');
+    }
 }

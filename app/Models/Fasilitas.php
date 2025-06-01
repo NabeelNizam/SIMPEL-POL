@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Http\Enums\Kondisi;
+use App\Http\Enums\Urgensi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +21,7 @@ class Fasilitas extends Model
     }
     protected $casts = [
         'kondisi' => Kondisi::class,
+        'urgensi' => Urgensi::class
     ];
 
     public function kategori()

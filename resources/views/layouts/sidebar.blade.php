@@ -51,7 +51,7 @@
                             <img src="{{ ($activeMenu == 'kategori') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Kategori" class="mr-2 w-5">
                             Kategori Fasilitas
                         </a>
-                        <a href="#" class="flex items-center p-2 w-full {{ ($activeMenu == 'lokasi') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        <a href="lokasi" class="flex items-center p-2 w-full {{ ($activeMenu == 'lokasi') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                          style="{{ ($activeMenu == 'lokasi') ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ ($activeMenu == 'lokasi') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Lokasi" class="mr-2 w-5">
                             Lokasi
@@ -60,9 +60,9 @@
 
                     <div>
                         <p class="mb-1 text-xs text-gray-500 uppercase">Laporan</p>
-                        <a href="#" class="flex items-center p-2 w-full {{ ($activeMenu == 'laporan') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
-                         style="{{ ($activeMenu == 'laporan') ? 'border-color: #F99D1C;' : '' }}">
-                            <img src="{{ ($activeMenu == 'laporan') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Laporan Perbaikan" class="mr-2 w-5">
+                        <a href="{{ route('admin.aduan') }}" class="flex items-center p-2 w-full {{ ($activeMenu == 'aduan') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                         style="{{ ($activeMenu == 'aduan') ? 'border-color: #F99D1C;' : '' }}">
+                            <img src="{{ ($activeMenu == 'aduan') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Laporan Perbaikan" class="mr-2 w-5">
                             Laporan Perbaikan
                         </a>
                     </div>
@@ -87,10 +87,10 @@
                     </div>
                 </nav>
             </div>
-        @elseif(Auth::user()->id_role == 1) {{-- Mahasiswa --}}
+        @elseif(Auth::user()->id_role == 1|5|6) {{-- Mahasiswa|Dosen|Tendik --}}
             <div class="h-full overflow-y-auto">
                 <nav class="p-4 space-y-4 text-sm text-gray-700">
-                    <a href="#"
+                    <a href="{{ route('dashboard.mahasiswa') }}"
                     class="flex items-center p-2 w-full {{ ($activeMenu == 'home') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                     style="{{ ($activeMenu == 'home') ? 'border-color: #F99D1C;' : '' }}">
                         <img src="{{ ($activeMenu == 'home') ? asset('icons/solid/Home.svg') : asset('icons/light/Home.svg') }}"
@@ -100,16 +100,16 @@
 
                     <div>
                         <p class="mb-1 text-xs text-gray-500 uppercase">Pelaporan</p>
-                        <a href="#"
-                        class="flex items-center p-2 w-full {{ ($activeMenu == 'form-pelaporan') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
-                        style="{{ ($activeMenu == 'form-pelaporan') ? 'border-color: #F99D1C;' : '' }}">
-                            <img src="{{ ($activeMenu == 'form-pelaporan') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">
+                        <a href="{{ route('mahasiswa.form') }}"
+                        class="flex items-center p-2 w-full {{ ($activeMenu == 'form') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        style="{{ ($activeMenu == 'form') ? 'border-color: #F99D1C;' : '' }}">
+                            <img src="{{ ($activeMenu == 'form') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">
                             Form Pelaporan
                         </a>
-                        <a href="#"
-                        class="flex items-center p-2 w-full {{ ($activeMenu == 'riwayat-pelaporan') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
-                        style="{{ ($activeMenu == 'riwayat-pelaporan') ? 'border-color: #F99D1C;' : '' }}">
-                            <img src="{{ ($activeMenu == 'riwayat-pelaporan') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Riwayat Pelaporan" class="mr-2 w-5">
+                        <a href="{{ route('mahasiswa.riwayat') }}"
+                        class="flex items-center p-2 w-full {{ ($activeMenu == 'riwayat') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        style="{{ ($activeMenu == 'riwayat') ? 'border-color: #F99D1C;' : '' }}">
+                            <img src="{{ ($activeMenu == 'riwayat') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Riwayat Pelaporan" class="mr-2 w-5">
                             Riwayat Pelaporan
                         </a>
                     </div>

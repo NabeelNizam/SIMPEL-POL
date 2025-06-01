@@ -11,5 +11,11 @@ class UmpanBalik extends Model
     protected $guarded = [];
     protected $table = 'umpan_balik';
     protected $primaryKey = 'id_umpan_balik';
+
+    public function aduan()
+    {
+        return $this->belongsTo(Aduan::class, 'id_aduan', 'id_aduan');
+    }
     
 }
+
