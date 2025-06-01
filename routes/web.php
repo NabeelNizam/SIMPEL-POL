@@ -87,6 +87,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['authorize:MAHASISWA|DOSEN|TE
     // Routes dashboard
     Route::get('/', [MahasiswaController::class, 'index'])->name('dashboard.mahasiswa');
     Route::get('/sop/download/{filename}', [MahasiswaController::class, 'SOPdownload'])->name('download.sop');
+    
     // routes form
     Route::prefix('form')->group(function () {
         Route::get('/', [FormPelaporanController::class, 'index'])->name('mahasiswa.form');

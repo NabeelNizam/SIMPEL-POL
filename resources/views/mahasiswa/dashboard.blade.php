@@ -119,9 +119,12 @@
                         <div>
                             <ol class="flex items-center w-full justify-center gap-x-10 py-8">
                                 <!-- Menunggu Diproses -->
-                                <li class="flex flex-col items-center cursor-pointer group step-item" data-step="1" data-status="MENUNGGU_DIPROSES" id="step-menunggu">
+                                <li class="flex flex-col items-center cursor-pointer group step-item" data-step="1"
+                                    data-status="MENUNGGU_DIPROSES" id="step-menunggu">
                                     <div class="flex w-full items-center">
-                                        <span class="circle-step flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full border-2 border-blue-400 transition-colors duration-200" id="circle-1">
+                                        <span
+                                            class="circle-step flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full border-2 border-blue-400 transition-colors duration-200"
+                                            id="circle-1">
                                             <svg class="w-6 h-6 text-blue-600 step-icon" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -190,6 +193,26 @@
                                         class="mt-2 text-sm font-medium text-gray-600 group-hover:text-blue-600 transition-colors duration-200 text-right w-full">Selesai</span>
                                 </li>
                             </ol>
+                            @foreach($aduan as $item)
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Gambar -->
+                                    <div class="flex justify-center">
+                                        <div>
+                                            @if($item->bukti_foto)
+                                                <img src="{{ asset('storage/' . $item->bukti_foto) }}" alt="Foto Aduan"
+                                                    class="w-48 h-32 object-cover rounded-lg shadow">
+                                            @else
+                                                <img src="{{ asset('img/no-image.svg') }}" alt="No Image"
+                                                    class="w-48 h-32 object-cover rounded-lg shadow">
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <!-- Detail Aduan -->
+                                    <div>
+                                        
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
