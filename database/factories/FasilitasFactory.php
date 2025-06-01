@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Http\Enums\Kondisi;
 use App\Http\Enums\Urgensi;
+use App\Models\Aduan;
 use App\Models\Fasilitas;
 use App\Models\Perbaikan;
 use App\Models\Ruangan;
@@ -38,6 +39,7 @@ class FasilitasFactory extends Factory
     {
         return $this->afterCreating(function (Fasilitas $fasilitas) {
             Perbaikan::factory()->create(['id_fasilitas' => $fasilitas->id_fasilitas]);
+            Aduan::factory()->create(['id_fasilitas' => $fasilitas->id_fasilitas]);
         });
     }
 }

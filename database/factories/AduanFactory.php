@@ -27,7 +27,8 @@ class AduanFactory extends Factory
             'bukti_foto' => 'bukti_foto.jpg',
             'id_fasilitas' => rand(1, 3),
             'id_user_pelapor' => rand(4, 5),
-            'id_periode' => 1
+            'id_periode' => 1,
+            'id_perbaikan' => 1
         ];
     }
     public function configure()
