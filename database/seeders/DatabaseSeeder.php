@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             KategoriSeeder::class,
             GedungSeeder::class,
-            AduanSeeder::class
+            LantaiSeeder::class,
+            RuanganSeeder::class
         ]);
     }
 }
