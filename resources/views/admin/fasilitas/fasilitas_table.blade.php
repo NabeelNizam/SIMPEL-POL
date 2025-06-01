@@ -21,8 +21,8 @@
                     ', Gedung ' . $f->ruangan->lantai->gedung->nama_gedung 
                     ?? '-' }}</x-table.cell>
                 <x-table.cell>
-                    <span class="px-2 py-1 rounded text-white {{ $f->kondisi->value === 'BAIK' ? 'bg-green-500' : 'bg-red-500' }}">
-                        {{ $f->kondisi->value }}
+                    <span class="px-2 py-1 rounded text-white w-full text-center {{ $f->kondisi->value === 'LAYAK' ? 'bg-green-500' : 'bg-red-500' }}">
+                        {{ Str::ucfirst(Str::lower($f->kondisi->value)) }}
                     </span>
                 </x-table.cell>
                 <x-table.cell>
