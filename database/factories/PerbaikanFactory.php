@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Biaya;
 use App\Models\Perbaikan;
+use App\Models\Prioritas;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -25,12 +26,14 @@ class PerbaikanFactory extends Factory
             'id_user_sarpras' => 4,
             'tanggal_mulai' => fake()->date(),
             'tanggal_selesai' => fake()->date(),
+            'id_periode' => 1
         ];
     }
     public function configure()
     {
         return $this->afterCreating(function (Perbaikan $perbaikan) {
             Biaya::factory(3)->create(['id_perbaikan' => $perbaikan->id_perbaikan]);
+            Prioritas::factory()->create(['id_perbaikan' => $perbaikan->id_perbaikan]);
         });
     }
 }
