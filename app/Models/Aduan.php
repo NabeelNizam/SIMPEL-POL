@@ -27,7 +27,7 @@ class Aduan extends Model
     }
     public function umpan_balik()
     {
-        return $this->hasOne(UmpanBalik::class, 'id_umpan_balik', 'id_umpan_balik');
+        return $this->hasOne(UmpanBalik::class, 'id_aduan', 'id_aduan');
     }
     public function prioritas()
     {

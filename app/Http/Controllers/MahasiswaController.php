@@ -39,7 +39,16 @@ class MahasiswaController extends Controller
         $sortDirection = $request->sort_direction ?? 'desc';
         $query->orderBy($sortColumn, $sortDirection);
 
-        $aduan = $query->get();
+        // Pagination
+        $perPage = $request->input('per_page', 10);
+        $aduan = $query->paginate($perPage);
+
+        $aduan->appends(request()->query());
+
+        if ($request->ajax()) {
+            $html = view('mahasiswa.dashboard_card', compact('aduan'))->render();
+            return response()->json(['html' => $html]);
+        }
 
         return view('mahasiswa.dashboard', [
             'breadcrumb' => $breadcrumb, 
