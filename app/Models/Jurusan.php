@@ -12,6 +12,7 @@ class Jurusan extends Model
 
     protected $primaryKey = 'id_jurusan';
     protected $table = 'jurusan';
+        protected $fillable = ['kode_jurusan', 'nama_jurusan'];
     protected $guarded = [];
 
     public function users():HasMany

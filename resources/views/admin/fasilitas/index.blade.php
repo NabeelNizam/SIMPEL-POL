@@ -5,7 +5,7 @@
     <div class="flex items-center justify-between mb-4">
         <span class="text-sm text-gray-700">Daftar Fasilitas yang terdaftar dalam sistem</span>
         <div class="flex gap-2">
-            <button onclick="modalAction('{{ route('admin.fasilitas.import_ajax') }}')" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
+            <button onclick="modalAction('{{ route('admin.fasilitas.import_ajax') }}')" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900 cursor-pointer">
                 <i class="fas fa-file-import"></i> Import
             </button>
             <a href="#" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
@@ -14,7 +14,7 @@
             <a href="#" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
                 <i class="fas fa-file-pdf"></i> Ekspor PDF
             </a>
-            <button onclick="modalAction('{{ route('admin.fasilitas.create_ajax') }}')" class="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-green-700">
+            <button onclick="modalAction('{{ route('admin.fasilitas.create') }}')" class="cursor-pointer bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-green-700">
                 <i class="fas fa-plus"></i> Tambah
             </button>
         </div>

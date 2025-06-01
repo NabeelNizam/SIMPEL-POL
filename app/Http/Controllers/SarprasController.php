@@ -14,8 +14,10 @@ class SarprasController extends Controller
             'list'  => ['Home']
         ];
 
+        $activeMenu = '';
+
         $kriteria = KriteriaModel::all();
 
-        return view('sarpras.bobot.index', ['breadcrumb' => $breadcrumb, 'kriteria' => $kriteria]);
+        return view('sarpras.bobot.index', ['breadcrumb' => $breadcrumb, 'kriteria' => $kriteria, 'activeMenu' => $activeMenu]);
     }
 }
