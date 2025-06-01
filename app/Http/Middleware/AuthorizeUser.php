@@ -16,16 +16,21 @@ class AuthorizeUser
      */
     public function handle(Request $request, Closure $next, $roles): Response
     {
-        $user = $request->user();
-        $user->loadMissing('role');
-        $user_role = $user->getRole();
+        try {
+            $user = $request->user();
+            $user->loadMissing('role');
+            $user_role = $user->getRole();
 
-        $allowedRoles = explode('|', $roles); // pisah string jadi array
+            $allowedRoles = explode('|', $roles); // pisah string jadi array
 
-        if (in_array($user_role, $allowedRoles)) {
-            return $next($request);
+            if (in_array($user_role, $allowedRoles)) {
+                return $next($request);
+            }
+
+            abort(403, 'Forbidden. Kamu tidak punya akses ke halaman ini');
+        } catch (\Throwable $th) {
+            // abort(403, 'Forbidden. Kamu tidak punya akses ke halaman ini. Silakan masuk terlebih dahulu.');
+            return redirect()->route('login');
         }
-
-        abort(403, 'Forbidden. Kamu tidak punya akses ke halaman ini');
     }
 }
