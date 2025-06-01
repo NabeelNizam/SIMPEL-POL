@@ -10,6 +10,7 @@ use App\Models\Kategori;
 use App\Models\Lantai;
 use App\Models\Mahasiswa;
 use App\Models\Pegawai;
+use App\Models\Periode;
 use App\Models\Role;
 use App\Models\Ruangan;
 use App\Models\User;
@@ -119,8 +120,10 @@ class FasilitasController extends Controller
                 'ruangan' => 'required|integer|exists:ruangan,id_ruangan',
                 'nama_fasilitas' => 'required|string|min:2|max:35',
                 'kategori' => 'required|integer|exists:kategori,id_kategori',
-                'kondisi_fasilitas' => 'required|string|in:BAIK,RUSAK,RUSAK BERAT',
+                'kondisi_fasilitas' => 'required|string|in:LAYAK,RUSAK',
                 'deskripsi' => 'required|string|min:10|max:255',
+                'urgensi' => 'required|string|in:DARURAT,PENTING,BIASA',
+                'foto_fasilitas' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -133,13 +136,35 @@ class FasilitasController extends Controller
                 ]);
             }
 
+            $periode = Periode::where('tanggal_mulai', '<=', now())
+                        ->where('tanggal_selesai', '>=', now())
+                        ->first();
+
+            if (!$periode) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Periode tidak ditemukan untuk tanggal saat ini',
+                ]);
+            }
+
+                // Simpan file foto_fasilitas
+            if ($request->hasFile('foto_fasilitas')) {
+                $file = $request->file('foto_fasilitas');
+                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('public/img/foto_fasilitas', $fileName); // Simpan ke storage
+                $fotoUrl = 'storage/img/foto_fasilitas/' . $fileName; // URL relatif
+            }
+
             Fasilitas::create([
                 'id_ruangan' => $request->ruangan,
                 'nama_fasilitas' => $request->nama_fasilitas,
                 'id_kategori' => $request->kategori,
                 'kondisi' => $request->kondisi_fasilitas,
                 'kode_fasilitas' => 'F-' . $request->gedung . $request->lantai . $request->ruangan . '-' . Fasilitas::count() + 1,
-                'deskripsi' => $request->deskripsi
+                'deskripsi' => $request->deskripsi,
+                'urgensi' => $request->urgensi,
+                'id_periode' => $periode->id_periode,
+                'foto_fasilitas' => $fotoUrl
             ]);
 
             return response()->json([
@@ -147,6 +172,9 @@ class FasilitasController extends Controller
                 'message' => 'Data fasilitas berhasil disimpan',
             ]);
         }
-        return redirect('/admin/fasilitas')->with('error', 'Data fasilitas gagal disimpan');
+        return response()->json([
+            'status' => false,
+            'message' => 'Data fasilitas gagal disimpan',
+        ]);
     }
 }
