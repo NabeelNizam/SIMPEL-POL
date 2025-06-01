@@ -78,7 +78,7 @@ class ProfilController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'message' => 'Input Anda Gagal diValidasi.'
             ], 422);
         }
 

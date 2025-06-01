@@ -11,6 +11,7 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\RiwayatMahasiswaController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SarprasController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -88,6 +89,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['authorize:ADMIN']], functio
 Route::group(['prefix' => 'user', 'middleware' => ['authorize:MAHASISWA|DOSEN|TENDIK']], function () {
     // Routes dashboard
     Route::get('/', [MahasiswaController::class, 'index'])->name('dashboard.mahasiswa');
+});
+Route::group(['prefix' => 'sarpras', 'middleware' => ['authorize:SARPRAS']], function () {
+    // Routes dashboard
+    Route::get('/', [SarprasController::class, 'index'])->name('dashboard.sarpras');
 });
 Route::group(['prefix' => 'profil', 'middleware' => ['auth']], function () {
     Route::get('/', [ProfilController::class, 'index'])->name('profil');

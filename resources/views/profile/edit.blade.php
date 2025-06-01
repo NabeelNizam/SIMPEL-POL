@@ -89,37 +89,62 @@
     $(document).ready(function () {
         $("#form-edit-profil").validate({
             rules: {
-                nama: "required",
-                telepon: "required",
+                nama: {
+                    required: true,
+                    maxlength: 255
+                },
+                telepon: {
+                    required: true,
+                    maxlength: 20
+                },
                 email: {
                     required: true,
                     email: true
                 },
-                username: "required",
-                jurusan: "required",
-                identifier: "required",
+                username: {
+                    required: true,
+                    maxlength: 50
+                },
+                jurusan: {
+                    required: true
+                },
+                identifier: {
+                    required: true,
+                    minlength: 10,
+                    maxlength: 50
+                },
                 fotoprofil: {
                     required: false,
                     fileExtensionIfFilled: "jpg|jpeg|png|gif|svg"
                 }
             },
             messages: {
-                nama: "Nama wajib diisi",
-                telepon: "Nomor Telepon wajib diisi",
+                nama: {
+                    required: "Nama wajib diisi",
+                    maxlength: "Nama maksimal 255 karakter"
+                },
+                telepon: {
+                    required: "Nomor Telepon wajib diisi",
+                    maxlength: "Nomor Telepon maksimal 20 karakter"
+                },
                 email: {
                     required: "Email wajib diisi",
                     email: "Format email tidak valid"
                 },
-                username: "Username wajib diisi",
+                username: {
+                    required: "Username wajib diisi",
+                    maxlength: "Username maksimal 50 karakter"
+                },
                 jurusan: "Pilih jurusan",
-                identifier: "{{ isset($user->pegawai->nip) ? 'NIP' : 'NIM' }} wajib diisi",
+                identifier: {
+                    required: "wajib diisi",
+                    minlength: "minimal 10 karakter",
+                    maxlength: "maksimal 50 karakter"
+                },
                 fotoprofil: {
-                    required: "Foto profil wajib diisi",
                     fileExtensionIfFilled: "Format file harus jpg, jpeg, png, gif, atau svg"
                 }
             },
-
-
             errorElement: 'span',
             errorPlacement: function (error, element) {
                 var id = element.attr("id");
@@ -140,7 +165,7 @@
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                        } else {                            
+                        } else {
                             $('#myModal').addClass('hidden').removeClass('flex').html('');
                             Swal.fire({
                                 icon: 'success',
@@ -150,13 +175,13 @@
 
                         }
                     },
-                     error: function(xhr) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal',
-                text: 'Terjadi kesalahan pada server.'
-            });
-        }
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: xhr.responseJSON?.message
+                        });
+                    }
                 });
                 return false;
             }

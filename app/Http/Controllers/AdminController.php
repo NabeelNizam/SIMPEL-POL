@@ -20,7 +20,7 @@ class AdminController extends Controller
     {
         $breadcrumb = (object) [
             'title' => 'Dashboard Admin',
-            'list' => ['Home', 'dashboard']
+            'list' => ['Home', 'Dashboard']
         ];
 
         $page = (object) [
