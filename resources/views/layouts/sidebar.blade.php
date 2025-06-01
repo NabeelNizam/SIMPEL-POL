@@ -115,10 +115,10 @@
                     </div>
                 </nav>
             </div>
-        @elseif(Auth::user()->id_role == 3) {{-- Teknisi/Sarpras --}}
+        @elseif(Auth::user()->id_role == 3) {{-- Teknisi --}}
             <div class="h-full overflow-y-auto">
                 <nav class="p-4 space-y-4 text-sm text-gray-700">
-                    <a href="#"
+                    <a href="{{ route('teknisi.dashboard') }}"
                     class="flex items-center p-2 w-full {{ ($activeMenu == 'home') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                     style="{{ ($activeMenu == 'home') ? 'border-color: #F99D1C;' : '' }}">
                         <img src="{{ ($activeMenu == 'home') ? asset('icons/solid/Home.svg') : asset('icons/light/Home.svg') }}"
@@ -132,19 +132,19 @@
                         class="flex items-center p-2 w-full {{ ($activeMenu == 'laporan-pending') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                         style="{{ ($activeMenu == 'laporan-pending') ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ ($activeMenu == 'laporan-pending') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Laporan Pending" class="mr-2 w-5">
-                            Laporan Pending
+                            Penugasan
                         </a>
                         <a href="#"
                         class="flex items-center p-2 w-full {{ ($activeMenu == 'laporan-process') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                         style="{{ ($activeMenu == 'laporan-process') ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ ($activeMenu == 'laporan-process') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Laporan Proses" class="mr-2 w-5">
-                            Laporan Proses
+                            Perbaikan
                         </a>
-                        <a href="#"
+                        <a href="{{ route('teknisi.riwayat') }}"
                         class="flex items-center p-2 w-full {{ ($activeMenu == 'laporan-completed') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                         style="{{ ($activeMenu == 'laporan-completed') ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ ($activeMenu == 'laporan-completed') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Laporan Selesai" class="mr-2 w-5">
-                            Laporan Selesai
+                            Riwayat Laporan
                         </a>
                     </div>
                 </nav>

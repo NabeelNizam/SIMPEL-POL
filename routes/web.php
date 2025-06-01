@@ -5,7 +5,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\RiwayatTeknisiController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TeknisiController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -77,5 +79,16 @@ Route::prefix('fasilitas')->group(function () {
 
 });
 Route::group(['prefix' => 'user', 'middleware' => ['authorize:MAHASISWA']], function () {
-    Route::get('/', [MahasiswaController::class, 'index'])->name('dashboard.mahasiswa');
+    Route::get('/', [MahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
 });
+Route::group(['prefix' => 'teknisi', 'middleware' => ['authorize:TEKNISI']], function () {
+    Route::get('/', [TeknisiController::class, 'index'])->name('teknisi.dashboard');
+
+    Route::prefix('riwayat')->group(function () {
+        Route::get('/', [RiwayatTeknisiController::class, 'index'])->name('teknisi.riwayat');
+        Route::get('/{id}/show_ajax', [RiwayatTeknisiController::class, 'show_ajax'])->name('teknisi.riwayat.show_ajax');
+    });
+});
+// Route::group(['prefix' => 'sarpras', 'middleware' => ['authorize:SARPRAS']], function () {
+//     Route::get('/', [MahasiswaController::class, 'index'])->name('dashboard.sarpras');
+// });
