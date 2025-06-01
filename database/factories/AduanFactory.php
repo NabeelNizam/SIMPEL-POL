@@ -23,17 +23,19 @@ class AduanFactory extends Factory
         return [
             'tanggal_aduan' => fake()->date(),
             'deskripsi' => fake()->sentence(5),
-            'status' => 'MENUNGGU_VERIFIKASI',
+            'status' => 'MENUNGGU_DIPROSES',
             'bukti_foto' => 'bukti_foto.jpg',
             'id_fasilitas' => rand(1, 3),
             'id_user_pelapor' => rand(4, 5),
+            'id_periode' => 1,
+            'id_perbaikan' => 1
         ];
     }
     public function configure()
     {
         return $this->afterCreating(function (Aduan $aduan) {
             UmpanBalik::factory()->create(['id_aduan' => $aduan->id_aduan]);
-            Prioritas::factory()->create(['id_aduan' => $aduan->id_aduan]);
+            // Prioritas::factory()->create(['id_aduan' => $aduan->id_aduan]);
         });
     }
 }

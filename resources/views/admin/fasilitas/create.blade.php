@@ -86,7 +86,7 @@
 $(document).ready(function() {
     $('#gedung').on('change', function () {
         let gedungID = $(this).val();
-        
+
         // Reset dan disable lantai + ruangan
         $('#lantai').html('<option value="">- Pilih Lantai -</option>')
                     .prop('disabled', true)
@@ -133,7 +133,7 @@ $(document).ready(function() {
             });
         }
     });
-    
+
     $("#form-tambah-pengguna").validate({
         errorElement: 'span',
         errorClass: 'text-xs text-red-500 mt-1 error-text',
@@ -142,7 +142,7 @@ $(document).ready(function() {
         errorPlacement: function(error, element) {
             var errorContainer = element.next('.error-text');
             if (errorContainer.length) {
-                errorContainer.replaceWith(error); 
+                errorContainer.replaceWith(error);
             } else {
                 error.insertAfter(element);
             }
