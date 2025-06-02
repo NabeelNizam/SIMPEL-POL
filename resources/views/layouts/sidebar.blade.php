@@ -87,7 +87,7 @@
                     </div>
                 </nav>
             </div>
-        @elseif(Auth::user()->id_role == 1|5|6) {{-- Mahasiswa|Dosen|Tendik --}}
+    @elseif(in_array(Auth::user()->id_role, [1, 5, 6])) {{-- Mahasiswa|Dosen|Tendik --}}
             <div class="h-full overflow-y-auto">
                 <nav class="p-4 space-y-4 text-sm text-gray-700">
                     <a href="{{ route('dashboard.mahasiswa') }}"
@@ -115,10 +115,10 @@
                     </div>
                 </nav>
             </div>
-        @elseif(Auth::user()->id_role == 3) {{-- Teknisi/Sarpras --}}
+        @elseif(Auth::user()->id_role == 3) {{-- Teknisi --}}
             <div class="h-full overflow-y-auto">
                 <nav class="p-4 space-y-4 text-sm text-gray-700">
-                    <a href="#"
+                    <a href="teknisi/dashboard"
                     class="flex items-center p-2 w-full {{ ($activeMenu == 'home') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                     style="{{ ($activeMenu == 'home') ? 'border-color: #F99D1C;' : '' }}">
                         <img src="{{ ($activeMenu == 'home') ? asset('icons/solid/Home.svg') : asset('icons/light/Home.svg') }}"
@@ -127,32 +127,32 @@
                     </a>
 
                     <div>
-                        <p class="mb-1 text-xs text-gray-500 uppercase">Penanganan Laporan</p>
-                        <a href="#"
-                        class="flex items-center p-2 w-full {{ ($activeMenu == 'laporan-pending') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
-                        style="{{ ($activeMenu == 'laporan-pending') ? 'border-color: #F99D1C;' : '' }}">
-                            <img src="{{ ($activeMenu == 'laporan-pending') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Laporan Pending" class="mr-2 w-5">
-                            Laporan Pending
+                        <p class="mb-1 text-xs text-gray-500 uppercase">Laporan</p>
+                        <a href="teknisi/penugasan"
+                        class="flex items-center p-2 w-full {{ ($activeMenu == 'penugasan') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        style="{{ ($activeMenu == 'penugasan') ? 'border-color: #F99D1C;' : '' }}">
+                            <img src="{{ ($activeMenu == 'penugasan') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Laporan Pending" class="mr-2 w-5">
+                            Penugasan
                         </a>
-                        <a href="#"
-                        class="flex items-center p-2 w-full {{ ($activeMenu == 'laporan-process') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
-                        style="{{ ($activeMenu == 'laporan-process') ? 'border-color: #F99D1C;' : '' }}">
-                            <img src="{{ ($activeMenu == 'laporan-process') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Laporan Proses" class="mr-2 w-5">
-                            Laporan Proses
+                        <a href="teknisi/perbaikan"
+                        class="flex items-center p-2 w-full {{ ($activeMenu == 'perbaikan') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        style="{{ ($activeMenu == 'perbaikan') ? 'border-color: #F99D1C;' : '' }}">
+                            <img src="{{ ($activeMenu == 'perbaikan') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Laporan Proses" class="mr-2 w-5">
+                            Perbaikan
                         </a>
-                        <a href="#"
-                        class="flex items-center p-2 w-full {{ ($activeMenu == 'laporan-completed') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
-                        style="{{ ($activeMenu == 'laporan-completed') ? 'border-color: #F99D1C;' : '' }}">
-                            <img src="{{ ($activeMenu == 'laporan-completed') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Laporan Selesai" class="mr-2 w-5">
-                            Laporan Selesai
+                        <a href="teknisi/riwayat"
+                        class="flex items-center p-2 w-full {{ ($activeMenu == 'riwayat') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        style="{{ ($activeMenu == 'riwayat') ? 'border-color: #F99D1C;' : '' }}">
+                            <img src="{{ ($activeMenu == 'riwayat') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Laporan Selesai" class="mr-2 w-5">
+                            Riwayat Laporan
                         </a>
                     </div>
                 </nav>
             </div>
-        @elseif(Auth::user()->id_role == 4) {{-- Dosen/Pegawai --}}
+        @elseif(Auth::user()->id_role == 4) {{-- Sarpras --}} 
             <div class="h-full overflow-y-auto">
                 <nav class="p-4 space-y-4 text-sm text-gray-700">
-                    <a href="#"
+                    <a href="/sarpras"
                     class="flex items-center p-2 w-full {{ ($activeMenu == 'home') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                     style="{{ ($activeMenu == 'home') ? 'border-color: #F99D1C;' : '' }}">
                         <img src="{{ ($activeMenu == 'home') ? asset('icons/solid/Home.svg') : asset('icons/light/Home.svg') }}"
@@ -161,23 +161,43 @@
                     </a>
 
                     <div>
-                        <p class="mb-1 text-xs text-gray-500 uppercase">Pelaporan</p>
-                        <a href="#"
-                        class="flex items-center p-2 w-full {{ ($activeMenu == 'form-pelaporan') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
-                        style="{{ ($activeMenu == 'form-pelaporan') ? 'border-color: #F99D1C;' : '' }}">
-                            <img src="{{ ($activeMenu == 'form-pelaporan') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">
+                        <p class="mb-1 text-xs text-gray-500 uppercase">Kelola</p>
+                        <a href="sarpras/bobot"
+                        class="flex items-center p-2 w-full {{ ($activeMenu == 'bobot') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        style="{{ ($activeMenu == 'bobot') ? 'border-color: #F99D1C;' : '' }}">
+                            <img src="{{ ($activeMenu == 'bobot') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">
                             Form Pelaporan
                         </a>
-                        <a href="#"
-                        class="flex items-center p-2 w-full {{ ($activeMenu == 'riwayat-pelaporan') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
-                        style="{{ ($activeMenu == 'riwayat-pelaporan') ? 'border-color: #F99D1C;' : '' }}">
-                            <img src="{{ ($activeMenu == 'riwayat-pelaporan') ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}" alt="Riwayat Pelaporan" class="mr-2 w-5">
-                            Riwayat Pelaporan
+                    </div>
+                    <div>
+                        <p class="mb-1 text-xs text-gray-500 uppercase">Laporan</p>
+                        <a href="/pengaduan"
+                        class="flex items-center p-2 w-full {{ ($activeMenu == 'pengaduan') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        style="{{ ($activeMenu == 'pengaduan') ? 'border-color: #F99D1C;' : '' }}">
+                            <img src="{{ ($activeMenu == 'pengaduan') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">
+                            Pengaduan
+                        </a>
+                        <a href="/penugasan"
+                        class="flex items-center p-2 w-full {{ ($activeMenu == 'penugasan') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        style="{{ ($activeMenu == 'penugasan') ? 'border-color: #F99D1C;' : '' }}">
+                            <img src="{{ ($activeMenu == 'penugasan') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">
+                            Penugasan
+                        </a>
+                        <a href="/perbaikan"
+                        class="flex items-center p-2 w-full {{ ($activeMenu == 'perbaikan') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        style="{{ ($activeMenu == 'perbaikan') ? 'border-color: #F99D1C;' : '' }}">
+                            <img src="{{ ($activeMenu == 'perbaikan') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">
+                            Perbaikan
+                        </a>
+                        <a href="/riwayat"
+                        class="flex items-center p-2 w-full {{ ($activeMenu == 'riwayat') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        style="{{ ($activeMenu == 'riwayat') ? 'border-color: #F99D1C;' : '' }}">
+                            <img src="{{ ($activeMenu == 'riwayat') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">
+                            Riwayat Laporan
                         </a>
                     </div>
                 </nav>
             </div>
-        
         @endif
     @endif
 </div>

@@ -65,8 +65,8 @@
         <div class="col-span-2">
             <label class="block text-sm font-medium mb-1">Foto Profil <span class="text-red-500">*</span></label>
             <span id="fotoprofil" class="text-xs text-gray-600">*abaikan jika tidak diganti</span>
-            <input type="file" name="fotoprofil" id="fotoprofil" value="{{ $user->foto_profil }}"
-                class="w-full border rounded-md px-3 text-sm" placeholder="Pilih Foto">
+            <input type="file" name="fotoprofil" id="fotoprofil" class="w-full border rounded-md px-3 text-sm"
+                placeholder="Pilih Foto">
             <span id="fotoprofil-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
 
@@ -153,27 +153,20 @@
 
             // ⬇️ Biarkan submitHandler tetap di bawah ⬇️
             submitHandler: function (form) {
+                var formData = new FormData(form);
                 $.ajax({
                     url: form.action,
                     type: form.method,
-                    data: $(form).serialize(),
+                    data: formData,
+                    processData: false, // WAJIB untuk FormData
+                    contentType: false, // WAJIB untuk FormData
                     success: function (response) {
-                        if (response.status) {
-                            $('#myModal').addClass('hidden').removeClass('flex').html('');
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: response.message
-                            });
-                        } else {
-                            $('#myModal').addClass('hidden').removeClass('flex').html('');
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: response.message
-                            });
-
-                        }
+                        $('#myModal').addClass('hidden').removeClass('flex').html('');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message
+                        });
                     },
                     error: function (xhr) {
                         Swal.fire({
