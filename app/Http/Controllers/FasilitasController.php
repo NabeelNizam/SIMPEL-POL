@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Enums\Kondisi;
+use App\Http\Sheet\Sheet;
 use App\Models\Fasilitas;
 use App\Models\Gedung;
 use App\Models\Jurusan;
@@ -24,6 +25,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class FasilitasController extends Controller
 {
+    private $queried_fasilitas;
     public function index(Request $request)
     {
         $breadcrumb = (object) [
@@ -40,6 +42,9 @@ class FasilitasController extends Controller
 
         // Query untuk fasilitas
         $query = Fasilitas::with(['kategori', 'ruangan']);
+
+        // Ambil data fasilitas yang difilter
+        $this->queried_fasilitas = $query;
 
         // Filter berdasarkan pencarian
         if ($request->search) {
@@ -81,7 +86,7 @@ class FasilitasController extends Controller
             $html = view('admin.fasilitas.fasilitas_table', compact('fasilitas'))->render();
             return response()->json(['html' => $html]);
         }
-        
+
         return view('admin.fasilitas.index', compact('breadcrumb', 'page', 'activeMenu', 'fasilitas', 'kategori', 'gedung', 'kondisi'));
     }
 
@@ -176,5 +181,59 @@ class FasilitasController extends Controller
             'status' => false,
             'message' => 'Data fasilitas gagal disimpan',
         ]);
+    }
+    public function export_pdf()
+    {
+        // Ini untuk mengambil data fasilitas yang sudah difilter (masih gagal)
+        // $fasilitas = $this->queried_fasilitas;
+
+        $fasilitas = Fasilitas::with(['kategori', 'ruangan'])->get();
+
+        $headers = ['Kode', 'Nama', 'Kategori', 'Lokasi'];
+        $data = $fasilitas->map(function ($item) {
+            return [
+                'kode' => $item->kode_fasilitas,
+                'nama' => $item->nama_fasilitas,
+                'kategori' => $item->kategori->nama_kategori,
+                'lokasi' => $item->getLokasiString(),
+            ];
+        })->toArray();
+        $sheet = new Sheet(
+            [
+                'title' => 'Data Fasilitas',
+                'text' => 'Berikut adalah daftar fasilitas yang terdaftar di sistem.',
+                'footer' => 'Dibuat oleh Nabeela',
+                'header' => $headers,
+                'data' => $data,
+                'filename' => 'data_fasilitas' . date('Y-m-d_H-i-s'),
+                'is_landscape' => false, // Mengatur orientasi kertas menjadi landscape
+            ]
+        );
+        return $sheet->toPdf();
+    }
+    public function export_excel()
+    {
+        // Ini untuk mengambil data fasilitas yang sudah difilter (masih gagal)
+        // $fasilitas = $this->queried_fasilitas;
+
+        $fasilitas = Fasilitas::with(['kategori', 'ruangan'])->get();
+
+        $headers = ['Kode', 'Nama', 'Kategori', 'Lokasi'];
+        $data = $fasilitas->map(function ($item) {
+            return [
+                'kode' => $item->kode_fasilitas,
+                'nama' => $item->nama_fasilitas,
+                'kategori' => $item->kategori->nama_kategori,
+                'lokasi' => $item->getLokasiString(),
+            ];
+        })->toArray();
+        $sheet = new Sheet(
+            [
+                'header' => $headers,
+                'data' => $data,
+                'filename' => 'data_fasilitas' . date('Y-m-d_H-i-s'),
+            ]
+        );
+        return $sheet->toXls();
     }
 }

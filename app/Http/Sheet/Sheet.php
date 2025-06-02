@@ -16,6 +16,7 @@ class Sheet
     public array $data; // Data yang akan ditampilkan di sheet, biasanya berupa array dari array
     public string $filename;    // Nama file yang akan digunakan saat mengunduh sheet
 
+    public bool $is_landscape; // Untuk menentukan orientasi kertas, defaultnya portrait
     public function __construct()
     {
 
@@ -53,7 +54,7 @@ class Sheet
     public function toPdf()
     {
         $pdf = Pdf::loadHTML($this->view()->render());
-        $pdf->setPaper('A4', 'portrait');
+        $pdf->setPaper('A4', $this->is_landscape ? 'landscape' : 'portrait');
         $pdf->setOption('isRemoteEnabled', true);
         $pdf->render();
 
