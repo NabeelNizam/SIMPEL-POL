@@ -48,7 +48,7 @@
                 </x-table.cell>
                 <x-table.cell>{{ $p->aduan_count ?? '-' }}</x-table.cell>
                 <x-table.cell>
-                    <button onclick="modalAction('/pengaduan/{{ $p->id_fasilitas }}/detail_pengaduan')"
+                    <button onclick="modalAction('/sarpras/pengaduan/{{ $p->id_fasilitas }}/detail_pengaduan')"
                         class="text-blue-600 hover:underline text-sm cursor-pointer">
                         <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
                     </button>
