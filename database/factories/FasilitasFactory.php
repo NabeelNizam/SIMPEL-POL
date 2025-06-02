@@ -29,7 +29,7 @@ class FasilitasFactory extends Factory
             'kode_fasilitas' => substr($random, 0, 2). fake()->numerify('##'),
             'deskripsi' => fake()->sentence(5),
             'id_kategori' => fake()->randomElement([1, 2, 3]),
-            'kondisi' => Kondisi::BAIK,
+            'kondisi' => Kondisi::LAYAK,
             'urgensi' => Urgensi::BIASA,
             'foto_fasilitas' => fake()->image(),
             'id_periode' => 1
