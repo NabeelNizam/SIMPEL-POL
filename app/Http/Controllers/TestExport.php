@@ -28,7 +28,7 @@ class TestExport extends Controller
 
         // Membuat instance dari Sheet dengan data yang sudah disiapkan
         // Judul, teks, footer, header, data, dan nama file
-        $sheet = new Sheet(
+        $sheet = Sheet::make(
             [
                 'title' => 'Data Mahasiswa',
                 'text' => 'Berikut adalah daftar mahasiswa yang terdaftar di sistem.',

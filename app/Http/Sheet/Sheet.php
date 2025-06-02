@@ -17,15 +17,28 @@ class Sheet
     public string $filename;    // Nama file yang akan digunakan saat mengunduh sheet
 
     public bool $is_landscape; // Untuk menentukan orientasi kertas, defaultnya portrait
-    public function __construct(array $params)
+    public function __construct()
     {
-        $this->title    = $params['title'] ?? 'Untitled';
-        $this->text     = $params['text'] ?? '';
-        $this->footer   = $params['footer'] ?? '';
-        $this->header   = $params['header'] ?? [];
-        $this->data     = $params['data'] ?? [];
-        $this->filename = $params['filename'] ?? 'no name';
-        $this->is_landscape = $params['is_landscape'] ?? false; // Defaultnya portrait, bisa diubah jadi landscape
+
+    }
+
+    public static function make(array $params): self
+    {
+        $title    = $params['title'] ?? 'Untitled';
+        $text     = $params['text'] ?? '';
+        $footer   = $params['footer'] ?? '';
+        $header   = $params['header'] ?? [];
+        $data     = $params['data'] ?? [];
+        $filename = $params['filename'] ?? 'no name';
+
+        $make = new self();
+        $make->title = $title;
+        $make->text = $text;
+        $make->footer = $footer;
+        $make->header = $header;
+        $make->data = $data;
+        $make->filename = $filename;
+        return $make;
     }
 
     public function view()
