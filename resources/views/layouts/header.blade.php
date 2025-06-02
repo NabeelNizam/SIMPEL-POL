@@ -14,7 +14,7 @@
             <i class="fas fa-bell mr-2"></i>
             <div class="relative">
                 <button type="button"
-                    class="flex items-center space-x-3 bg-gray-100 hover:bg-gray-400 p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none cursor-pointer"
+                    class="flex items-center space-x-3 hover:bg-gray-400 p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none cursor-pointer"
                     id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
                     data-dropdown-placement="bottom">   
                     <img class="w-8 h-8 rounded-full border border-gray-300"
