@@ -87,6 +87,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['authorize:ADMIN']], functio
         Route::delete('/{id}/remove_ajax', [FasilitasController::class, 'remove_ajax'])->name('admin.fasilitas.delete_ajax');
         Route::get('/get-lantai/{id_gedung}', [FasilitasController::class, 'getLantai']);
         Route::get('/get-ruangan/{id_lantai}', [FasilitasController::class, 'getRuangan']);
+        Route::get('/export-excel', [FasilitasController::class, 'export_excel'])->name('admin.fasilitas.export_excel');
+        Route::get('/export-pdf', [FasilitasController::class, 'export_pdf'])->name('admin.fasilitas.export_pdf');
     });
     Route::prefix('aduan')->group(function () {
         Route::get('/', [AduanController::class, 'index'])->name('admin.aduan');

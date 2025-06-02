@@ -72,10 +72,24 @@
         .border-all td {
             border: 1px solid;
         }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            text-align: center;
+        }
+
+        .pagenum:before {
+            content: counter(page);
+        }
     </style>
 </head>
 
 <body>
+    {{-- <img id='pdf-watermark' src="{{ public_path('img/pdf-watermark.svg') }}" alt=""> --}}
 
     <table class="border-bottom-header">
         <tr>
@@ -103,28 +117,30 @@
     </table>
     <br>
     <h3 class="font-medium text-center">{{ $title }}</h1>
-    <p>{{ $text }}</p>
+        <p>{{ $text }}</p>
 
-    <table class="border-all">
-        <thead>
-            <tr>
-                @foreach ($header as $col)
-                    <th>{{ $col }}</th>
-                @endforeach
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($data as $row)
+        <table class="border-all">
+            <thead>
                 <tr>
-                    @foreach ($row as $cell)
-                        <td>{{ $cell }}</td>
+                    @foreach ($header as $col)
+                        <th>{{ $col }}</th>
                     @endforeach
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    <p>{{ $footer }}</p>
+            </thead>
+            <tbody>
+                @foreach ($data as $row)
+                    <tr>
+                        @foreach ($row as $cell)
+                            <td>{{ $cell }}</td>
+                        @endforeach
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <footer>
+            <br class="p-1">
+            <span class="pagenum"></span> - {{ $footer }}
+        </footer>
 
 </body>
 
