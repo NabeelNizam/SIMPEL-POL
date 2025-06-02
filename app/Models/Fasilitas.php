@@ -33,4 +33,12 @@ class Fasilitas extends Model
     {
         return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
     }
+    public function getLokasiString(): string
+    {
+        $ruangan = $this->ruangan;
+        if ($ruangan) {
+            return "{$ruangan->nama_ruangan}, {$ruangan->lantai->nama_lantai}, {$ruangan->lantai->gedung->nama_gedung}";
+        }
+        return 'Lokasi tidak diketahui';
+    }
 }

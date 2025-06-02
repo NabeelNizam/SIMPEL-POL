@@ -118,7 +118,7 @@
         @elseif(Auth::user()->id_role == 3) {{-- Teknisi --}}
             <div class="h-full overflow-y-auto">
                 <nav class="p-4 space-y-4 text-sm text-gray-700">
-                    <a href="teknisi/dashboard"
+                    <a href="{{ route('teknisi.dashboard') }}"
                     class="flex items-center p-2 w-full {{ ($activeMenu == 'home') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                     style="{{ ($activeMenu == 'home') ? 'border-color: #F99D1C;' : '' }}">
                         <img src="{{ ($activeMenu == 'home') ? asset('icons/solid/Home.svg') : asset('icons/light/Home.svg') }}"
