@@ -11,7 +11,27 @@ use Illuminate\Support\Facades\Storage;
 
 class SarprasController extends Controller
 {
-   public function index()
+    public function index()
+    {
+        $breadcrumb = (object) [
+            'title' => 'Dashboard',
+            'list' => ['Home', 'Dashboard']
+        ];
+
+        $page = (object) [
+            'title' => 'Beranda Sarana Prasarana'
+        ];
+
+        $activeMenu = 'home';
+
+        return view('sarpras.dashboard', [
+            'breadcrumb' => $breadcrumb, 
+            'page' => $page, 
+            'activeMenu' => $activeMenu
+        ]);
+    }
+    
+    public function bobot()
     {
         $breadcrumb = (object) [
             'title' => 'Dashboard Sarana Prasarana',
@@ -27,5 +47,4 @@ class SarprasController extends Controller
 
         return view('sarpras.dashboard', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
     }
-
 }

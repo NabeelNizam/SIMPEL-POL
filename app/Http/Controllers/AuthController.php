@@ -52,6 +52,10 @@ public function postMasuk(Request $request)
             $redirectUrl = url('/');
             if ($role == 'ADMIN') {
                 $redirectUrl = url('/admin');
+            }  elseif($role == 'SARPRAS'){
+                $redirectUrl = url('/sarpras');
+            }  elseif($role == 'TEKNISI'){
+                $redirectUrl = url('/teknisi');
             } elseif (in_array($role, ['MAHASISWA', 'DOSEN', 'TENDIK'])) {
                 $redirectUrl = url('/user');
             }elseif ($role == 'TEKNISI') {

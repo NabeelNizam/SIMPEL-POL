@@ -15,6 +15,11 @@ class Fasilitas extends Model
     protected $guarded = ['id_fasilitas'];
     protected $primaryKey = 'id_fasilitas';
 
+    public function aduan()
+    {
+        return $this->hasMany(Aduan::class, 'id_fasilitas');
+    }
+    
     public function ruangan()
     {
         return $this->belongsTo(Ruangan::class, 'id_ruangan', 'id_ruangan');

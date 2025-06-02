@@ -9,6 +9,7 @@ use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\GedungController;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\PerbaikanController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\RiwayatMahasiswaController;
 use App\Http\Controllers\RiwayatTeknisiController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SarprasController;
 use App\Http\Controllers\TeknisiController;
 use App\Http\Controllers\WelcomeController;
+use App\Models\Fasilitas;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -116,13 +118,13 @@ Route::prefix('form')->group(function () {
     Route::get('/{id}/edit_ajax', [FormPelaporanController::class, 'edit_ajax'])->name('mahasiswa.form.edit_ajax');
     Route::post('/{id}/edit_ajax', [FormPelaporanController::class, 'update_ajax'])->name('mahasiswa.form.update_ajax');
 });
+
 // routes riwayat
 Route::prefix('riwayat')->group(function () {
     Route::get('/', [RiwayatMahasiswaController::class, 'index'])->name('mahasiswa.riwayat');
     Route::get('/{id}/show_ajax', [RiwayatMahasiswaController::class, 'show_ajax'])->name('mahasiswa.riwayat.show_ajax');
     Route::get('/{id}/edit_ajax', [RiwayatMahasiswaController::class, 'edit_ajax'])->name('mahasiswa.riwayat.edit_ajax');
 });
-
 
 Route::group(['prefix' => 'teknisi', 'middleware' => ['authorize:TEKNISI']], function () {
     Route::get('/', [TeknisiController::class, 'index'])->name('teknisi.dashboard');
@@ -142,4 +144,9 @@ Route::group(['prefix' => 'sarpras', 'middleware' => ['authorize:SARPRAS']], fun
         Route::get('/', [RiwayatTeknisiController::class, 'index'])->name('sarpras.perbaikan');
         Route::get('/{id}/show_ajax', [RiwayatTeknisiController::class, 'show_ajax'])->name('sarpras.perbaikan.show_ajax');
     });
+    Route::get('/pengaduan', [AduanController::class, 'pengaduan'])->name('sarpras.pengaduan');
+    Route::get('/pengaduan/{id}/detail_pengaduan', [AduanController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
+    Route::get('/penugasan', [FasilitasController::class, 'penugasan']);
+    Route::get('/perbaikan', [PerbaikanController::class, 'perbaikan']);
+    Route::get('/perbaikan', [PerbaikanController::class, 'riwayat']);
 });
