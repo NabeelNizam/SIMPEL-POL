@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Perbaikan;
 use App\Models\Periode;
 use Illuminate\Http\Request;
@@ -27,5 +26,4 @@ class SarprasController extends Controller
 
         return view('sarpras.dashboard', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
     }
-
 }
