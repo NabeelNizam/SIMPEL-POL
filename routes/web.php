@@ -9,11 +9,13 @@ use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\GedungController;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\PerbaikanController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\RiwayatMahasiswaController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SarprasController;
 use App\Http\Controllers\WelcomeController;
+use App\Models\Fasilitas;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -97,10 +99,6 @@ Route::group(['prefix' => 'user', 'middleware' => ['authorize:MAHASISWA|DOSEN|TE
     // Routes dashboard
     Route::get('/', [MahasiswaController::class, 'index'])->name('dashboard.mahasiswa');
 });
-Route::group(['prefix' => 'sarpras', 'middleware' => ['authorize:SARPRAS']], function () {
-    // Routes dashboard
-    Route::get('/', [SarprasController::class, 'index'])->name('dashboard.sarpras');
-});
 Route::group(['prefix' => 'profil', 'middleware' => ['auth']], function () {
     Route::get('/', [ProfilController::class, 'index'])->name('profil');
     Route::get('/edit_ajax', [ProfilController::class, 'edit_ajax'])->name('profil.edit_ajax');
@@ -116,6 +114,7 @@ Route::prefix('form')->group(function () {
     Route::get('/{id}/edit_ajax', [FormPelaporanController::class, 'edit_ajax'])->name('mahasiswa.form.edit_ajax');
     Route::post('/{id}/edit_ajax', [FormPelaporanController::class, 'update_ajax'])->name('mahasiswa.form.update_ajax');
 });
+
 // routes riwayat
 Route::prefix('riwayat')->group(function () {
     Route::get('/', [RiwayatMahasiswaController::class, 'index'])->name('mahasiswa.riwayat');
@@ -126,10 +125,16 @@ Route::prefix('riwayat')->group(function () {
 //Sarpras
 Route::middleware(['authorize:SARPRAS'])->group(function () {
     Route::prefix('sarpras')->group(function () {
+        Route::get('/', [SarprasController::class, 'index']);
         Route::get('/bobot', [SarprasController::class, 'bobot']);
     });
-
+    
     Route::prefix('kriteria')->group(function () {
         Route::post('/list', [KriteriaController::class, 'list']);
     });
+    Route::get('/pengaduan', [AduanController::class, 'pengaduan'])->name('sarpras.pengaduan');
+    Route::get('/pengaduan/{id}/detail_pengaduan', [AduanController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
+    Route::get('/penugasan', [FasilitasController::class, 'penugasan']);
+    Route::get('/perbaikan', [PerbaikanController::class, 'perbaikan']);
+    Route::get('/perbaikan', [PerbaikanController::class, 'riwayat']);
 });
