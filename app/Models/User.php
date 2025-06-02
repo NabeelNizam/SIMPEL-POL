@@ -82,6 +82,12 @@ class User extends Authenticatable
     }
 
     protected $appends = ['identifier'];
+    public function getIdentifier()
+    {
+        return $this->hasRole('MAHASISWA')
+            ? $this->mahasiswa?->nim
+            : $this->pegawai?->nip;
+    }
 
     public function getIdentifierAttribute()
     {

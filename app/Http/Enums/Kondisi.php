@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Http\Enums;
-enum Kondisi:string{
-    case BAIK = 'BAIK';
+
+enum Kondisi: string
+{
+    case LAYAK = 'LAYAK';
     case RUSAK = 'RUSAK';
-    case RUSAK_BERAT= 'RUSAK BERAT';
 }
