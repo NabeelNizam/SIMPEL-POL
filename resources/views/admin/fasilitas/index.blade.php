@@ -5,13 +5,13 @@
     <div class="flex items-center justify-between mb-4">
         <span class="text-sm text-gray-700">Daftar Fasilitas yang terdaftar dalam sistem</span>
         <div class="flex gap-2">
-            <button onclick="modalAction('{{ route('admin.fasilitas.import_ajax') }}')" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900 cursor-pointer">
+            <button onclick="modalAction('{{ route('admin.fasilitas.import') }}')" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900 cursor-pointer">
                 <i class="fas fa-file-import"></i> Import
             </button>
-            <a href="#" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
+            <a href="{{ route('admin.fasilitas.export_excel') }}" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
                 <i class="fas fa-file-excel"></i> Ekspor Excel
             </a>
-            <a href="#" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
+            <a href="{{ route('admin.fasilitas.export_pdf') }}" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
                 <i class="fas fa-file-pdf"></i> Ekspor PDF
             </a>
             <button onclick="modalAction('{{ route('admin.fasilitas.create') }}')" class="cursor-pointer bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-green-700">
@@ -25,7 +25,7 @@
     <!-- Filter Kategori -->
     <div class="flex items-center gap-2">
         <label for="id_kategori" class="text-sm font-medium text-gray-700">Filter Kategori:</label>
-        <select id="id_kategori" name="id_kategori" class="w-48 border border-gray-300 rounded-md shadow-sm sm:text-sm">
+        <select id="id_kategori" name="id_kategori" class="cursor-pointer w-48 border border-gray-300 rounded-md shadow-sm sm:text-sm">
             <option value="">Semua Kategori</option>
             @foreach ($kategori as $k)
                 <option value="{{ $k->id_kategori }}" {{ request('id_kategori') == $k->id_kategori ? 'selected' : '' }}>{{ $k->nama_kategori }}</option>
@@ -36,7 +36,7 @@
     <!-- Filter Gedung -->
     <div class="flex items-center gap-2">
         <label for="id_gedung" class="text-sm font-medium text-gray-700">Filter Gedung:</label>
-        <select id="id_gedung" name="id_gedung" class="w-48 border border-gray-300 rounded-md shadow-sm sm:text-sm">
+        <select id="id_gedung" name="id_gedung" class="cursor-pointer w-48 border border-gray-300 rounded-md shadow-sm sm:text-sm">
             <option value="">Semua Gedung</option>
             @foreach ($gedung as $g)
                 <option value="{{ $g->id_gedung }}" {{ request('id_gedung') == $g->id_gedung ? 'selected' : '' }}>{{ $g->nama_gedung }}</option>
@@ -47,7 +47,7 @@
     <!-- Filter Kondisi -->
     <div class="flex items-center gap-2">
         <label for="kondisi" class="text-sm font-medium text-gray-700">Filter Kondisi:</label>
-        <select id="kondisi" name="kondisi" class="w-48 border border-gray-300 rounded-md shadow-sm sm:text-sm">
+        <select id="kondisi" name="kondisi" class="cursor-pointer w-48 border border-gray-300 rounded-md shadow-sm sm:text-sm">
             <option value="">Semua Kondisi</option>
             @foreach ($kondisi as $k)
                 <option value="{{ $k->value }}" {{ request('kondisi') == $k->value ? 'selected' : '' }}>{{ $k->value }}</option>
@@ -57,7 +57,7 @@
 
     <!-- Tombol Submit -->
     <div class="flex items-center gap-2">
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-700">Terapkan Filter</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-700 cursor-pointer">Terapkan Filter</button>
     </div>
 </form>
 

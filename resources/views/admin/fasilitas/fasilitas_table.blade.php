@@ -17,24 +17,26 @@
                 <x-table.cell>{{ $f->nama_fasilitas }}</x-table.cell>
                 <x-table.cell>{{ $f->kategori->nama_kategori ?? '-' }}</x-table.cell>
                 <x-table.cell>{{ $f->ruangan->nama_ruangan . 
-                    ', lantai '. $f->ruangan->lantai->nama_lantai . 
-                    ', Gedung ' . $f->ruangan->lantai->gedung->nama_gedung 
+                    ', '. $f->ruangan->lantai->nama_lantai . 
+                    ', ' . $f->ruangan->lantai->gedung->nama_gedung 
                     ?? '-' }}</x-table.cell>
                 <x-table.cell>
-                    <span class="px-2 py-1 rounded text-white w-full text-center {{ $f->kondisi->value === 'LAYAK' ? 'bg-green-500' : 'bg-red-500' }}">
+                    <span class="block w-full text-center px-2 py-1 rounded text-white {{ $f->kondisi->value === 'LAYAK' ? 'bg-green-500' : 'bg-red-500' }}">
                         {{ Str::ucfirst(Str::lower($f->kondisi->value)) }}
                     </span>
                 </x-table.cell>
                 <x-table.cell>
-                    <button onclick="modalAction('{{ route('admin.fasilitas.show_ajax', $f->id_fasilitas) }}')" class="cursor-pointer text-blue-600 hover:underline text-sm">
-                        <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
-                    </button>
-                    <button onclick="modalAction('{{ route('admin.fasilitas.edit_ajax', $f->id_fasilitas) }}')" class="cursor-pointer text-blue-600 hover:underline text-sm ml-2">
-                        <img src="{{ asset('icons/solid/Edit.svg') }}" alt="" class="h-7 w-7 inline">
-                    </button>
-                    <button onclick="removeFasilitas('{{ $f->id_fasilitas }}')" class="cursor-pointer text-red-600 hover:underline text-sm ml-2">
-                        <img src="{{ asset('icons/solid/Delete.svg') }}" alt="" class="h-7 w-7 inline">
-                    </button>
+                    <div class="flex items-center space-x-2 min-w-[120px]">
+                        <button onclick="modalAction('{{ route('admin.fasilitas.show', $f->id_fasilitas) }}')" class="cursor-pointer text-blue-600 hover:underline text-sm">
+                            <img src="{{ asset('icons/solid/Detail.svg') }}" alt="Detail" class="h-7 w-7 min-h-[29px] min-w-[29px]">
+                        </button>
+                        <button onclick="modalAction('{{ route('admin.fasilitas.edit', $f->id_fasilitas) }}')" class="cursor-pointer text-blue-600 hover:underline text-sm">
+                            <img src="{{ asset('icons/solid/Edit.svg') }}" alt="Edit" class="h-7 w-7 min-h-[29px] min-w-[29px]">
+                        </button>
+                        <button onclick="modalAction('{{ route('admin.fasilitas.confirm', $f->id_fasilitas) }}')" class="cursor-pointer text-red-600 hover:underline text-sm">
+                            <img src="{{ asset('icons/solid/Delete.svg') }}" alt="Delete" class="h-7 w-7 min-h-[29px] min-w-[29px]">
+                        </button>
+                    </div>
                 </x-table.cell>
             </x-table.row>
         @empty
