@@ -81,6 +81,11 @@ class User extends Authenticatable
         return $this->hasOne(Pegawai::class, 'id_user', 'id_user');
     }
 
+    public function aduan()
+    {
+        return $this->hasMany(Aduan::class, 'id_user_pelapor', 'id_user');
+    }
+
     protected $appends = ['identifier'];
 
     public function getIdentifierAttribute()
