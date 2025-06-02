@@ -10,7 +10,10 @@ use App\Http\Controllers\GedungController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\RiwayatMahasiswaController;
+use App\Http\Controllers\RiwayatTeknisiController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SarprasController;
+use App\Http\Controllers\TeknisiController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -113,3 +116,22 @@ Route::group(['prefix' => 'profil', 'middleware' => ['auth']], function () {
         Route::get('/{id}/show_ajax', [RiwayatMahasiswaController::class, 'show_ajax'])->name('mahasiswa.riwayat.show_ajax');
         Route::get('/{id}/edit_ajax', [RiwayatMahasiswaController::class, 'edit_ajax'])->name('mahasiswa.riwayat.edit_ajax');
     });
+
+
+Route::group(['prefix' => 'teknisi', 'middleware' => ['authorize:TEKNISI']], function () {
+    Route::get('/', [TeknisiController::class, 'index'])->name('teknisi.dashboard');
+
+    Route::prefix('riwayat')->group(function () {
+        Route::get('/', [RiwayatTeknisiController::class, 'index'])->name('teknisi.riwayat');
+        Route::get('/{id}/show_ajax', [RiwayatTeknisiController::class, 'show_ajax'])->name('teknisi.riwayat.show_ajax');
+    });
+}); 
+
+Route::group(['prefix' => 'sarpras', 'middleware' => ['authorize:SARPRAS']], function () {
+    Route::get('/', [SarprasController::class, 'index'])->name('sarpras.dashboard');
+
+    Route::prefix('perbaikan')->group(function () {
+        Route::get('/', [RiwayatTeknisiController::class, 'index'])->name('sarpras.perbaikan');
+        Route::get('/{id}/show_ajax', [RiwayatTeknisiController::class, 'show_ajax'])->name('sarpras.perbaikan.show_ajax');
+    });
+}); 

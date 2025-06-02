@@ -56,6 +56,8 @@ public function postMasuk(Request $request)
                 $redirectUrl = url('/user');
             }elseif ($role == 'TEKNISI') {
                 $redirectUrl = url('/teknisi');
+            }elseif ($role == 'SARPRAS') {
+                $redirectUrl = url('/sarpras');
             }
 
             return response()->json([

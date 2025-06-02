@@ -38,7 +38,7 @@
         <span id="ruangan-error" class="text-xs text-red-500 mt-1 error-text"></span>
     </div>
 
-    <div>
+    <div class="col-span-2">
         <label class="block text-sm font-medium mb-1">Nama Fasilitas <span class="text-red-500">*</span></label>
         <select name="fasilitas" id="fasilitas" class="w-full border rounded-md px-3 py-2 text-sm" disabled>
             <option value="">Pilih fasilitas</option>
