@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Http\Enums\Kondisi;
 use App\Http\Enums\Urgensi;
+use App\Models\Aduan;
 use App\Models\Fasilitas;
 use App\Models\Perbaikan;
 use App\Models\Ruangan;
@@ -28,7 +29,7 @@ class FasilitasFactory extends Factory
             'kode_fasilitas' => substr($random, 0, 2). fake()->numerify('##'),
             'deskripsi' => fake()->sentence(5),
             'id_kategori' => fake()->randomElement([1, 2, 3]),
-            'kondisi' => Kondisi::BAIK,
+            'kondisi' => Kondisi::LAYAK,
             'urgensi' => Urgensi::BIASA,
             'foto_fasilitas' => fake()->image(),
             'id_periode' => 1
@@ -37,7 +38,8 @@ class FasilitasFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (Fasilitas $fasilitas) {
-            Perbaikan::factory()->create(['id_fasilitas' => $fasilitas->id_fasilitas]);
+            Perbaikan::factory()->count(10)->create(['id_fasilitas' => $fasilitas->id_fasilitas]);
+            Aduan::factory()->create(['id_fasilitas' => $fasilitas->id_fasilitas]);
         });
     }
 }
