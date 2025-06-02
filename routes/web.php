@@ -105,14 +105,12 @@ Route::group(['prefix' => 'profil', 'middleware' => ['auth']], function () {
     Route::get('/edit_ajax', [ProfilController::class, 'edit_ajax'])->name('profil.edit_ajax');
     Route::put('/{id}/update_ajax', [ProfilController::class, 'update_ajax']);
 });
+
 Route::get('/sop/download/{filename}', [MahasiswaController::class, 'SOPdownload'])->name('download.sop');
 // routes form
 Route::prefix('form')->group(function () {
     Route::get('/', [FormPelaporanController::class, 'index'])->name('mahasiswa.form');
-     Route::get('/create', [FormPelaporanController::class, 'create_ajax'])->name('mahasiswa.form.create_ajax');
-        Route::get('/form/get-lantai', [FormPelaporanController::class, 'getLantai'])->name('mahasiswa.form.get_lantai');
-        Route::get('/form/get-ruangan', [FormPelaporanController::class, 'getRuangan'])->name('mahasiswa.form.get_ruangan');
-        Route::get('/form/get-fasilitas', [FormPelaporanController::class, 'getFasilitas'])->name('mahasiswa.form.get_fasilitas');
+    Route::get('/create', [FormPelaporanController::class, 'create'])->name('mahasiswa.form.create_ajax');
     Route::post('/store', [FormPelaporanController::class, 'store'])->name('mahasiswa.form.store_ajax');
     Route::get('/{id}/show_ajax', [FormPelaporanController::class, 'show_ajax'])->name('mahasiswa.form.show_ajax');
     Route::get('/{id}/edit_ajax', [FormPelaporanController::class, 'edit_ajax'])->name('mahasiswa.form.edit_ajax');
@@ -125,6 +123,33 @@ Route::prefix('riwayat')->group(function () {
     Route::get('/{id}/edit_ajax', [RiwayatMahasiswaController::class, 'edit_ajax'])->name('mahasiswa.riwayat.edit_ajax');
 });
 
+//Sarpras
+Route::middleware(['authorize:SARPRAS'])->group(function () {
+    Route::prefix('sarpras')->group(function () {
+        Route::get('/bobot', [SarprasController::class, 'bobot']);
+    Route::get('/sop/download/{filename}', [MahasiswaController::class, 'SOPdownload'])->name('download.sop');
+    // routes form
+    Route::prefix('form')->group(function () {
+        Route::get('/', [FormPelaporanController::class, 'index'])->name('mahasiswa.form');
+        Route::get('/create', [FormPelaporanController::class, 'create_ajax'])->name('mahasiswa.form.create_ajax');
+        Route::get('/form/get-lantai', [FormPelaporanController::class, 'getLantai'])->name('mahasiswa.form.get_lantai');
+        Route::get('/form/get-ruangan', [FormPelaporanController::class, 'getRuangan'])->name('mahasiswa.form.get_ruangan');
+        Route::get('/form/get-fasilitas', [FormPelaporanController::class, 'getFasilitas'])->name('mahasiswa.form.get_fasilitas');
+        Route::post('/store', [FormPelaporanController::class, 'store'])->name('mahasiswa.form.store_ajax');
+        Route::get('/{id}/show_ajax', [FormPelaporanController::class, 'show_ajax'])->name('mahasiswa.form.show_ajax');
+        Route::get('/{id}/edit_ajax', [FormPelaporanController::class, 'edit_ajax'])->name('mahasiswa.form.edit_ajax');
+        Route::post('/{id}/edit_ajax', [FormPelaporanController::class, 'update_ajax'])->name('mahasiswa.form.update_ajax');
+
+    });
+
+    Route::prefix('kriteria')->group(function () {
+        Route::post('/list', [KriteriaController::class, 'list']);
+    });
+
+});
+
+
+
 Route::group(['prefix' => 'teknisi', 'middleware' => ['authorize:TEKNISI']], function () {
     Route::get('/', [TeknisiController::class, 'index'])->name('teknisi.dashboard');
 
@@ -132,7 +157,7 @@ Route::group(['prefix' => 'teknisi', 'middleware' => ['authorize:TEKNISI']], fun
         Route::get('/', [RiwayatTeknisiController::class, 'index'])->name('teknisi.riwayat');
         Route::get('/{id}/show_ajax', [RiwayatTeknisiController::class, 'show_ajax'])->name('teknisi.riwayat.show_ajax');
     });
-}); 
+});
 
 Route::group(['prefix' => 'sarpras', 'middleware' => ['authorize:SARPRAS']], function () {
     Route::get('/', [SarprasController::class, 'index'])->name('sarpras.dashboard');
@@ -152,3 +177,4 @@ Route::group(['prefix' => 'sarpras', 'middleware' => ['authorize:SARPRAS']], fun
         Route::get('/{id}/show_ajax', [PerbaikanSarprasController::class, 'show_ajax'])->name('sarpras.perbaikan.show_ajax');
     });
 }); 
+
