@@ -206,7 +206,7 @@ class FasilitasController extends Controller
                 'header' => $headers,
                 'data' => $data,
                 'filename' => 'data_fasilitas' . date('Y-m-d_H-i-s'),
-                'is_landscape' => true, // Mengatur orientasi kertas menjadi landscape
+                'is_landscape' => false, // Mengatur orientasi kertas menjadi landscape
             ]
         );
         return $sheet->toPdf();
