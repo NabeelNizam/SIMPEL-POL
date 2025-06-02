@@ -8,6 +8,7 @@ use App\Http\Controllers\FormPelaporanController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\GedungController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\RiwayatMahasiswaController;
 use App\Http\Controllers\RoleController;
@@ -84,6 +85,16 @@ Route::group(['prefix' => 'admin', 'middleware' => ['authorize:ADMIN']], functio
         Route::get('/{id}/comment_ajax', [AduanController::class, 'comment_ajax'])->name('admin.aduan.comment_ajax');
         Route::get('/ekspor_pdf', [AduanController::class, 'ekspor_pdf'])->name('admin.aduan.ekspor_pdf');
         Route::get('/ekspor_excel', [AduanController::class, 'ekspor_excel'])->name('admin.aduan.ekspor_excel');
+    });
+    Route::prefix('periode')->group(function(){
+        Route::get('/', [PeriodeController::class, 'index'])->name('admin.periode');
+        Route::get('/create', [PeriodeController::class, 'create_ajax'])->name('admin.periode.create_ajax');
+        Route::post('/store', [PeriodeController::class, 'store_ajax'])->name('admin.periode.store_ajax');
+        Route::get('/{periode}/show_ajax', [PeriodeController::class, 'show_ajax'])->name('admin.periode.show_ajax');
+        Route::get('/{periode}/edit_ajax', [PeriodeController::class, 'edit_ajax'])->name('admin.periode.edit_ajax');
+        Route::put('/{periode}/edit_ajax', [PeriodeController::class, 'update_ajax'])->name('admin.periode.update_ajax');
+        Route::get('/{periode}/confirm_ajax', [PeriodeController::class, 'confirm_ajax'])->name('admin.periode.confirm_ajax');
+        Route::delete('/{periode}/remove_ajax', [PeriodeController::class, 'remove_ajax'])->name('admin.periode.delete_ajax');
     });
 });
 Route::group(['prefix' => 'user', 'middleware' => ['authorize:MAHASISWA|DOSEN|TENDIK']], function () {
