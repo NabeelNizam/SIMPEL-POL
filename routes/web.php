@@ -9,6 +9,7 @@ use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\GedungController;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\PerbaikanSarprasController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\RiwayatMahasiswaController;
 use App\Http\Controllers\RiwayatTeknisiController;
@@ -124,18 +125,6 @@ Route::prefix('riwayat')->group(function () {
     Route::get('/{id}/edit_ajax', [RiwayatMahasiswaController::class, 'edit_ajax'])->name('mahasiswa.riwayat.edit_ajax');
 });
 
-//Sarpras
-Route::middleware(['authorize:SARPRAS'])->group(function () {
-    Route::prefix('sarpras')->group(function () {
-        Route::get('/bobot', [SarprasController::class, 'bobot']);
-    });
-
-    Route::prefix('kriteria')->group(function () {
-        Route::post('/list', [KriteriaController::class, 'list']);
-    });
-});
-
-
 Route::group(['prefix' => 'teknisi', 'middleware' => ['authorize:TEKNISI']], function () {
     Route::get('/', [TeknisiController::class, 'index'])->name('teknisi.dashboard');
 
@@ -147,9 +136,19 @@ Route::group(['prefix' => 'teknisi', 'middleware' => ['authorize:TEKNISI']], fun
 
 Route::group(['prefix' => 'sarpras', 'middleware' => ['authorize:SARPRAS']], function () {
     Route::get('/', [SarprasController::class, 'index'])->name('sarpras.dashboard');
+    Route::get('/sop/download/{filename}', [SarprasController::class, 'SOPDownload'])->name('download.sop');
+
+
+    Route::prefix('bobot')->group(function () {
+        Route::get('/', [BobotSarprasController::class, 'bobot']);
+    });
+
+    Route::prefix('kriteria')->group(function () {
+        Route::post('/list', [KriteriaController::class, 'list']);
+    });
 
     Route::prefix('perbaikan')->group(function () {
-        Route::get('/', [RiwayatTeknisiController::class, 'index'])->name('sarpras.perbaikan');
-        Route::get('/{id}/show_ajax', [RiwayatTeknisiController::class, 'show_ajax'])->name('sarpras.perbaikan.show_ajax');
+        Route::get('/', [PerbaikanSarprasController::class, 'index'])->name('sarpras.perbaikan');
+        Route::get('/{id}/show_ajax', [PerbaikanSarprasController::class, 'show_ajax'])->name('sarpras.perbaikan.show_ajax');
     });
 }); 

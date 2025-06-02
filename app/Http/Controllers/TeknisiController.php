@@ -9,7 +9,7 @@ class TeknisiController extends Controller
     public function index()
     {
         $breadcrumb = (object) [
-            'title' => 'Dashboard Admin',
+            'title' => 'Dashboard Teknisi',
             'list' => ['Home', 'dashboard']
         ];
 
