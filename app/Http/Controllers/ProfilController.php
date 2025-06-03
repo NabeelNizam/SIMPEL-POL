@@ -71,14 +71,14 @@ class ProfilController extends Controller
             $pegawai = Pegawai::where('id_user', $id)->first();
             $rules['identifier'] = 'required|string|min:10|max:50|unique:pegawai,nip,' . ($pegawai->id_pegawai ?? 'NULL') . ',id_pegawai';
         }
-        
+
 
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'message' => 'Input Anda Gagal diValidasi.'
             ], 422);
         }
 
@@ -95,9 +95,12 @@ class ProfilController extends Controller
 
             // Proses upload gambar
             if ($request->hasFile('fotoprofil')) {
+                if ($user->foto_profil && file_exists(public_path($user->foto_profil))) {
+                    @unlink(public_path($user->foto_profil));
+                }
                 $file = $request->file('fotoprofil');
                 $filename = time() . '_' . $file->getClientOriginalName();
-                $path = $file->storeAs('uploads/foto_profil', $filename, 'public');
+                $path = $file->storeAs('uploads/img/foto_profil', $filename, 'public');
                 $user->foto_profil = 'storage/' . $path; // simpan path akses publik
             }
 

@@ -16,14 +16,31 @@ class Sheet
     public array $data; // Data yang akan ditampilkan di sheet, biasanya berupa array dari array
     public string $filename;    // Nama file yang akan digunakan saat mengunduh sheet
 
-    public function __construct(array $params)
+    public bool $is_landscape; // Untuk menentukan orientasi kertas, defaultnya portrait
+    public function __construct()
     {
-        $this->title    = $params['title'] ?? 'Untitled';
-        $this->text     = $params['text'] ?? '';
-        $this->footer   = $params['footer'] ?? '';
-        $this->header   = $params['header'] ?? [];
-        $this->data     = $params['data'] ?? [];
-        $this->filename = $params['filename'] ?? 'no name';
+        $this->is_landscape = false; // Default orientasi kertas adalah portrait
+    }
+
+    public static function make(array $params): self
+    {
+        $title    = $params['title'] ?? 'Untitled';
+        $text     = $params['text'] ?? '';
+        $footer   = $params['footer'] ?? '';
+        $header   = $params['header'] ?? [];
+        $data     = $params['data'] ?? [];
+        $filename = $params['filename'] ?? 'no name';
+        $is_landscape = $params['is_landscape'] ?? false;
+
+        $make = new self();
+        $make->title = $title;
+        $make->text = $text;
+        $make->footer = $footer;
+        $make->header = $header;
+        $make->data = $data;
+        $make->filename = $filename;
+        $make->is_landscape = $is_landscape;
+        return $make;
     }
 
     public function view()
@@ -39,7 +56,7 @@ class Sheet
     public function toPdf()
     {
         $pdf = Pdf::loadHTML($this->view()->render());
-        $pdf->setPaper('A4', 'portrait');
+        $pdf->setPaper('A4', $this->is_landscape ? 'landscape' : 'portrait');
         $pdf->setOption('isRemoteEnabled', true);
         $pdf->render();
 

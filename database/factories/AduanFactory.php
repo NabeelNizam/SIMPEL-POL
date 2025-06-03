@@ -20,13 +20,14 @@ class AduanFactory extends Factory
      */
     public function definition(): array
     {
+        $numbers = [1, 5, 6];
         return [
             'tanggal_aduan' => fake()->date(),
             'deskripsi' => fake()->sentence(5),
             'status' => 'MENUNGGU_DIPROSES',
             'bukti_foto' => 'bukti_foto.jpg',
             'id_fasilitas' => rand(1, 3),
-            'id_user_pelapor' => rand(4, 5),
+            'id_user_pelapor' => $numbers[array_rand($numbers)],
             'id_periode' => 1,
             'id_perbaikan' => 1
         ];

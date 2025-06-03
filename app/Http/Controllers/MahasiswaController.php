@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Aduan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -9,11 +10,11 @@ use Illuminate\Support\Facades\Storage;
 
 class MahasiswaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $breadcrumb = (object) [
             'title' => 'Dashboard',
-            'list' => ['Home']
+            'list' => ['Home', 'Dashboard']
         ];
 
         $page = (object) [
@@ -22,10 +23,38 @@ class MahasiswaController extends Controller
 
         $activeMenu = 'home';
 
+        // query untuk aduan
+        $query = Aduan::with(['pelapor', 'fasilitas.kategori', 'fasilitas.ruangan'])
+            ->where('id_user_pelapor', auth()->user()->id_user);
+
+        // Filter berdasarkan pencarian
+        if ($request->search) {
+            $query->whereHas('fasilitas', function ($q) use ($request) {
+                $q->where('nama_fasilitas', 'like', "%{$request->search}%");
+            });
+        }
+
+        // Sorting
+        $sortColumn = $request->sort_column ?? 'tanggal_aduan';
+        $sortDirection = $request->sort_direction ?? 'desc';
+        $query->orderBy($sortColumn, $sortDirection);
+
+        // Pagination
+        $perPage = $request->input('per_page', 10);
+        $aduan = $query->paginate($perPage);
+
+        $aduan->appends(request()->query());
+
+        if ($request->ajax()) {
+            $html = view('mahasiswa.dashboard_card', compact('aduan'))->render();
+            return response()->json(['html' => $html]);
+        }
+
         return view('mahasiswa.dashboard', [
             'breadcrumb' => $breadcrumb, 
             'page' => $page, 
-            'activeMenu' => $activeMenu
+            'activeMenu' => $activeMenu,
+            'aduan'=> $aduan
         ]);
     }
 

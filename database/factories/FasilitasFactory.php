@@ -38,7 +38,7 @@ class FasilitasFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (Fasilitas $fasilitas) {
-            Perbaikan::factory()->create(['id_fasilitas' => $fasilitas->id_fasilitas]);
+            Perbaikan::factory()->count(10)->create(['id_fasilitas' => $fasilitas->id_fasilitas]);
             Aduan::factory()->create(['id_fasilitas' => $fasilitas->id_fasilitas]);
         });
     }

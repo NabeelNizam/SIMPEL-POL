@@ -22,8 +22,8 @@
             <!-- Gambar -->
             <div class="flex justify-center">
                 <div class="bg-gray-100 p-4 rounded-lg shadow-sm">
-                    @if($aduan->foto)
-                        <img src="{{ asset('storage/' . $aduan->foto) }}" alt="Foto Aduan"
+                    @if($aduan->bukti_foto)
+                        <img src="{{ asset('storage/' . $aduan->bukti_foto) }}" alt="Foto Aduan"
                             class="w-48 h-32 object-cover rounded-lg shadow">
                     @else
                         <img src="{{ asset('img/no-image.svg') }}" alt="No Image"
@@ -49,6 +49,11 @@
                     </p>
                 </div>
 
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Deskripsi Kerusakan</label>
+                    <p class="text-gray-700 text-sm leading-relaxed">{{ $aduan->deskripsi ?? '-' }}</p>
+                </div>
+
                 <div class="flex items-center gap-16">
                     <div>
                         <label class="block text-sm font-medium text-gray-600 mb-1">Tanggal Lapor</label>
@@ -62,11 +67,6 @@
                             {{ $aduan->perbaikan && $aduan->perbaikan->tanggal_selesai ? \Carbon\Carbon::parse($aduan->perbaikan->tanggal_selesai)->format('d/m/Y') : '-' }}
                         </p>
                     </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-1">Deskripsi Kerusakan</label>
-                    <p class="text-gray-700 text-sm leading-relaxed">{{ $aduan->deskripsi ?? '-' }}</p>
                 </div>
 
                 <div>
@@ -105,11 +105,11 @@
                 <label class="block text-sm font-medium text-gray-600 mb-2">Umpan Balik</label>
                 @if($aduan->umpan_balik && $aduan->umpan_balik->rating)
                     <div class="flex items-center space-x-1 mb-2">
-                        @for($i = 1; $i <= $a->umpan_balik->rating; $i++)
+                        @for($i = 1; $i <= $aduan->umpan_balik->rating; $i++)
                             <i class="fas fa-star text-yellow-400 text-lg"></i>
                         @endfor
                     </div>
-                    <p class="text-gray-800 font-semibold">{{ $aduan->umpan_balik->keterangan ?? '-' }}</p>
+                    <p class="text-gray-800 font-semibold">{{ $aduan->umpan_balik->komentar ?? '-' }}</p>
                 @else
                     <span class="text-gray-500">Belum ada umpan balik.</span>
                 @endif

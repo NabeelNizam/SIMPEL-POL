@@ -19,15 +19,16 @@ class Aduan extends Model
     ];
     public function pelapor()
     {
-        return $this->hasOne(User::class, 'id_user', 'id_user');
+        return $this->belongsTo(User::class, 'id_user_pelapor', 'id_user');
     }
+
     public function fasilitas()
     {
         return $this->hasOne(Fasilitas::class, 'id_fasilitas', 'id_fasilitas');
     }
     public function umpan_balik()
     {
-        return $this->hasOne(UmpanBalik::class, 'id_umpan_balik', 'id_umpan_balik');
+        return $this->hasOne(UmpanBalik::class, 'id_aduan', 'id_aduan');
     }
     public function prioritas()
     {
@@ -37,5 +38,4 @@ class Aduan extends Model
     {
         return $this->hasOne(Perbaikan::class, 'id_perbaikan', 'id_perbaikan');
     }
-
 }

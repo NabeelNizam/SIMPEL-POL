@@ -81,18 +81,18 @@
 
                             <div class="prose max-w-none text-gray-700">
                                 <p class="mb-4">
-                                    SOP Sarana Prasarana adalah panduan prosedur standar 
+                                    SOP Sarana Prasarana adalah panduan prosedur standar
                                     untuk pengelolaan, pemeliharaan, dan penggunaan fasilitas
-                                    di lingkungan Politeknik Negeri Malang. 
-                                    SOP ini bertujuan untuk memastikan proses pengelolaan 
+                                    di lingkungan Politeknik Negeri Malang.
+                                    SOP ini bertujuan untuk memastikan proses pengelolaan
                                     sarana dan prasarana berjalan efektif, efisien, dan sesuai
                                      dengan regulasi yang berlaku.
                                 </p>
 
                                 <p class="mb-4">
-                                    Seluruh staff dan mahasiswa Polinema diharapkan 
-                                    mengikuti SOP ini dalam penggunaan dan pengelolaan 
-                                    sarana prasarana kampus. Untuk mengakses dokumen SOP 
+                                    Seluruh staff dan mahasiswa Polinema diharapkan
+                                    mengikuti SOP ini dalam penggunaan dan pengelolaan
+                                    sarana prasarana kampus. Untuk mengakses dokumen SOP
                                     lengkap, silakan beralih ke tab "Dokumen SOP".
                                 </p>
                             </div>
@@ -204,7 +204,7 @@
                         'rgba(255, 205, 86, 0.5)',
                         'rgba(255, 159, 64, 0.5)',
                         'rgba(255, 99, 132, 0.5)'
-                         
+
                     ],
                     borderColor: [
                         'rgba(54, 162, 235, 1)',
