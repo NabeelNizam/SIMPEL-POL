@@ -8,7 +8,7 @@
     <h2 class="text-xl font-semibold mb-2 text-center">Tambah Pengguna</h2>
     <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
-    <form id="form-tambah-pengguna" action="{{ route('admin.fasilitas.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form id="form-tambah-fasilitas" action="{{ route('admin.fasilitas.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         @csrf
 
         <div>
@@ -166,7 +166,7 @@ $(document).ready(function() {
         }
     });
 
-    $("#form-tambah-pengguna").validate({
+    $("#form-tambah-fasilitas").validate({
         errorElement: 'span',
         errorClass: 'text-xs text-red-500 mt-1 error-text',
         highlight: function(element) {},
@@ -259,7 +259,8 @@ $(document).ready(function() {
                 contentType: false,
                 processData: false,
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json' // <- Tambahkan ini
                 },
                 success: function(response) {
                     if (response.status) {
