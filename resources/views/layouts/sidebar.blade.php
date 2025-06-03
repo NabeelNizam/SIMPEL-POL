@@ -69,7 +69,7 @@
 
                     <div>
                         <p class="mb-1 text-xs text-gray-500 uppercase">Kelola</p>
-                        <a href="#" class="flex items-center p-2 w-full {{ ($activeMenu == 'periode') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        <a href="{{ route('admin.periode') }}" class="flex items-center p-2 w-full {{ ($activeMenu == 'periode') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                          style="{{ ($activeMenu == 'periode') ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ ($activeMenu == 'periode') ? asset('icons/solid/Time square.svg') : asset('icons/light/Time square.svg') }}" alt="Periode" class="mr-2 w-5">
                             Periode
