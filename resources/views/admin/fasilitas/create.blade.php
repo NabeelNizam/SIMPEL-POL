@@ -5,7 +5,7 @@
         <i class="fas fa-times"></i>
     </button>
 
-    <h2 class="text-xl font-semibold mb-2 text-center">Tambah Pengguna</h2>
+    <h2 class="text-xl font-semibold mb-2 text-center">Tambah Data Fasilitas</h2>
     <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
     <form id="form-tambah-fasilitas" action="{{ route('admin.fasilitas.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -271,6 +271,7 @@ $(document).ready(function() {
                             text: response.message
                         });
                         // dataFasilitas.ajax.reload();
+                        reloadData();
                     } else {
                         $('.error-text').text('');
                         $.each(response.msgField, function(prefix, val) {

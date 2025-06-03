@@ -123,7 +123,7 @@ class FasilitasController extends Controller
 
     public function store(Request $request)
     {
-        if ($request->ajax() || $request->wantsJson()) {
+        // if ($request->ajax() || $request->wantsJson()) {
             $rules = [
                 'gedung' => 'required|integer|exists:gedung,id_gedung',
                 'lantai' => 'required|integer|exists:lantai,id_lantai',
@@ -213,16 +213,16 @@ class FasilitasController extends Controller
                 'status' => true,
                 'message' => 'Data fasilitas berhasil disimpan',
             ]);
-        }
+        // }
 
-        Log::error('Request bukan AJAX atau tidak meminta JSON', [
-            'request_headers' => $request->headers->all()
-        ]);
+        // Log::error('Request bukan AJAX atau tidak meminta JSON', [
+        //     'request_headers' => $request->headers->all()
+        // ]);
 
-        return response()->json([
-            'status' => false,
-            'message' => 'Data fasilitas gagal disimpan',
-        ]);
+        // return response()->json([
+        //     'status' => false,
+        //     'message' => 'Data fasilitas gagal disimpan',
+        // ]);
     }
 
     public function confirm(Fasilitas $fasilitas)
