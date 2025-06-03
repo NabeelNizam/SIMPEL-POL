@@ -32,6 +32,8 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         Route::get('/{user}/edit_ajax', [AdminController::class, 'edit_ajax'])->name('admin.pengguna.edit_ajax');
         Route::put('/{user}/edit_ajax', [AdminController::class, 'update_ajax'])->name('admin.pengguna.update_ajax');
         Route::delete('/{user}/remove_ajax', [AdminController::class, 'remove_ajax'])->name('admin.pengguna.delete_ajax');
+        Route::get('/export_excel', [AdminController::class, 'export_excel'])->name('admin.pengguna.export_excel');
+        Route::get('/export_pdf', [AdminController::class, 'export_pdf'])->name('admin.pengguna.export_pdf');
     });
 
     // Role
