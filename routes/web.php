@@ -2,11 +2,25 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
-    AdminController, AduanController, AuthController, FasilitasController,
-    FormPelaporanController, JurusanController, GedungController,
-    KriteriaController, MahasiswaController, PerbaikanSarprasController,
-    ProfilController, RiwayatMahasiswaController, RiwayatTeknisiController,
-    RoleController, SarprasController, TeknisiController, WelcomeController, PeriodeController
+    AdminController,
+    AduanController,
+    AuthController,
+    FasilitasController,
+    FormPelaporanController,
+    JurusanController,
+    GedungController,
+    KriteriaController,
+    MahasiswaController,
+    PerbaikanController,
+    PerbaikanSarprasController,
+    ProfilController,
+    RiwayatMahasiswaController,
+    RiwayatTeknisiController,
+    RoleController,
+    SarprasController,
+    TeknisiController,
+    WelcomeController,
+    PeriodeController
 };
 
 // Auth & Welcome
@@ -85,7 +99,7 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         Route::get('/ekspor_pdf', [AduanController::class, 'ekspor_pdf'])->name('admin.aduan.ekspor_pdf');
         Route::get('/ekspor_excel', [AduanController::class, 'ekspor_excel'])->name('admin.aduan.ekspor_excel');
     });
-    Route::prefix('periode')->group(function(){
+    Route::prefix('periode')->group(function () {
         Route::get('/', [PeriodeController::class, 'index'])->name('admin.periode');
         Route::get('/create', [PeriodeController::class, 'create_ajax'])->name('admin.periode.create_ajax');
         Route::post('/store', [PeriodeController::class, 'store_ajax'])->name('admin.periode.store_ajax');
@@ -150,6 +164,14 @@ Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
         Route::get('/', [PerbaikanSarprasController::class, 'index'])->name('sarpras.perbaikan');
         Route::get('/{id}/show_ajax', [PerbaikanSarprasController::class, 'show_ajax'])->name('sarpras.perbaikan.show_ajax');
     });
+});
+
+Route::middleware(['authorize:SARPRAS'])->group(function () {
+Route::get('/pengaduan', [AduanController::class, 'pengaduan'])->name('sarpras.pengaduan');
+Route::get('/pengaduan/{id}/detail_pengaduan', [AduanController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
+Route::get('/penugasan', [FasilitasController::class, 'penugasan']);
+Route::get('/perbaikan', [PerbaikanController::class, 'perbaikan']);
+Route::get('/perbaikan', [PerbaikanController::class, 'riwayat']);
 });
 
 // Teknisi
