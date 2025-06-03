@@ -44,32 +44,42 @@
                                 bg-yellow-500
                             @elseif($a->status === \App\Http\Enums\Status::SEDANG_DIPERBAIKI)
                                 bg-orange-500
-                            @else
-                                bg-gray-500
-                            @endif
-                        ">
+                            @endif   ">
                             {{ $a->status->value }}
                         </span>
                     @else
                         <span class="px-3 py-1 rounded-full bg-gray-500 text-white text-sm">-</span>
                     @endif
                 </x-table.cell>
+                @php
+                    $avgRating = \App\Models\UmpanBalik::whereHas('aduan', function ($q) use ($a) {
+                        $q->where('id_fasilitas', $a->id_fasilitas)
+                            ->where('tanggal_aduan', $a->tanggal_aduan);
+                    })->avg('rating');
+                    $avgRating = $avgRating ? number_format($avgRating, 1) : null;
+                @endphp
                 <x-table.cell>
-                    @if($a->umpan_balik && $a->umpan_balik->rating)
-                        <div class="flex items-center">
-                            @for($i = 1; $i <= $a->umpan_balik->rating; $i++)
-                                <i class="fas fa-star text-yellow-400 text-lg"></i>
-                            @endfor
+                    @if($avgRating)
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-star text-yellow-400 text-lg"></i>
+                            <span class="text-yellow-500 font-bold text-lg mr-1">{{ $avgRating }}</span>
+                            <span class="text-gray-600 text-sm">/ 5.0</span>
                         </div>
                     @else
                         <span class="text-gray-500">-</span>
                     @endif
                 </x-table.cell>
                 <x-table.cell>
-                    <button onclick="modalAction('{{ route('admin.aduan.show_ajax', $a->id_aduan) }}')"
-                        class="text-blue-600 hover:underline text-sm">
-                        <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
-                    </button>
+                    <div class="flex gap-2">
+                        <button onclick="modalAction('{{ route('admin.aduan.show_ajax', $a->id_aduan) }}')"
+                            class="text-blue-600 hover:underline text-sm">
+                            <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
+                        </button>
+                        <button onclick="modalAction('{{ route('admin.aduan.comment_ajax', $a->id_aduan) }}')"
+                            class="text-blue-600 hover:underline text-sm">
+                            <img src="{{ asset('icons/solid/message.svg') }}" alt="" class="h-7 w-7 inline">
+                        </button>
+                    </div>
                 </x-table.cell>
             </x-table.row>
         @empty

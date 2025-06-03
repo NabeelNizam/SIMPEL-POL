@@ -36,7 +36,7 @@
         </form>
 
         <div id="perbaikan-table-body">
-            @include('sarpras.perbaikan.perbaikan_table', ['perbaikan' => $perbaikan])
+            @include('sarpras.perbaikan.perbaikan_table', ['aduan' => $aduan])
         </div>
     </div>
 
@@ -58,7 +58,7 @@
 
     function reloadData() {
         $.ajax({
-            url: "{{ route('sarpras.perbaikan.index') }}",
+            url: "{{ route('sarpras.perbaikan') }}",
             method: 'GET',
             data: {
                 id_periode: $('#id_periode').val(),

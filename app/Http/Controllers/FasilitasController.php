@@ -19,7 +19,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -58,7 +60,9 @@ class FasilitasController extends Controller
 
         // Filter berdasarkan gedung
         if ($request->id_gedung) {
-            $query->where('id_gedung', $request->id_gedung);
+            $query->whereHas('ruangan.lantai.gedung', function ($q) use ($request) {
+                $q->where('id_gedung', $request->id_gedung);
+            });
         }
 
         // Filter berdasarkan kondisi
@@ -116,6 +120,7 @@ class FasilitasController extends Controller
     }
 
 
+
     public function store(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
@@ -125,10 +130,160 @@ class FasilitasController extends Controller
                 'ruangan' => 'required|integer|exists:ruangan,id_ruangan',
                 'nama_fasilitas' => 'required|string|min:2|max:35',
                 'kategori' => 'required|integer|exists:kategori,id_kategori',
-                'kondisi_fasilitas' => 'required|string|in:LAYAK,RUSAK',
+                'kondisi' => 'required|string|in:LAYAK,RUSAK',
                 'deskripsi' => 'required|string|min:10|max:255',
                 'urgensi' => 'required|string|in:DARURAT,PENTING,BIASA',
                 'foto_fasilitas' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                Log::error('Validasi gagal', [
+                    'errors' => $validator->errors()->toArray(),
+                    'input' => $request->all()
+                ]);
+
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            $periode = Periode::where('tanggal_mulai', '<=', now())
+                ->where('tanggal_selesai', '>=', now())
+                ->first();
+
+            if (!$periode) {
+                Log::error('Periode tidak ditemukan', [
+                    'tanggal_now' => now()->toDateTimeString()
+                ]);
+
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Periode tidak ditemukan untuk tanggal saat ini',
+                ]);
+            }
+
+            // Simpan file foto_fasilitas
+            $fileName = null;
+            if ($request->hasFile('foto_fasilitas')) {
+                try {
+                    $file = $request->file('foto_fasilitas');
+                    $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $file->storeAs('uploads/img/foto_fasilitas', $fileName, 'public');
+                } catch (\Exception $e) {
+                    Log::error('Gagal menyimpan file foto_fasilitas', [
+                        'exception' => $e->getMessage()
+                    ]);
+
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Gagal menyimpan foto fasilitas',
+                    ]);
+                }
+            }
+
+            try {
+                Fasilitas::create([
+                    'id_ruangan' => $request->ruangan,
+                    'nama_fasilitas' => $request->nama_fasilitas,
+                    'id_kategori' => $request->kategori,
+                    'kondisi' => $request->kondisi,
+                    'kode_fasilitas' => 'F-' . $request->gedung . $request->lantai . $request->ruangan . '-' . (Fasilitas::count() + 1),
+                    'deskripsi' => $request->deskripsi,
+                    'urgensi' => $request->urgensi,
+                    'id_periode' => $periode->id_periode,
+                    'foto_fasilitas' => $fileName
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Gagal menyimpan data fasilitas', [
+                    'exception' => $e->getMessage(),
+                    'input' => $request->all()
+                ]);
+
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Gagal menyimpan data fasilitas',
+                ]);
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data fasilitas berhasil disimpan',
+            ]);
+        }
+
+        Log::error('Request bukan AJAX atau tidak meminta JSON', [
+            'request_headers' => $request->headers->all()
+        ]);
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Data fasilitas gagal disimpan',
+        ]);
+    }
+
+    public function confirm(Fasilitas $fasilitas)
+    {
+        return view('admin.fasilitas.confirm')->with([
+            'fasilitas' => $fasilitas
+        ]);
+    }
+
+    public function destroy(Fasilitas $fasilitas)
+    {
+        try {
+            if ($fasilitas->foto_fasilitas) {
+                Storage::disk('public')->delete('uploads/img/foto_fasilitas/' . $fasilitas->foto_fasilitas);
+            }
+
+            $fasilitas->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Fasilitas berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function show(Fasilitas $fasilitas)
+    {
+        $fasilitas = Fasilitas::findOrFail($fasilitas->id_fasilitas);
+        return view('admin.fasilitas.detail', ['fasilitas' => $fasilitas]);
+    }
+
+
+    public function edit(Fasilitas $fasilitas)
+    {
+        $fasilitas = Fasilitas::findOrFail($fasilitas->id_fasilitas);
+
+        $gedung = Gedung::all();
+        $kategori = Kategori::all();
+        $lantai = Lantai::where('id_gedung', $fasilitas->id_gedung)->get();
+        $ruangan = Ruangan::where('id_lantai', $fasilitas->id_lantai)->get();
+
+        return view('admin.fasilitas.edit', compact('fasilitas', 'gedung', 'kategori', 'lantai', 'ruangan'));
+    }
+
+    public function update(Request $request, Fasilitas $fasilitas)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'gedung' => 'required|integer|exists:gedung,id_gedung',
+                'lantai' => 'required|integer|exists:lantai,id_lantai',
+                'ruangan' => 'required|integer|exists:ruangan,id_ruangan',
+                'nama_fasilitas' => 'required|string|min:2|max:35',
+                'kategori' => 'required|integer|exists:kategori,id_kategori',
+                'kondisi' => 'required|string|in:LAYAK,RUSAK',
+                'deskripsi' => 'required|string|min:10|max:255',
+                'urgensi' => 'required|string|in:DARURAT,PENTING,BIASA',
+                'foto_fasilitas' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -141,9 +296,70 @@ class FasilitasController extends Controller
                 ]);
             }
 
+            $fasilitas = Fasilitas::find($fasilitas->id_fasilitas);
+            if (!$fasilitas) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Fasilitas tidak ditemukan',
+                ]);
+            }
+
+            $fileName = $fasilitas->foto_fasilitas;
+            if ($request->hasFile('foto_fasilitas')) {
+                if ($fileName && Storage::disk('public')->exists('uploads/img/foto_fasilitas/' . $fileName)) {
+                    Storage::disk('public')->delete('uploads/img/foto_fasilitas/' . $fileName);
+                }
+                $file = $request->file('foto_fasilitas');
+                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('uploads/img/foto_fasilitas', $fileName, 'public');
+            }
+
+            $fasilitas->update([
+                'id_ruangan' => $request->ruangan,
+                'nama_fasilitas' => $request->nama_fasilitas,
+                'id_kategori' => $request->kategori,
+                'kondisi' => $request->kondisi,
+                'deskripsi' => $request->deskripsi,
+                'urgensi' => $request->urgensi,
+                'foto_fasilitas' => $fileName
+            ]);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data fasilitas berhasil diperbarui',
+            ]);
+        }
+        return response()->json([
+            'status' => false,
+            'message' => 'Data fasilitas gagal diperbarui',
+        ]);
+    }
+
+    public function import()
+    {
+        return view('admin.fasilitas.import');
+    }
+
+    public function import_file(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                // validasi file harus xls atau xlsx, max 1MB
+                'file_input' => ['required', 'mimes:xlsx', 'max:1024']
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
             $periode = Periode::where('tanggal_mulai', '<=', now())
-                        ->where('tanggal_selesai', '>=', now())
-                        ->first();
+                ->where('tanggal_selesai', '>=', now())
+                ->first();
 
             if (!$periode) {
                 return response()->json([
@@ -152,35 +368,51 @@ class FasilitasController extends Controller
                 ]);
             }
 
-                // Simpan file foto_fasilitas
-            if ($request->hasFile('foto_fasilitas')) {
-                $file = $request->file('foto_fasilitas');
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->storeAs('public/img/foto_fasilitas', $fileName); // Simpan ke storage
-                $fotoUrl = 'storage/img/foto_fasilitas/' . $fileName; // URL relatif
+            $file = $request->file('file_input');
+
+            $reader = IOFactory::createReader('Xlsx'); // load reader file excel
+            $reader->setReadDataOnly(true); // hanya membaca data
+            $spreadsheet = $reader->load($file->getRealPath()); // load file excel
+            $sheet = $spreadsheet->getActiveSheet(); // ambil sheet yang aktif
+
+            $data = $sheet->toArray(null, false, true, true); // ambil data excel
+
+            $insert = [];
+            if (count($data) > 1) { // jika data lebih dari 1 baris
+                foreach ($data as $baris => $value) {
+                    if ($baris > 1) { // baris ke 1 adalah header, maka lewati
+                        $insert[] = [
+                            'nama_fasilitas' => $value['A'],
+                            'kode_fasilitas' => $value['B'],
+                            'id_kategori' => $value['C'],
+                            'id_ruangan' => $value['D'],
+                            'urgensi' => $value['E'],
+                            'kondisi' => $value['F'],
+                            'deskripsi' => $value['G'],
+                            'foto_fasiltas' => '0',
+                            'id_periode' => $periode->id_periode,
+                            'created_at' => now(),
+                        ];
+                    }
+                }
+
+                if (count($insert) > 0) {
+                    // insert data ke database, jika data sudah ada, maka diabaikan
+                    Fasilitas::insertOrIgnore($insert);
+                }
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data berhasil diimport'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Tidak ada data yang diimport'
+                ]);
             }
-
-            Fasilitas::create([
-                'id_ruangan' => $request->ruangan,
-                'nama_fasilitas' => $request->nama_fasilitas,
-                'id_kategori' => $request->kategori,
-                'kondisi' => $request->kondisi_fasilitas,
-                'kode_fasilitas' => 'F-' . $request->gedung . $request->lantai . $request->ruangan . '-' . Fasilitas::count() + 1,
-                'deskripsi' => $request->deskripsi,
-                'urgensi' => $request->urgensi,
-                'id_periode' => $periode->id_periode,
-                'foto_fasilitas' => $fotoUrl
-            ]);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Data fasilitas berhasil disimpan',
-            ]);
         }
-        return response()->json([
-            'status' => false,
-            'message' => 'Data fasilitas gagal disimpan',
-        ]);
+        return redirect('/');
     }
     public function export_pdf()
     {
@@ -198,7 +430,7 @@ class FasilitasController extends Controller
                 'lokasi' => $item->getLokasiString(),
             ];
         })->toArray();
-        $sheet = new Sheet(
+        $sheet = Sheet::make(
             [
                 'title' => 'Data Fasilitas',
                 'text' => 'Berikut adalah daftar fasilitas yang terdaftar di sistem.',
@@ -227,7 +459,7 @@ class FasilitasController extends Controller
                 'lokasi' => $item->getLokasiString(),
             ];
         })->toArray();
-        $sheet = new Sheet(
+        $sheet = Sheet::make(
             [
                 'header' => $headers,
                 'data' => $data,

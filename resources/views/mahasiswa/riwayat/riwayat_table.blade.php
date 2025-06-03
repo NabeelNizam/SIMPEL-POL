@@ -34,23 +34,39 @@
                 </x-table.cell>
                 <x-table.cell>
                     @if($a->umpan_balik && $a->umpan_balik->rating)
-                        <div class="flex items-center">
-                            @for($i = 1; $i <= $a->umpan_balik->rating; $i++)
-                                <i class="fas fa-star text-yellow-400 text-lg"></i>
-                            @endfor
+                        <div class="flex flex-col items-center">
+                            <div class="flex items-center">
+                                @for($i = 1; $i <= $a->umpan_balik->rating; $i++)
+                                    <i class="fas fa-star text-yellow-400 text-lg"></i>
+                                @endfor
+                            </div>
+                            <div class="text-xs text-gray-700 mt-1 font-semibold">
+                                {{ number_format($a->umpan_balik->rating, 1) }} / 5.0
+                            </div>
                         </div>
                     @else
-                        <button onclick="modalAction('{{ route('mahasiswa.riwayat.edit_ajax', $a->id_aduan) }}')"
-                            class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
-                            Beri Umpan Balik
-                        </button>
+                        -
                     @endif
                 </x-table.cell>
                 <x-table.cell>
-                    <button onclick="modalAction('{{ route('mahasiswa.riwayat.show_ajax', $a->id_aduan) }}')"
-                        class="text-blue-600 hover:underline text-sm">
-                        <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
-                    </button>
+                    <div class="flex gap-2">
+                        <button onclick="modalAction('{{ route('mahasiswa.riwayat.show_ajax', $a->id_aduan) }}')"
+                            class="text-blue-600 hover:underline text-sm">
+                            <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
+                        </button>
+
+                        @if($a->umpan_balik && $a->umpan_balik->rating)
+                            <button disabled class="text-gray-400 cursor-not-allowed text-sm opacity-60">
+                                <img src="{{ asset('icons/solid/message.svg') }}" alt=""
+                                    class="h-7 w-7 inline filter grayscale brightness-75">
+                            </button>
+                        @else
+                            <button onclick="modalAction('{{ route('mahasiswa.riwayat.edit_ajax', $a->id_aduan) }}')"
+                                class="text-blue-600 hover:underline text-sm">
+                                <img src="{{ asset('icons/solid/message.svg') }}" alt="" class="h-7 w-7 inline">
+                            </button>
+                        @endif
+                    </div>
                 </x-table.cell>
             </x-table.row>
         @empty

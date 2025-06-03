@@ -8,7 +8,7 @@
     <h2 class="text-xl font-semibold mb-2 text-center">Tambah Pengguna</h2>
     <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
-    <form id="form-tambah-pengguna" action="{{ route('admin.fasilitas.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form id="form-tambah-fasilitas" action="{{ route('admin.fasilitas.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         @csrf
 
         <div>
@@ -57,13 +57,12 @@
 
         <div>
             <label class="block text-sm font-medium mb-1">Kondisi Fasilitas<span class="text-red-500">*</span></label>
-            <select required name="kondisi_fasilitas" id="kondisi_fasilitas" class="cursor-pointer w-full border rounded-md px-3 py-2 text-sm">
+            <select required name="kondisi" id="kondisi" class="cursor-pointer w-full border rounded-md px-3 py-2 text-sm">
                 <option value="">- Kondisi Fasilitas -</option>
-                <option value="BAIK">Baik</option>
+                <option value="LAYAK">Layak</option>
                 <option value="RUSAK">Rusak</option>
-                <option value="RUSAK BERAT">Rusak Berat</option>
             </select>
-            <span id="kondisi_fasilitas-error" class="text-xs text-red-500 mt-1 error-text"></span>
+            <span id="kondisi-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
 
         <div>
@@ -103,6 +102,7 @@
             <p class="mt-1 text-xs text-gray-500">
             Format yang didukung: JPG, PNG, JPEG. Ukuran maksimal: 2MB
             </p>
+            <span id="foto_fasilitas-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
 
         <div class="col-span-2 text-right mt-4">
@@ -166,7 +166,7 @@ $(document).ready(function() {
         }
     });
 
-    $("#form-tambah-pengguna").validate({
+    $("#form-tambah-fasilitas").validate({
         errorElement: 'span',
         errorClass: 'text-xs text-red-500 mt-1 error-text',
         highlight: function(element) {},
@@ -201,7 +201,7 @@ $(document).ready(function() {
                 required: true,
                 digits: true
             },
-            kondisi_fasilitas: "required",
+            kondisi: "required",
             urgensi: "required",
             deskripsi: {
                 required: true,
@@ -236,8 +236,8 @@ $(document).ready(function() {
                 required: "Kategori fasilitas wajib dipilih",
                 digits: "Kategori tidak valid"
             },
-            kondisi_fasilitas: "Kondisi fasilitas wajib dipilih",
-            kondisi_fasilitas: "Urgensi fasilitas wajib dipilih",
+            kondisi: "Kondisi fasilitas wajib dipilih",
+            urgensi: "Urgensi fasilitas wajib dipilih",
             deskripsi: {
                 required: "Deskripsi fasilitas wajib diisi",
                 minlength: "Deskripsi minimal 10 karakter",
@@ -250,10 +250,18 @@ $(document).ready(function() {
             }
         },
         submitHandler: function(form) {
+            const formData = new FormData(form);
+
             $.ajax({
                 url: form.action,
                 type: form.method,
-                data: $(form).serialize(),
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json' // <- Tambahkan ini
+                },
                 success: function(response) {
                     if (response.status) {
                         $('#myModal').addClass('hidden').removeClass('flex').html('');
@@ -262,7 +270,7 @@ $(document).ready(function() {
                             title: 'Berhasil',
                             text: response.message
                         });
-                        dataFasilitas.ajax.reload();
+                        // dataFasilitas.ajax.reload();
                     } else {
                         $('.error-text').text('');
                         $.each(response.msgField, function(prefix, val) {
@@ -274,6 +282,14 @@ $(document).ready(function() {
                             text: response.message
                         });
                     }
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Terjadi Kesalahan',
+                        text: response.message
+                    });
+                    $('#myModal').addClass('hidden').removeClass('flex').html('');
                 }
             });
             return false;
