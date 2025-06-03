@@ -22,8 +22,8 @@
             <!-- Gambar -->
             <div class="flex justify-center">
                 <div class="bg-gray-100 p-4 rounded-lg shadow-sm">
-                    @if($aduan->foto)
-                        <img src="{{ asset('storage/' . $aduan->foto) }}" alt="Foto Aduan"
+                    @if($aduan->bukti_foto)
+                        <img src="{{ asset('storage/' . $aduan->bukti_foto) }}" alt="Foto Aduan"
                             class="w-48 h-32 object-cover rounded-lg shadow">
                     @else
                         <img src="{{ asset('img/no-image.svg') }}" alt="No Image"
@@ -33,6 +33,7 @@
                         <h4 class="font-semibold text-gray-800">{{ $aduan->fasilitas->nama_fasilitas ?? '-' }}</h4>
                         <p class="text-sm text-gray-600">{{ $aduan->fasilitas->kategori->nama_kategori ?? '-' }}</p>
                     </div>
+
                 </div>
             </div>
             <!-- Detail Aduan -->
@@ -50,20 +51,14 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-1">Tanggal Lapor</label>
-                    <p class="text-gray-800 font-semibold">
-                        {{ $aduan->tanggal_aduan ? \Carbon\Carbon::parse($aduan->tanggal_aduan)->format('d/m/Y') : '-' }}
-                    </p>
-                </div>
-
-                <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Deskripsi Kerusakan</label>
                     <p class="text-gray-700 text-sm leading-relaxed">{{ $aduan->deskripsi ?? '-' }}</p>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-1">Status</label>
-                    <span class="px-3 py-1 rounded-full text-white text-sm
+                <div class="flex gap-12">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Status</label>
+                        <span class="px-3 py-1 rounded-full text-white text-sm
                         @if($aduan->status === \App\Http\Enums\Status::SELESAI)
                             bg-green-500
                         @elseif($aduan->status === \App\Http\Enums\Status::MENUNGGU_DIPROSES)
@@ -75,8 +70,18 @@
                         @else
                             bg-gray-500
                         @endif">
-                        {{ $aduan->status->value }}
-                    </span>
+                            {{ $aduan->status->value }}
+                        </span>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Tanggal Lapor</label>
+                        <p class="text-gray-800 font-semibold">
+                            {{ $aduan->tanggal_aduan ? \Carbon\Carbon::parse($aduan->tanggal_aduan)->format('d/m/Y') : '-' }}
+                        </p>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>

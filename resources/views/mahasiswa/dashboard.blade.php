@@ -86,7 +86,7 @@
                                         </div>
                                     </div>
                                     <div class="flex-shrink-0">
-                                        <a href="{{ route('download.sop', 'sop-perbaikan-fasilitas') }}"
+                                        <a href="{{ route('download.sop', 'sop-mahasiswa') }}"
                                             class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -113,83 +113,22 @@
                                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                                     </path>
                                 </svg>
-                                Daftar Status Aduan
+                                Daftar Status Riwayat Aduan
                             </h2>
                         </div>
-                        <div>
-                            <ol class="flex items-center w-full justify-center gap-x-10 py-8">
-                                <!-- Menunggu Diproses -->
-                                <li class="flex flex-col items-center cursor-pointer group step-item" data-step="1" data-status="MENUNGGU_DIPROSES" id="step-menunggu">
-                                    <div class="flex w-full items-center">
-                                        <span class="circle-step flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full border-2 border-blue-400 transition-colors duration-200" id="circle-1">
-                                            <svg class="w-6 h-6 text-blue-600 step-icon" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                        </span>
-                                    </div>
-                                    <span
-                                        class="mt-2 text-sm font-medium text-gray-600 group-hover:text-blue-600 transition-colors duration-200 text-right w-full">Menunggu
-                                        Diproses</span>
-                                </li>
-                                <!-- Sedang Inspeksi -->
-                                <li class="flex flex-col items-center cursor-pointer group step-item" data-step="2">
-                                    <div class="flex w-full items-center">
-                                        <div class="w-50 h-1 bg-gray-200 mx-2"></div>
-                                        <span
-                                            class="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full step-circle border-2 border-gray-200 group-hover:bg-blue-200 transition-colors duration-200"
-                                            id="circle-2">
-                                            <svg class="w-6 h-6 text-yellow-500 step-icon" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <circle cx="11" cy="11" r="8" stroke-width="2" stroke="currentColor"
-                                                    fill="none" />
-                                                <line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"
-                                                    stroke="currentColor" />
-                                            </svg>
-                                        </span>
-                                    </div>
-                                    <span
-                                        class="mt-2 text-sm font-medium text-gray-600 group-hover:text-blue-600 transition-colors duration-200 text-right w-full">Sedang
-                                        Inspeksi</span>
-                                </li>
-                                <!-- Sedang Diperbaiki -->
-                                <li class="flex flex-col items-center cursor-pointer group step-item" data-step="3">
-                                    <div class="flex w-full items-center">
-                                        <div class="w-50 h-1 bg-gray-200 mx-2"></div>
-                                        <span
-                                            class="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full step-circle border-2 border-gray-200 group-hover:bg-blue-200 transition-colors duration-200"
-                                            id="circle-3">
-                                            <svg class="w-5 h-5 text-orange-500 step-icon" id="icon-3" fill="currentColor"
-                                                viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd"
-                                                    d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                        </span>
-                                    </div>
-                                    <span
-                                        class="mt-2 text-sm font-medium text-gray-600 group-hover:text-blue-600 transition-colors duration-200 text-right w-full">Sedang
-                                        Diperbaiki</span>
-                                </li>
-                                <!-- Selesai -->
-                                <li class="flex flex-col items-center cursor-pointer group step-item" data-step="4">
-                                    <div class="flex w-full items-center">
-                                        <div class="w-50 h-1 bg-gray-200 mx-2"></div>
-                                        <span
-                                            class="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full step-circle border-2 border-gray-200 group-hover:bg-blue-200 transition-colors duration-200"
-                                            id="circle-4">
-                                            <svg class="w-6 h-6 text-green-600 step-icon" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </span>
-                                    </div>
-                                    <span
-                                        class="mt-2 text-sm font-medium text-gray-600 group-hover:text-blue-600 transition-colors duration-200 text-right w-full">Selesai</span>
-                                </li>
-                            </ol>
+
+                        <!-- Pencarian -->
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="relative">
+                                <label for="search" class="text-sm font-medium text-gray-700">Pencarian:</label>
+                                <input type="text" name="search" id="search" value="{{ request('search') }}"
+                                    placeholder="Cari fasilitas..."
+                                    class="w-64 border border-gray-300 rounded-md shadow-sm sm:text-sm" />
+                            </div>
+                        </div>
+                        {{-- card status riwayat --}}
+                        <div class="p-6" id="dashboard-table-body">
+                            @include('mahasiswa.dashboard_card', ['aduan' => $aduan])
                         </div>
                     </div>
                 </div>
@@ -198,33 +137,75 @@
             </div>
         </div>
     </div>
+@endsection
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const tabButtons = document.querySelectorAll('.tab-button');
-            const tabContents = document.querySelectorAll('.tab-content');
+@push('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
 
-            tabButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const tabId = this.id.replace('tab-', '');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const tabId = this.id.replace('tab-', '');
 
-                    // Reset all tabs
-                    tabButtons.forEach(btn => {
-                        btn.classList.remove('active', 'border-orange-500', 'text-blue-600');
-                        btn.classList.add('border-transparent', 'text-gray-500');
-                    });
-
-                    tabContents.forEach(content => {
-                        content.classList.add('hidden');
-                    });
-
-                    // Activate clicked tab
-                    this.classList.add('active', 'border-orange-500', 'text-blue-600');
-                    this.classList.remove('border-transparent', 'text-gray-500');
-
-                    document.getElementById(`content-${tabId}`).classList.remove('hidden');
+                // Reset all tabs
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('active', 'border-orange-500', 'text-blue-600');
+                    btn.classList.add('border-transparent', 'text-gray-500');
                 });
+
+                tabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+
+                // Activate clicked tab
+                this.classList.add('active', 'border-orange-500', 'text-blue-600');
+                this.classList.remove('border-transparent', 'text-gray-500');
+
+                document.getElementById(`content-${tabId}`).classList.remove('hidden');
             });
         });
-    </script>
-@endsection
+    });
+
+
+    function reloadData() {
+        $.ajax({
+            url: "{{ route('dashboard.mahasiswa') }}",
+            method: 'GET',
+            data: {
+                search: $('#search').val(),
+                per_page: $('#per_page').val(),
+                sort_column: $('#sort-column').val(),
+                sort_direction: $('#sort-direction').val()
+            },
+            success: function (response) {
+                $('#dashboard-table-body').html(response.html);
+            },
+            error: function () {
+                Swal.fire('Error', 'Gagal memuat data riwayat aduan', 'error');
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        // Event untuk jumlah data per halaman
+        $('#per_page').on('change', function () {
+            reloadData();
+        });
+
+        // Event untuk pencarian (dengan debounce)
+        let debounceTimer;
+        $('#search').on('input', function () {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () {
+                reloadData();
+            }, 300);
+        });
+
+        // Event untuk sorting jika ada
+        $('#sort-column, #sort-direction').on('change', function () {
+            reloadData();
+        });
+    });
+</script>

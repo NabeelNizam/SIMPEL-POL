@@ -121,35 +121,35 @@
                     minlength: "Minimal 6 karakter"
                 }
             },
-            submitHandler: function(form) {
-                $.ajax({
-                    url: form.action,
-                    type: form.method,
-                    data: $(form).serialize(),
-                    success: function(response) {
-                        if (response.status) {
-                            $('#myModal').modal('hide');
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: response.message
-                            });
-                            dataUser.ajax.reload();
-                        } else {
-                            $('.error-text').text('');
-                            $.each(response.msgField, function(prefix, val) {
-                                $('#' + prefix + '-error').text(val[0]);
-                            });
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Terjadi Kesalahan',
-                                text: response.message
-                            });
-                        }
-                    }
-                });
-                return false;
-            }
+            // submitHandler: function(form) {
+            //     $.ajax({
+            //         url: form.action,
+            //         type: form.method,
+            //         data: $(form).serialize(),
+            //         success: function(response) {
+            //             if (response.status) {
+            //                 $('#myModal').modal('hide');
+            //                 Swal.fire({
+            //                     icon: 'success',
+            //                     title: 'Berhasil',
+            //                     text: response.message
+            //                 });
+            //                 dataUser.ajax.reload();
+            //             } else {
+            //                 $('.error-text').text('');
+            //                 $.each(response.msgField, function(prefix, val) {
+            //                     $('#' + prefix + '-error').text(val[0]);
+            //                 });
+            //                 Swal.fire({
+            //                     icon: 'error',
+            //                     title: 'Terjadi Kesalahan',
+            //                     text: response.message
+            //                 });
+            //             }
+            //         }
+            //     });
+            //     return false;
+            // }
         });
     });
 </script>

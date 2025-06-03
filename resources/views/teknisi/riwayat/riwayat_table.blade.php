@@ -3,8 +3,8 @@
         <x-table.heading>No</x-table.heading>
         <x-table.heading>Nama Fasilitas</x-table.heading>
         <x-table.heading>Kategori</x-table.heading>
-        <x-table.heading>Tanggal Lapor</x-table.heading>
-        <x-table.heading>Tanggal Perbaikan</x-table.heading>
+        <x-table.heading>Tanggal Mulai</x-table.heading>
+        <x-table.heading>Tanggal Selesai</x-table.heading>
         <x-table.heading>Aksi</x-table.heading>
     </x-slot>
 
@@ -14,8 +14,8 @@
                 <x-table.cell>{{ $aduan->firstItem() + $index }}</x-table.cell>
                 <x-table.cell>{{ $a->fasilitas->nama_fasilitas ?? '-' }}</x-table.cell>
                 <x-table.cell>{{ $a->fasilitas->kategori->nama_kategori ?? '-' }}</x-table.cell>
-                <x-table.cell>{{ $a->tanggal_aduan ?? '-' }}</x-table.cell>
-                <x-table.cell>{{ $a->perbaikan->tanggal_perbaikan ?? '-' }}</x-table.cell>
+                <x-table.cell>{{ $a->perbaikan->tanggal_mulai ?? '-'}}</x-table.cell>
+                <x-table.cell>{{ $a->perbaikan->tanggal_selesai ?? '-' }}</x-table.cell>
                 <x-table.cell>
                     <button onclick="modalAction('{{ route('teknisi.riwayat.show_ajax', $a->id_aduan) }}')" class="text-blue-600 hover:underline text-sm">
                         <img src="{{ asset('icons/solid/Detail.svg') }}" alt="Detail" class="h-7 w-7 inline">
