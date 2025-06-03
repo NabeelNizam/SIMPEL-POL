@@ -24,7 +24,7 @@ class RiwayatTeknisiController extends Controller
             'title' => 'Daftar aduan dengan status selesai'
         ];
 
-        $activeMenu = 'laporan-completed';
+        $activeMenu = 'riwayat';
 
         // Query untuk aduan dengan status selesai
         $query = Aduan::with(['fasilitas', 'prioritas', 'perbaikan'])->where('status', 'Selesai');
