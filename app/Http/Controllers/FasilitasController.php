@@ -120,6 +120,7 @@ class FasilitasController extends Controller
     }
 
 
+
     public function store(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
@@ -138,6 +139,11 @@ class FasilitasController extends Controller
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
+                Log::error('Validasi gagal', [
+                    'errors' => $validator->errors()->toArray(),
+                    'input' => $request->all()
+                ]);
+
                 return response()->json([
                     'status' => false,
                     'message' => 'Validasi Gagal',
@@ -150,6 +156,10 @@ class FasilitasController extends Controller
                 ->first();
 
             if (!$periode) {
+                Log::error('Periode tidak ditemukan', [
+                    'tanggal_now' => now()->toDateTimeString()
+                ]);
+
                 return response()->json([
                     'status' => false,
                     'message' => 'Periode tidak ditemukan untuk tanggal saat ini',
@@ -157,30 +167,58 @@ class FasilitasController extends Controller
             }
 
             // Simpan file foto_fasilitas
+            $fileName = null;
             if ($request->hasFile('foto_fasilitas')) {
-                $file = $request->file('foto_fasilitas');
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                try {
+                    $file = $request->file('foto_fasilitas');
+                    $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $file->storeAs('uploads/img/foto_fasilitas', $fileName, 'public');
+                } catch (\Exception $e) {
+                    Log::error('Gagal menyimpan file foto_fasilitas', [
+                        'exception' => $e->getMessage()
+                    ]);
 
-                $file->storeAs('uploads/img/foto_fasilitas', $fileName, 'public');
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Gagal menyimpan foto fasilitas',
+                    ]);
+                }
             }
 
-            Fasilitas::create([
-                'id_ruangan' => $request->ruangan,
-                'nama_fasilitas' => $request->nama_fasilitas,
-                'id_kategori' => $request->kategori,
-                'kondisi' => $request->kondisi,
-                'kode_fasilitas' => 'F-' . $request->gedung . $request->lantai . $request->ruangan . '-' . Fasilitas::count() + 1,
-                'deskripsi' => $request->deskripsi,
-                'urgensi' => $request->urgensi,
-                'id_periode' => $periode->id_periode,
-                'foto_fasilitas' => $fileName
-            ]);
+            try {
+                Fasilitas::create([
+                    'id_ruangan' => $request->ruangan,
+                    'nama_fasilitas' => $request->nama_fasilitas,
+                    'id_kategori' => $request->kategori,
+                    'kondisi' => $request->kondisi,
+                    'kode_fasilitas' => 'F-' . $request->gedung . $request->lantai . $request->ruangan . '-' . (Fasilitas::count() + 1),
+                    'deskripsi' => $request->deskripsi,
+                    'urgensi' => $request->urgensi,
+                    'id_periode' => $periode->id_periode,
+                    'foto_fasilitas' => $fileName
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Gagal menyimpan data fasilitas', [
+                    'exception' => $e->getMessage(),
+                    'input' => $request->all()
+                ]);
+
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Gagal menyimpan data fasilitas',
+                ]);
+            }
 
             return response()->json([
                 'status' => true,
                 'message' => 'Data fasilitas berhasil disimpan',
             ]);
         }
+
+        Log::error('Request bukan AJAX atau tidak meminta JSON', [
+            'request_headers' => $request->headers->all()
+        ]);
+
         return response()->json([
             'status' => false,
             'message' => 'Data fasilitas gagal disimpan',
