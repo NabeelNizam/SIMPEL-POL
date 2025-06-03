@@ -48,6 +48,7 @@ $(document).ready(function() {
                         text: response.message
                     });
                     // dataFasilitas.ajax.reload();
+                    reloadData();
                 } else {
                     $('.error-text').text('');
                     $.each(response.msgField, function(prefix, val) {
