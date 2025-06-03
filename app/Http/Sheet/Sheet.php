@@ -30,6 +30,7 @@ class Sheet
         $header   = $params['header'] ?? [];
         $data     = $params['data'] ?? [];
         $filename = $params['filename'] ?? 'no name';
+        $is_landscape = $params['is_landscape'] ?? false;
 
         $make = new self();
         $make->title = $title;
@@ -38,6 +39,7 @@ class Sheet
         $make->header = $header;
         $make->data = $data;
         $make->filename = $filename;
+        $make->is_landscape = $is_landscape;
         return $make;
     }
 

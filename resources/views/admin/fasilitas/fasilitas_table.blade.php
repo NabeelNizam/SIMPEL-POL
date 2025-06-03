@@ -26,7 +26,7 @@
                     </span>
                 </x-table.cell>
                 <x-table.cell>
-                    <button onclick="modalAction('{{ route('admin.fasilitas.show_ajax', $f->id_fasilitas) }}')"
+                    {{-- <button onclick="modalAction('{{ route('admin.fasilitas.show_ajax', $f->id_fasilitas) }}')"
                         class="cursor-pointer text-blue-600 hover:underline text-sm">
                         <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
                     </button>
@@ -37,7 +37,7 @@
                     <button onclick="removeFasilitas('{{ $f->id_fasilitas }}')"
                         class="cursor-pointer text-red-600 hover:underline text-sm ml-2">
                         <img src="{{ asset('icons/solid/Delete.svg') }}" alt="" class="h-7 w-7 inline">
-                    </button>
+                    </button> --}}
                     <div class="flex items-center space-x-2 min-w-[120px]">
                         <button onclick="modalAction('{{ route('admin.fasilitas.show', $f->id_fasilitas) }}')"
                             class="cursor-pointer text-blue-600 hover:underline text-sm">
