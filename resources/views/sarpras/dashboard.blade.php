@@ -148,7 +148,7 @@
 
         {{-- Status Perbaikan Fasilitas --}}
         <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
-            <div class="flex items-center gap-2">
+            {{-- <div class="flex items-center gap-2">
             <label for="id_periode" class="text-sm font-medium text-gray-700 ">Filter Periode:</label>
             <select id="id_periode" name="id_periode" class="w-48 border border-gray-300 rounded-md shadow-sm sm:text-sm">
                 <option value="">Semua Periode</option>
@@ -156,7 +156,7 @@
                     <option value="{{ $p->id_periode }}" {{ request('id_periode') == $p->id_periode ? 'selected' : '' }}>{{ $p->kode_periode }}</option>
                 @endforeach
             </select>
-        </div>
+        </div> --}}
 
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Status Perbaikan Fasilitas</h3>
             <canvas id="statusPerbaikanChart"></canvas>
