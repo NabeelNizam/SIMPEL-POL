@@ -58,9 +58,9 @@
                 </x-table.cell>
             </x-table.row>
         @empty
-            <x-table.row>
-                <x-table.cell colspan="6" class="text-center text-gray-500">Tidak ada data fasilitas.</x-table.cell>
-            </x-table.row>
+            <tr class="border-1">
+                <td colspan="6" class="text-center text-gray-500 py-4">Tidak ada data fasilitas.</td>
+            </tr>
         @endforelse
     </x-slot>
 </x-table>

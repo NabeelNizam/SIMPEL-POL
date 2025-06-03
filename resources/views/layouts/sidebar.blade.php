@@ -171,7 +171,7 @@
                     </div>
                     <div>
                         <p class="mb-1 text-xs text-gray-500 uppercase">Laporan</p>
-                        <a href="/sarpras/pengaduan"
+                        <a href="{{route('sarpras.pengaduan')}}"
                         class="flex items-center p-2 w-full {{ ($activeMenu == 'pengaduan') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                         style="{{ ($activeMenu == 'pengaduan') ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ ($activeMenu == 'pengaduan') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">
