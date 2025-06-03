@@ -19,7 +19,7 @@ class Sheet
     public bool $is_landscape; // Untuk menentukan orientasi kertas, defaultnya portrait
     public function __construct()
     {
-
+        $this->is_landscape = false; // Default orientasi kertas adalah portrait
     }
 
     public static function make(array $params): self
