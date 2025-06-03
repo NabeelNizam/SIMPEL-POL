@@ -25,8 +25,9 @@ class PerbaikanFactory extends Factory
             'id_user_teknisi' => 3,
             'id_user_sarpras' => 4,
             'tanggal_mulai' => fake()->date(),
-            'tanggal_selesai' => fake()->date(),
-            'id_periode' => 1
+            'tanggal_selesai' => '2027-01-01',
+            'id_periode' => 1,
+            'is_teknisi_selesai' => fake()->boolean(),
         ];
     }
     public function configure()

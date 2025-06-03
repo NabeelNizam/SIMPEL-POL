@@ -13,18 +13,20 @@
                 d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
         </svg>
         <h3 class="mb-5 text-lg font-semibold text-gray-700">Apakah Anda yakin ingin menghapus pengguna ini?</h3>
-        <form action="{{ route('admin.pengguna.delete_ajax', $user->id_user) }}" method="POST">
-            @csrf
-            @method('DELETE')
-            <button id="confirm-delete"
-                class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
-                Ya, Hapus
-            </button>
-        </form>
+        <div class="flex justify-center items-center gap-4">
+            <form action="{{ route('admin.pengguna.delete_ajax', $user->id_user) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button id="confirm-delete"
+                    class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                    Ya, Hapus
+                </button>
+            </form>
 
-        {{-- ini nanti benerin biar modal nya bisa hilang/nutup --}}
-        <button type="button"
-            class="py-2.5 px-5 ml-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-300 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Batal</button>
+            {{-- ini nanti benerin biar modal nya bisa hilang/nutup --}}
+            <button type="button"
+                class="py-2.5 px-5 ml-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-300 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Batal</button>
+        </div>
     </div>
 </div>
 

@@ -15,6 +15,11 @@ class Fasilitas extends Model
     protected $guarded = ['id_fasilitas'];
     protected $primaryKey = 'id_fasilitas';
 
+    public function aduan()
+    {
+        return $this->hasMany(Aduan::class, 'id_fasilitas');
+    }
+    
     public function ruangan()
     {
         return $this->belongsTo(Ruangan::class, 'id_ruangan', 'id_ruangan');
@@ -27,5 +32,13 @@ class Fasilitas extends Model
     public function kategori()
     {
         return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
+    }
+    public function getLokasiString(): string
+    {
+        $ruangan = $this->ruangan;
+        if ($ruangan) {
+            return "{$ruangan->nama_ruangan}, {$ruangan->lantai->nama_lantai}, {$ruangan->lantai->gedung->nama_gedung}";
+        }
+        return 'Lokasi tidak diketahui';
     }
 }

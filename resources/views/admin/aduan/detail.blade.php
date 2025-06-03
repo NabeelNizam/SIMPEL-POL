@@ -11,7 +11,7 @@
     <!-- Isi pengaduan -->
     <div class="mb-6">
         <div class="flex items-center mb-4">
-            <div class="bg-blue-500 text-white p-2 rounded-md mr-3">
+            <div class="bg-blue-500 text-white px-3 py-2 rounded-md mr-3">
                 <i class="fas fa-clipboard-list"></i>
             </div>
             <h3 class="text-lg font-semibold text-gray-800">Detail Fasilitas</h3>

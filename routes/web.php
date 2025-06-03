@@ -10,6 +10,7 @@ use App\Http\Controllers\GedungController;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PeriodeController;
+use App\Http\Controllers\PerbaikanController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\RiwayatMahasiswaController;
 use App\Http\Controllers\RiwayatTeknisiController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SarprasController;
 use App\Http\Controllers\TeknisiController;
 use App\Http\Controllers\WelcomeController;
+use App\Models\Fasilitas;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -81,13 +83,16 @@ Route::group(['prefix' => 'admin', 'middleware' => ['authorize:ADMIN']], functio
         Route::get('/', [FasilitasController::class, 'index'])->name('admin.fasilitas');
         Route::get('/create', [FasilitasController::class, 'create'])->name('admin.fasilitas.create');
         Route::post('/store', [FasilitasController::class, 'store'])->name('admin.fasilitas.store');
-        Route::get('/import', [FasilitasController::class, 'import_ajax'])->name('admin.fasilitas.import_ajax');
-        Route::get('/{id}/show_ajax', [FasilitasController::class, 'show_ajax'])->name('admin.fasilitas.show_ajax');
-        Route::get('/{id}/edit_ajax', [FasilitasController::class, 'edit_ajax'])->name('admin.fasilitas.edit_ajax');
-        Route::post('/{id}/edit_ajax', [FasilitasController::class, 'update_ajax'])->name('admin.fasilitas.update_ajax');
-        Route::delete('/{id}/remove_ajax', [FasilitasController::class, 'remove_ajax'])->name('admin.fasilitas.delete_ajax');
+        Route::get('/import', [FasilitasController::class, 'import'])->name('admin.fasilitas.import');
+        Route::get('/{fasilitas}/confirm', [FasilitasController::class, 'confirm'])->name('admin.fasilitas.confirm');
+        Route::get('/{fasilitas}/show', [FasilitasController::class, 'show'])->name('admin.fasilitas.show');
+        Route::get('/{fasilitas}/edit', [FasilitasController::class, 'edit'])->name('admin.fasilitas.edit');
+        Route::put('/{fasilitas}/update', [FasilitasController::class, 'update'])->name('admin.fasilitas.update');
+        Route::delete('/{fasilitas}/destroy', [FasilitasController::class, 'destroy'])->name('admin.fasilitas.destroy');
         Route::get('/get-lantai/{id_gedung}', [FasilitasController::class, 'getLantai']);
         Route::get('/get-ruangan/{id_lantai}', [FasilitasController::class, 'getRuangan']);
+        Route::get('/export_pdf', [FasilitasController::class, 'export_pdf'])->name('admin.fasilitas.export_pdf');
+        Route::get('/export_excel', [FasilitasController::class, 'export_excel'])->name('admin.fasilitas.export_excel');
     });
     Route::prefix('aduan')->group(function () {
         Route::get('/', [AduanController::class, 'index'])->name('admin.aduan');
@@ -117,7 +122,7 @@ Route::group(['prefix' => 'profil', 'middleware' => ['auth']], function () {
     Route::put('/{id}/update_ajax', [ProfilController::class, 'update_ajax']);
 });
     Route::get('/sop/download/{filename}', [MahasiswaController::class, 'SOPdownload'])->name('download.sop');
-    
+
     // routes form
     Route::prefix('form')->group(function () {
         Route::get('/', [FormPelaporanController::class, 'index'])->name('mahasiswa.form');
@@ -134,6 +139,12 @@ Route::group(['prefix' => 'profil', 'middleware' => ['auth']], function () {
         Route::get('/{id}/edit_ajax', [RiwayatMahasiswaController::class, 'edit_ajax'])->name('mahasiswa.riwayat.edit_ajax');
     });
 
+// routes riwayat
+Route::prefix('riwayat')->group(function () {
+    Route::get('/', [RiwayatMahasiswaController::class, 'index'])->name('mahasiswa.riwayat');
+    Route::get('/{id}/show_ajax', [RiwayatMahasiswaController::class, 'show_ajax'])->name('mahasiswa.riwayat.show_ajax');
+    Route::get('/{id}/edit_ajax', [RiwayatMahasiswaController::class, 'edit_ajax'])->name('mahasiswa.riwayat.edit_ajax');
+});
 
 Route::group(['prefix' => 'teknisi', 'middleware' => ['authorize:TEKNISI']], function () {
     Route::get('/', [TeknisiController::class, 'index'])->name('teknisi.dashboard');
@@ -141,6 +152,8 @@ Route::group(['prefix' => 'teknisi', 'middleware' => ['authorize:TEKNISI']], fun
     Route::prefix('riwayat')->group(function () {
         Route::get('/', [RiwayatTeknisiController::class, 'index'])->name('teknisi.riwayat');
         Route::get('/{id}/show_ajax', [RiwayatTeknisiController::class, 'show_ajax'])->name('teknisi.riwayat.show_ajax');
+        Route::get('/export-excel', [RiwayatTeknisiController::class, 'export_excel'])->name('teknisi.perbaikan.export_excel');
+        Route::get('/export-pdf', [RiwayatTeknisiController::class, 'export_pdf'])->name('teknisi.perbaikan.export_pdf');
     });
 });
 
@@ -151,4 +164,9 @@ Route::group(['prefix' => 'sarpras', 'middleware' => ['authorize:SARPRAS']], fun
         Route::get('/', [RiwayatTeknisiController::class, 'index'])->name('sarpras.perbaikan');
         Route::get('/{id}/show_ajax', [RiwayatTeknisiController::class, 'show_ajax'])->name('sarpras.perbaikan.show_ajax');
     });
+    Route::get('/pengaduan', [AduanController::class, 'pengaduan'])->name('sarpras.pengaduan');
+    Route::get('/pengaduan/{id}/detail_pengaduan', [AduanController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
+    Route::get('/penugasan', [FasilitasController::class, 'penugasan']);
+    Route::get('/perbaikan', [PerbaikanController::class, 'perbaikan']);
+    Route::get('/perbaikan', [PerbaikanController::class, 'riwayat']);
 });

@@ -19,8 +19,9 @@ class Aduan extends Model
     ];
     public function pelapor()
     {
-        return $this->hasOne(User::class, 'id_user', 'id_user');
+        return $this->belongsTo(User::class, 'id_user_pelapor', 'id_user');
     }
+
     public function fasilitas()
     {
         return $this->hasOne(Fasilitas::class, 'id_fasilitas', 'id_fasilitas');
@@ -37,5 +38,4 @@ class Aduan extends Model
     {
         return $this->hasOne(Perbaikan::class, 'id_perbaikan', 'id_perbaikan');
     }
-
 }
