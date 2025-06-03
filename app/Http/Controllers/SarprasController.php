@@ -2,22 +2,49 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\KriteriaModel;
+use App\Models\Perbaikan;
+use App\Models\Periode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class SarprasController extends Controller
 {
+    public function index()
+    {
+        $breadcrumb = (object) [
+            'title' => 'Dashboard',
+            'list' => ['Home', 'Dashboard']
+        ];
+
+        $page = (object) [
+            'title' => 'Beranda Sarana Prasarana'
+        ];
+
+        $activeMenu = 'home';
+
+        return view('sarpras.dashboard', [
+            'breadcrumb' => $breadcrumb, 
+            'page' => $page, 
+            'activeMenu' => $activeMenu
+        ]);
+    }
+    
     public function bobot()
     {
         $breadcrumb = (object) [
-            'title' => 'Kelola Bobot Prioritas Perbaikan',
-            'list'  => ['Home']
+            'title' => 'Dashboard Sarana Prasarana',
+            'list' => ['Home', 'dashboard']
         ];
 
-        $activeMenu = '';
+        $page = (object) [
+            'title' => 'Daftar user yang terdaftar dalam sistem'
+        ];
 
-        $kriteria = KriteriaModel::all();
+        $activeMenu = 'dashboard';
 
-        return view('sarpras.bobot.index', ['breadcrumb' => $breadcrumb, 'kriteria' => $kriteria, 'activeMenu' => $activeMenu]);
+
+        return view('sarpras.dashboard', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
     }
 }

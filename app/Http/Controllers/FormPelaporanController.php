@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Enums\Status;
 use App\Models\Aduan;
+use App\Models\Fasilitas;
+use App\Models\Gedung;
 use App\Models\Kategori;
+use App\Models\Lantai;
+use App\Models\Ruangan;
 use Illuminate\Http\Request;
 
 class FormPelaporanController extends Controller
@@ -76,5 +80,41 @@ class FormPelaporanController extends Controller
         $user = $aduan->pelapor; 
         return view('mahasiswa.form.detail', compact('aduan', 'user'))->render();
     }
+    public function create_ajax()
+    {
+        $gedung = Gedung::all();
+        $lantai = Lantai::all();
+        $ruangan = Ruangan::all();
+        $fasilitas = Fasilitas::all();
+        return view('mahasiswa.form.create', ['gedung' => $gedung, 'lantai' => $lantai, 'ruangan' => $ruangan, 'fasilitas' => $fasilitas])->render();
+    }
+    public function getLantai(Request $request)
+{
+    $lantai = Lantai::where('id_gedung', $request->gedung_id)->get();
+    $options = '<option value="">Pilih lantai</option>';
+    foreach ($lantai as $l) {
+        $options .= '<option value="' . $l->id_lantai . '">' . $l->nama_lantai . '</option>';
+    }
+    return response()->json(['status' => true, 'options' => $options]);
+}
+
+public function getRuangan(Request $request)
+{
+    $ruangan = Ruangan::where('id_lantai', $request->lantai_id)->get();
+    $options = '<option value="">Pilih ruangan</option>';
+    foreach ($ruangan as $r) {
+        $options .= '<option value="' . $r->id_ruangan . '">' . $r->nama_ruangan . '</option>';
+    }
+    return response()->json(['status' => true, 'options' => $options]);
+}
+public function getFasilitas(Request $request)
+{
+    $fasilitas = Fasilitas::where('id_ruangan', $request->ruangan_id)->get();
+    $options = '<option value="">Pilih fasilitas</option>';
+    foreach ($fasilitas as $f) {
+        $options .= '<option value="' . $f->id_fasilitas . '">' . $f->nama_fasilitas . '</option>';
+    }
+    return response()->json(['status' => true, 'options' => $options]);
+}
 
 }

@@ -11,7 +11,7 @@
     <!-- Isi pengaduan -->
     <div class="mb-6">
         <div class="flex items-center mb-4">
-            <div class="bg-blue-500 text-white p-2 rounded-md mr-3">
+            <div class="bg-blue-500 text-white px-3 py-2 rounded-md mr-3">
                 <i class="fas fa-clipboard-list"></i>
             </div>
             <h3 class="text-lg font-semibold text-gray-800">Isi Pengaduan</h3>
@@ -22,7 +22,7 @@
             <!-- Gambar -->
             <div class="flex justify-center">
                 <div class="bg-gray-100 p-4 rounded-lg shadow-sm">
-                    @if($aduan->foto)
+                    @if($aduan->fasilitas->foto_fasilitas)
                         <img src="{{ asset('storage/' . $aduan->foto) }}" alt="Foto Aduan"
                             class="w-48 h-32 object-cover rounded-lg shadow">
                     @else
@@ -45,7 +45,7 @@
                         $gedung = $lantai->gedung;
                     @endphp
                     <p class="text-gray-800 font-semibold">
-                        {{ $gedung->nama_gedung ?? '-' }}{{ $lantai ? ', Lt. ' . $lantai->nama_lantai : '' }}{{ $ruangan ? ', ' . $ruangan->nama_ruangan : '' }}
+                        {{ $gedung->nama_gedung ?? '-' }}{{ $lantai ? ', ' . $lantai->nama_lantai : '' }}{{ $ruangan ? ', ' . $ruangan->nama_ruangan : '' }}
                     </p>
                 </div>
 
@@ -105,7 +105,7 @@
     <!-- Hasil Inspeksi Section -->
     <div class="mb-6">
         <div class="flex items-center mb-4">
-            <div class="bg-blue-500 text-white p-2 rounded-md mr-3">
+            <div class="bg-blue-500 text-white px-3 py-2 rounded-md mr-3">
                 <i class="fas fa-clipboard-check"></i>
             </div>
             <h3 class="text-lg font-semibold text-gray-800">Hasil Inspeksi</h3>
@@ -205,7 +205,7 @@
     <!-- Hasil Perbaikan -->
     <div class="mb-6">
         <div class="flex items-center mb-4">
-            <div class="bg-blue-500 text-white p-2 rounded-md mr-3">
+            <div class="bg-blue-500 text-white px-3 py-2 rounded-md mr-3">
                 <i class="fas fa-tools"></i>
             </div>
             <h3 class="text-lg font-semibold text-gray-800">Hasil Perbaikan</h3>
@@ -248,7 +248,7 @@
     <!-- Umpan Balik -->
     <div class="mb-6">
         <div class="flex items-center mb-4">
-            <div class="bg-blue-500 text-white p-2 rounded-md mr-3">
+            <div class="bg-blue-500 text-white px-3 py-2 rounded-md mr-3">
                 <i class="fas fa-comment-dots"></i>
             </div>
             <h3 class="text-lg font-semibold text-gray-800">Umpan Balik Pelanggan</h3>

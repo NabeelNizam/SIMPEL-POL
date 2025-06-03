@@ -81,7 +81,18 @@ class User extends Authenticatable
         return $this->hasOne(Pegawai::class, 'id_user', 'id_user');
     }
 
+    public function aduan()
+    {
+        return $this->hasMany(Aduan::class, 'id_user_pelapor', 'id_user');
+    }
+
     protected $appends = ['identifier'];
+    public function getIdentifier()
+    {
+        return $this->hasRole('MAHASISWA')
+            ? $this->mahasiswa?->nim
+            : $this->pegawai?->nip;
+    }
 
     public function getIdentifierAttribute()
     {

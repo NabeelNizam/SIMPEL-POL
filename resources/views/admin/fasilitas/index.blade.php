@@ -91,7 +91,7 @@
 
 @push('js')
 <script>
-    
+
     function modalAction(url = '') {
         $.get(url, function(response) {
             $('#myModal').html(response).removeClass('hidden').addClass('flex');

@@ -13,7 +13,7 @@ class MahasiswaController extends Controller
     {
         $breadcrumb = (object) [
             'title' => 'Dashboard',
-            'list' => ['Home']
+            'list' => ['Home', 'Dashboard']
         ];
 
         $page = (object) [
