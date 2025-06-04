@@ -80,6 +80,7 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         Route::get('/create', [FasilitasController::class, 'create'])->name('admin.fasilitas.create');
         Route::post('/store', [FasilitasController::class, 'store'])->name('admin.fasilitas.store');
         Route::get('/import', [FasilitasController::class, 'import'])->name('admin.fasilitas.import');
+        Route::post('/import_file', [FasilitasController::class, 'import_file'])->name('admin.fasilitas.import_file');
         Route::get('/{fasilitas}/confirm', [FasilitasController::class, 'confirm'])->name('admin.fasilitas.confirm');
         Route::get('/{fasilitas}/show', [FasilitasController::class, 'show'])->name('admin.fasilitas.show');
         Route::get('/{fasilitas}/edit', [FasilitasController::class, 'edit'])->name('admin.fasilitas.edit');
@@ -143,6 +144,14 @@ Route::prefix('riwayat')->group(function () {
 Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
     Route::get('/', [SarprasController::class, 'index'])->name('sarpras.dashboard');
     Route::get('/sop/download/{filename}', [SarprasController::class, 'SOPDownload'])->name('download.sop');
+
+    Route::prefix('bobot')->group(function () {
+        Route::get('/', [KriteriaController::class, 'index'])->name('sarpras.bobot');
+        Route::get('/edit', [KriteriaController::class, 'edit'])->name('sarpras.bobot.edit');
+        Route::put('/update', [KriteriaController::class, 'update'])->name('sarpras.bobot.update');
+        Route::get('/export_pdf', [KriteriaController::class, 'export_pdf'])->name('sarpras.bobot.export_pdf');
+        Route::get('/export_excel', [KriteriaController::class, 'export_excel'])->name('sarpras.bobot.export_excel');
+    });
 
     Route::prefix('form')->group(function () {
         Route::get('/', [FormPelaporanController::class, 'index'])->name('mahasiswa.form');

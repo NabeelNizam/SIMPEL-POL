@@ -6,7 +6,7 @@
     </button>
 
     <h2 class="text-xl font-semibold text-center">Detail Data Fasilitas</h2>
-    <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
+    <div class="w-[185px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
     <!-- Gambar Fasilitas -->
     <div class="w-full flex justify-center mb-6">
