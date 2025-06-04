@@ -2,25 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kriteria;
 use App\Models\KriteriaModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class KriteriaController extends Controller
 {
-    public function list(Request $request)
+    public function index()
     {
-        $kriterias = KriteriaModel::select('id_kriteria', 'kode_kriteria', 'nama_kriteria', 'bobot');
+        $breadcrumb = (object) [
+            'title' => 'Kelola Bobot Prioritas Perbaikan',
+            'list' => ['Home']
+        ];
 
-        return DataTables::of($kriterias)
-            // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex)
-            ->addIndexColumn()
-            ->addColumn('aksi', function ($kriteria) {
-                $btn = '<button onclick="modalAction(\''.url('/kriteria/' . $kriteria->kriteria_id . '/show').'\')" class="cursor-pointer px-1 py-1 rounded"><img src="'.asset('icons/crud/detail.svg').'" alt="Detail" class="w-5 h-5 inline"></button>';
-                $btn .= '<button onclick="modalAction(\''.url('/kriteria/' . $kriteria->kriteria_id . '/edit').'\')" class="cursor-pointer px-1 py-1 rounded"><img src="'.asset('icons/crud/edit.svg').'" alt="Edit" class="w-5 h-5 inline"></button>';
-                return $btn;
-            })
-            ->rawColumns(['aksi'])
-            ->make(true);
+        $page = (object) [
+            'title' => 'Daftar kriteria yang terdaftar dalam sistem'
+        ];
+
+        $activeMenu = 'bobot';
+
+        $kriteria = Kriteria::all();
+
+        return view('sarpras.bobot.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu, 'kriteria' => $kriteria]);
+    }
+
+    public function edit()
+    {
+        $kriteria = Kriteria::all();
+
+        return view('sarpras.bobot.edit')->with('kriteria', $kriteria);
+    }
+
+    public function update(Request $request)
+    {
+        $kriteria = Kriteria::all();
+
+        $rules = [];
+        foreach ($kriteria as $k) {
+            $rules["bobot_{$k->id_kriteria}"] = 'required|numeric|min:0|max:1';
+        }
+
+        $validated = $request->validate($rules);
+
+        $total = collect($validated)->sum();
+
+        if (round($total, 3) != 1.000) {
+            return back()->withErrors(['total' => 'Jumlah total bobot harus sama dengan 1.'])->withInput();
+        }
+
+        foreach ($validated as $key => $value) {
+            $id = str_replace('bobot_', '', $key);
+            Kriteria::where('id_kriteria', $id)->update([
+                'bobot' => $value
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Data bobot berhasil diperbarui.');
     }
 }

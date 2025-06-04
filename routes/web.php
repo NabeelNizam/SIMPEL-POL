@@ -145,6 +145,14 @@ Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
     Route::get('/', [SarprasController::class, 'index'])->name('sarpras.dashboard');
     Route::get('/sop/download/{filename}', [SarprasController::class, 'SOPDownload'])->name('download.sop');
 
+    Route::prefix('bobot')->group(function () {
+        Route::get('/', [KriteriaController::class, 'index'])->name('sarpras.bobot');
+        Route::get('/edit', [KriteriaController::class, 'edit'])->name('sarpras.bobot.edit');
+        Route::put('/update', [KriteriaController::class, 'update'])->name('sarpras.bobot.update');
+        Route::get('/export_pdf', [KriteriaController::class, 'export_pdf'])->name('sarpras.bobot.export_pdf');
+        Route::get('/export_excel', [KriteriaController::class, 'export_excel'])->name('sarpras.bobot.export_excel');
+    });
+
     Route::prefix('form')->group(function () {
         Route::get('/', [FormPelaporanController::class, 'index'])->name('mahasiswa.form');
         Route::get('/create', [FormPelaporanController::class, 'create_ajax'])->name('mahasiswa.form.create_ajax');
