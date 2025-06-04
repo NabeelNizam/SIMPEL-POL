@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('perbaikan', function (Blueprint $table) {
-            $table->boolean('is_teknisi_selesai_perbaikan')->default(false)->after('tingkat_kerusakan');
+            $table->date('tanggal_inspeksi')->nullable(); // ini tanggal ditangkap pas teknisi selesai inspeksi (berarti dia filled bareng kolom tingkat kerusakan, biaya, dsb)
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('perbaikan', function (Blueprint $table) {
-            $table->dropColumn('is_teknisi_selesai_perbaikan');
+            $table->dropColumn('tanggal_inspeksi'); // rollback, hapus kolom tanggal_inspeksi
         });
     }
 };
