@@ -122,18 +122,22 @@
         <table class="border-all">
             <thead>
                 <tr>
+                    <th>No</th>
                     @foreach ($header as $col)
                         <th>{{ $col }}</th>
                     @endforeach
                 </tr>
             </thead>
             <tbody>
+                {{ $no = 1 }}
                 @foreach ($data as $row)
                     <tr>
+                        <td>{{ $no }}</td>
                         @foreach ($row as $cell)
                             <td>{{ $cell }}</td>
-                        @endforeach
+                            @endforeach
                     </tr>
+                    {{ $no++ }}
                 @endforeach
             </tbody>
         </table>
