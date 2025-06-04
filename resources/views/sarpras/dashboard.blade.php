@@ -134,53 +134,64 @@
                         </div>
                     </div>
                 </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 mt-6">
-       {{-- Umpan Balik --}}
-        <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Umpan Balik</h3>
-            <canvas id="umpanBalikChart"></canvas>
 
-            <h2 class="text-lg font-semibold text-gray-800 mt-4">Rata-rata Tingkat Kepuasan</h2>
-            <p class="text-gray-600">
-                {{ $umpanBalik->count() > 0 ? round($umpanBalik->sum(fn($item) => $item->rating * $item->total) / $umpanBalik->sum('total'), 2) : 'Belum ada data' }}
-            </p>
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 mt-24">
+    <div class="p-6 border-b border-gray-200 flex items-center">
+        <div class="flex-shrink-0">
+            <svg class="w-5 h-5 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clip-rule="evenodd"></path>
+            </svg>
         </div>
-
-        {{-- Status Perbaikan Fasilitas --}}
-        <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
-            {{-- <div class="flex items-center gap-2">
-            <label for="id_periode" class="text-sm font-medium text-gray-700 ">Filter Periode:</label>
-            <select id="id_periode" name="id_periode" class="w-48 border border-gray-300 rounded-md shadow-sm sm:text-sm">
-                <option value="">Semua Periode</option>
-                @foreach ($periode as $p)
-                    <option value="{{ $p->id_periode }}" {{ request('id_periode') == $p->id_periode ? 'selected' : '' }}>{{ $p->kode_periode }}</option>
-                @endforeach
-            </select>
-        </div> --}}
-
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Status Perbaikan Fasilitas</h3>
-            <canvas id="statusPerbaikanChart"></canvas>
-        </div>
-
-        {{-- Kategori Kerusakan --}}
-        <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Kategori Kerusakan</h3>
-            <canvas id="kategoriKerusakanChart"></canvas>
-        </div>
-
-        {{-- Tren Kerusakan Fasilitas --}}
-        <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Tren Kerusakan Fasilitas</h3>
-            <canvas id="trenKerusakanChart"></canvas>
-        </div>
-
-        {{-- Tren Anggaran --}}
-        <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Tren Anggaran</h3>
-            <canvas id="trenAnggaranChart"></canvas>
+        <div class="ml-3">
+            <h3 class="text-sm font-medium text-blue-800">Tentang SOP Sarana Prasarana</h3>
         </div>
     </div>
 </div>
+
+{{-- GRID UTAMA UNTUK SEMUA GRAFIK --}}
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 my-6">
+
+    {{-- Umpan Balik --}}
+    <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Tingkat Kepuasan Pengguna</h3>
+        <canvas id="umpanBalikChart"></canvas>
+
+        <div class="text-center mt-4">
+            <h2 class="text-base font-semibold text-gray-800">Rata-rata:</h2>
+            <p class="text-gray-800 font-bold">
+                {{ $umpanBalik->count() > 0 ? round($umpanBalik->sum(fn($item) => $item->rating * $item->total) / $umpanBalik->sum('total'), 2) : 'Belum ada data' }}
+            </p>
+        </div>
+    </div>
+
+    {{-- Status Perbaikan Fasilitas --}}
+    <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Status Perbaikan Fasilitas</h3>
+        <canvas id="statusPerbaikanChart"></canvas>
+    </div>
+
+    {{-- Kategori Kerusakan --}}
+    <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Kategori Kerusakan</h3>
+        <canvas id="kategoriKerusakanChart"></canvas>
+    </div>
+
+    {{-- Tren Kerusakan Fasilitas --}}
+    <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Tren Kerusakan Fasilitas</h3>
+        <canvas id="trenKerusakanChart"></canvas>
+    </div>
+
+</div>
+
+{{-- Bagian Penuh untuk Tren Anggaran --}}
+<div class="bg-white rounded-lg shadow border border-gray-200 p-4 w-full">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Tren Anggaran</h3>
+    <canvas id="trenAnggaranChart"></canvas>
+</div>
+
 @endsection
 
 @push('js')
@@ -259,69 +270,172 @@
         });
 
         // Kategori Kerusakan Chart
-        const kategoriKerusakanCtx = document.getElementById('kategoriKerusakanChart').getContext('2d');
-        const kategoriKerusakanChart = new Chart(kategoriKerusakanCtx, {
-            type: 'bar',
-            data: {
-                labels: @json($kategoriKerusakan->pluck('kategori')),
-                datasets: [{
-                    label: 'Jumlah Kerusakan',
-                    data: @json($kategoriKerusakan->pluck('total')),
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
+       const kategoriKerusakanCtx = document.getElementById('kategoriKerusakanChart').getContext('2d');
+const kategoriKerusakanChart = new Chart(kategoriKerusakanCtx, {
+    type: 'bar',
+    data: {
+        labels: @json($kategoriKerusakan->pluck('kategori')), // Kategori fasilitas
+        datasets: [{
+            label: 'Jumlah Aduan',
+            data: @json($kategoriKerusakan->pluck('total')), // Jumlah aduan per kategori
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(255, 205, 86, 0.5)',
+                'rgba(75, 192, 192, 0.5)',
+                'rgba(153, 102, 255, 0.5)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 205, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top'
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Kategori Fasilitas' // Label untuk sumbu X
+                }
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Jumlah Aduan' // Label untuk sumbu Y
                 }
             }
-        });
+        }
+    }
+});
 
-        // Tren Kerusakan Chart
+       // Tren Kerusakan Chart
         const trenKerusakanCtx = document.getElementById('trenKerusakanChart').getContext('2d');
         const trenKerusakanChart = new Chart(trenKerusakanCtx, {
             type: 'line',
             data: {
-                labels: @json($trenKerusakan->pluck('bulan')),
+                labels: @json($trenKerusakan->pluck('bulan')), // Bulan (1 hingga 12)
                 datasets: [{
-                    label: 'Jumlah Kerusakan',
-                    data: @json($trenKerusakan->pluck('total')),
+                    label: 'Jumlah Aduan',
+                    data: @json($trenKerusakan->pluck('total')), // Jumlah aduan per bulan
                     borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    tension: 0.4
+                    backgroundColor: 'rgba(75, 192, 192, 0.4)',
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: 'white',
+                    pointBorderColor: 'rgba(75, 192, 192, 1)',
+                    pointRadius: 5,
+                    pointHoverRadius: 6,
+                    borderWidth: 2
                 }]
             },
             options: {
                 responsive: true,
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false },
+                    tooltip: { enabled: true },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        color: '#000',
+                        font: {
+                            weight: 'bold'
+                        },
+                        formatter: Math.round
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Bulan'
+                        },
+                        ticks: {
+                            callback: function (value, index) {
+                                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                                return months[index]; // Menampilkan nama bulan
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Jumlah Laporan'
+                        },
+                        ticks: {
+                            stepSize: 2
+                        }
+                    }
                 }
-            }
+            },
+            plugins: [ChartDataLabels]
         });
 
-        // Tren Anggaran Chart
+       // Tren Anggaran Chart
         const trenAnggaranCtx = document.getElementById('trenAnggaranChart').getContext('2d');
         const trenAnggaranChart = new Chart(trenAnggaranCtx, {
-            type: 'line',
+            type: 'line', // Ubah dari 'bar' ke 'line'
             data: {
-                labels: @json($trenAnggaran->pluck('bulan')),
+                labels: @json($trenAnggaran->pluck('bulan')), // Bulan (1 hingga 12)
                 datasets: [{
-                    label: 'Jumlah Anggaran',
-                    data: @json($trenAnggaran->pluck('total')),
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                    tension: 0.4
+                    label: 'Pengeluaran (Rp)',
+                    data: @json($trenAnggaran->pluck('total')), // Total pengeluaran per bulan
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)', // Warna area di bawah garis
+                    tension: 0.4, // Membuat garis lebih halus
+                    fill: true, // Isi area di bawah garis
+                    pointBackgroundColor: 'white',
+                    pointBorderColor: 'rgba(255, 99, 132, 1)',
+                    pointRadius: 5,
+                    pointHoverRadius: 6,
+                    borderWidth: 2
                 }]
             },
             options: {
                 responsive: true,
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: true },
+                    tooltip: { enabled: true }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Bulan'
+                        },
+                        ticks: {
+                            callback: function (value, index) {
+                                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                                return months[index]; // Menampilkan nama bulan
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Pengeluaran (Rp)'
+                        },
+                        ticks: {
+                            stepSize: 1000000 // Atur step size sesuai kebutuhan
+                        }
+                    }
                 }
             }
+            
         });
 
             tabButtons.forEach(button => {

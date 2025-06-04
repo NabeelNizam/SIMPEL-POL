@@ -40,18 +40,62 @@ class SarprasController extends Controller
         ->orderBy('rating', 'desc')
         ->get();
 
-         $periodeId = $request->input('id_periode');
+        $periodeId = $request->input('id_periode');
         $statusPerbaikan = Aduan::selectRaw('COUNT(*) as total, status')->groupBy('status')->get();
-        $kategoriKerusakan = Perbaikan::selectRaw('COUNT(*) as total, tingkat_kerusakan')->groupBy('tingkat_kerusakan')->get();
-        $trenKerusakan = Aduan::selectRaw('COUNT(*) as total, MONTH(created_at) as bulan')->groupBy('bulan')->get();
-        $trenAnggaran = Biaya::selectRaw('SUM(besaran) as total, MONTH(created_at) as bulan')->groupBy('bulan')->get();
+       $kategoriKerusakan = Aduan::with('fasilitas.kategori') // Ambil relasi kategori dari fasilitas
+    ->get()
+    ->groupBy(fn($item) => $item->fasilitas->kategori->nama_kategori ?? 'Tidak ada kategori') // Kelompokkan berdasarkan kategori
+    ->map(function ($items, $kategori) {
+        return [
+            'kategori' => $kategori,
+            'total' => $items->count(), // Hitung jumlah aduan dalam kategori
+        ];
+        })
+        ->values();
+       $trenKerusakanRaw = Aduan::selectRaw('COUNT(*) as total, MONTH(tanggal_aduan) as bulan')
+        ->groupBy('bulan')
+        ->orderBy('bulan', 'asc')
+        ->get();
 
-    return view('sarpras.dashboard', compact(
-        'breadcrumb', 'page', 'activeMenu',
-        'totalLaporan', 'tertunda', 'dalamProses', 'selesai',
-        'umpanBalik', 'statusPerbaikan', 'kategoriKerusakan', 'trenKerusakan', 'trenAnggaran', 'periode'
+    // Pastikan semua bulan (1 hingga 12) ada dalam data
+    $trenKerusakan = collect(range(1, 12))->map(function ($bulan) use ($trenKerusakanRaw) {
+        $data = $trenKerusakanRaw->firstWhere('bulan', $bulan);
+        return [
+            'bulan' => $bulan,
+            'total' => $data ? $data->total : 0, // Jika tidak ada data, set total ke 0
+        ];
+    });
+       $trenAnggaranRaw = Biaya::selectRaw('SUM(besaran) as total, MONTH(perbaikan.tanggal_mulai) as bulan')
+        ->join('perbaikan', 'biaya.id_perbaikan', '=', 'perbaikan.id_perbaikan') // Hubungkan tabel biaya dengan perbaikan
+        ->groupBy('bulan')
+        ->orderBy('bulan', 'asc')
+        ->get();
+
+    // Pastikan semua bulan (1 hingga 12) ada dalam data
+    $trenAnggaran = collect(range(1, 12))->map(function ($bulan) use ($trenAnggaranRaw) {
+        $data = $trenAnggaranRaw->firstWhere('bulan', $bulan);
+        return [
+            'bulan' => $bulan,
+            'total' => $data ? $data->total : 0, // Jika tidak ada data, set total ke 0
+        ];
+    });
+    
+            return view('sarpras.dashboard', compact(
+        'breadcrumb', 
+        'page', 
+        'activeMenu', 
+        'periode', 
+        'totalLaporan', 
+        'tertunda', 
+        'dalamProses', 
+        'selesai', 
+        'umpanBalik', 
+        'statusPerbaikan', 
+        'kategoriKerusakan', 
+        'trenKerusakan', 
+        'trenAnggaran'
     ));
-}
+    }
     public function SOPDownload($filename)
     {
         $role = 'sarpras'; // Bisa juga ambil dari auth jika dinamis
