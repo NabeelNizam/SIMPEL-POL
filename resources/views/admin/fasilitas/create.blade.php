@@ -8,7 +8,7 @@
     </button>
 
     <h2 class="text-xl font-semibold mb-2 text-center">Tambah Data Fasilitas</h2>
-    <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
+    <div class="w-[205px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
     <form id="form-tambah-fasilitas" action="{{ route('admin.fasilitas.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4" enctype="multipart/form-data">
         @csrf
@@ -112,7 +112,12 @@
         </div>
 
         <div class="col-span-2 text-right mt-4">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md cursor-pointer">Simpan</button>
+            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md cursor-pointer">
+                <div class="flex justify-center items-center gap-[10px]">
+                    <img src="{{ asset('icons/light/Check-circle.svg') }}" alt="Simpan" class="w-6 h-6">
+                    <p>Simpan</p>
+                </div>
+            </button>
         </div>
     </form>
 
