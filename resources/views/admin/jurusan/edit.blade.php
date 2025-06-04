@@ -6,7 +6,7 @@
     </button>
 
     <h2 class="text-xl font-semibold mb-2 text-center">Edit Data Jurusan</h2>
-    <div class="w-[205px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
+    <div class="w-[170px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
     <form id="form-tambah-jurusan" action="{{ route('admin.jurusan.update', $jurusan->id_jurusan) }}" method="POST" class="grid grid-cols-1 gap-4" enctype="multipart/form-data">
         @method('PUT')

@@ -5,7 +5,7 @@
     </button>
 
     <h2 class="text-xl font-semibold mb-2 text-center">Hapus Data Jurusan</h2>
-    <div class="w-[145px] h-1 bg-red-400 mx-auto mt-1 mb-6 rounded"></div>
+    <div class="w-[185px] h-1 bg-red-400 mx-auto mt-1 mb-6 rounded"></div>
     <div class="p-4 md:p-5 text-center">
         <svg class="mx-auto mb-4 text-blue-600 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
             fill="none" viewBox="0 0 20 20">
