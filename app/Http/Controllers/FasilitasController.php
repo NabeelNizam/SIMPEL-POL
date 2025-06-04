@@ -42,47 +42,37 @@ class FasilitasController extends Controller
 
         $activeMenu = 'fasilitas';
 
-
-        // Query untuk fasilitas
         $query = Fasilitas::with(['kategori', 'ruangan']);
 
-        // Ambil data fasilitas yang difilter
         $this->queried_fasilitas = $query;
 
-        // Filter berdasarkan pencarian
         if ($request->search) {
             $query->where('nama_fasilitas', 'like', "%{$request->search}%");
         }
 
-        // Filter berdasarkan kategori
         if ($request->id_kategori) {
             $query->where('id_kategori', $request->id_kategori);
         }
 
-        // Filter berdasarkan gedung
         if ($request->id_gedung) {
             $query->whereHas('ruangan.lantai.gedung', function ($q) use ($request) {
                 $q->where('id_gedung', $request->id_gedung);
             });
         }
 
-        // Filter berdasarkan kondisi
         if ($request->kondisi) {
             $query->where('kondisi', $request->kondisi);
         }
 
-        // Sorting
         $sortColumn = $request->sort_column ?? 'nama_fasilitas';
         $sortDirection = $request->sort_direction ?? 'asc';
         $query->orderBy($sortColumn, $sortDirection);
 
-        // Pagination
         $perPage = $request->input('per_page', 10);
         $fasilitas = $query->paginate($perPage);
 
         $fasilitas->appends(request()->query());
 
-        // Ambil data kategori dan gedung untuk filter
         $kategori = Kategori::all();
         $gedung = Gedung::all();
         $kondisi = Kondisi::cases();
@@ -291,9 +281,8 @@ class FasilitasController extends Controller
 
     public function import_file(Request $request)
     {
-        if ($request->ajax() || $request->wantsJson()) {
+        //if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                // validasi file harus xls atau xlsx, max 1MB
                 'file_input' => ['required', 'mimes:xlsx', 'max:1024']
             ];
 
@@ -311,60 +300,51 @@ class FasilitasController extends Controller
                 ->first();
 
             if (!$periode) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Periode tidak ditemukan untuk tanggal saat ini',
-                ]);
+                return redirect()->back()->withErrors(['periode_id' => 'Periode tidak ditemukan.']);
             }
 
             $file = $request->file('file_input');
 
-            $reader = IOFactory::createReader('Xlsx'); // load reader file excel
-            $reader->setReadDataOnly(true); // hanya membaca data
-            $spreadsheet = $reader->load($file->getRealPath()); // load file excel
-            $sheet = $spreadsheet->getActiveSheet(); // ambil sheet yang aktif
+            $reader = IOFactory::createReader('Xlsx'); 
+            $reader->setReadDataOnly(true); 
+            $spreadsheet = $reader->load($file->getRealPath()); 
+            $sheet = $spreadsheet->getActiveSheet();
 
-            $data = $sheet->toArray(null, false, true, true); // ambil data excel
+            $data = $sheet->toArray(null, false, true, true);
 
             $insert = [];
-            if (count($data) > 1) { // jika data lebih dari 1 baris
+            if (count($data) > 1) {
                 foreach ($data as $baris => $value) {
-                    if ($baris > 1) { // baris ke 1 adalah header, maka lewati
+                    if ($baris > 1) { 
                         $insert[] = [
                             'kode_fasilitas' => $value['A'],
                             'nama_fasilitas' => $value['B'],
                             'id_kategori' => $value['C'],
                             'id_ruangan' => $value['D'],
-                            'urgensi' => $value['E']->toUpperCase(),
-                            'kondisi' => $value['F']->toUpperCase(),
+                            'urgensi' => strtoupper($value['E']),
+                            'kondisi' => strtoupper($value['F']),
                             'deskripsi' => $value['G'],
-                            'foto_fasiltas' => '0',
+                            'foto_fasilitas' => '0',
                             'id_periode' => $periode->id_periode,
                             'created_at' => now(),
+                            'updated_at' => now(),
                         ];
                     }
                 }
 
                 if (count($insert) > 0) {
-                    // insert data ke database, jika data sudah ada, maka diabaikan
                     Fasilitas::insertOrIgnore($insert);
                 }
 
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Data berhasil diimport'
-                ]);
+                return redirect()->back()->with('success', 'Data berhasil diimport.');
             } else {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Tidak ada data yang diimport'
-                ]);
+                return redirect()->back()->withErrors(['general' => 'Data gagal diimport.']);
             }
-        }
-        return response()->json([
-            'status' => false,
-            'message' => 'Data gagal diimport'
-        ]);
+        //}
+        // return response()->json([
+        //     'status' => false,
+        //     'message' => 'Data gagal diimport'
+        // ]);
     }
 
     public function export_pdf()
