@@ -35,7 +35,7 @@ class FasilitasSeeder extends Seeder
                 'id_ruangan' => Ruangan::all()->random()->id_ruangan,
             ]);
 
-            $state = fake()->randomElement(['MENUNGGU_DIPROSES', 'SEDANG_INSPEKSI', 'SEDANG_DIPERBAIKI', 'SELESAI']);
+            $state = Status::from(fake()->randomElement(['MENUNGGU_DIPROSES', 'SEDANG_INSPEKSI', 'SEDANG_DIPERBAIKI', 'SELESAI']));
             $periode = Periode::all()->random();
             $tanggal_aduan = fake()->dateTimeBetween($periode->tanggal_mulai, $periode->tanggal_selesai);
             $tanggal_mulai_perbaikan = fake()->dateTimeBetween($tanggal_aduan, $periode->tanggal_selesai);
@@ -167,7 +167,7 @@ class FasilitasSeeder extends Seeder
                         ]);
 
                         $aduan = Aduan::create([
-                            'status' => Status::SEDANG_DIPERBAIKI,
+                            'status' => Status::SELESAI,
                             'tanggal_aduan' => $tanggal_aduan,
                             'id_fasilitas' => $fasilitas->id_fasilitas,
                             'id_periode' => $periode->id_periode,
