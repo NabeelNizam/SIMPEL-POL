@@ -21,9 +21,9 @@ class FasilitasSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $random = fake()->randomElement(['Meja', 'PC', 'Papan Tulis', 'Kursi', 'Pintu', 'Proyektor']);
-            $fasilitas = Fasilitas::create([
+            Fasilitas::create([
                 'nama_fasilitas' => $random,
                 'kode_fasilitas' => substr($random, 0, 2) . fake()->unique()->numerify('##'),
                 'deskripsi' => fake()->sentence(5),
@@ -34,12 +34,16 @@ class FasilitasSeeder extends Seeder
                 'id_periode' => 1,
                 'id_ruangan' => Ruangan::all()->random()->id_ruangan,
             ]);
+        }
+        for ($i = 0; $i < 20; $i++) {
 
             $state = Status::from(fake()->randomElement(['MENUNGGU_DIPROSES', 'SEDANG_INSPEKSI', 'SEDANG_DIPERBAIKI', 'SELESAI']));
             $periode = Periode::all()->random();
             $tanggal_aduan = fake()->dateTimeBetween($periode->tanggal_mulai, $periode->tanggal_selesai);
             $tanggal_mulai_perbaikan = fake()->dateTimeBetween($tanggal_aduan, $periode->tanggal_selesai);
             $tanggal_inspeksi = fake()->dateTimeBetween($tanggal_mulai_perbaikan, $periode->tanggal_selesai);
+
+            $fasilitas = Fasilitas::all()->random();
 
             // $state= Status::SEDANG_DIPERBAIKI;
             // pertama kali submit
