@@ -5,37 +5,37 @@
     <div class="flex items-center justify-between mb-4">
         <span class="text-sm text-gray-700">Daftar Jurusan yang terdaftar dalam sistem</span>
         <div class="flex gap-2">
-            <a href="#" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
+            <a href="{{ route('admin.jurusan.export_excel') }}" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
                 <i class="fas fa-file-excel"></i> Ekspor Excel
             </a>
-            <a href="#" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
+            <a href="{{ route('admin.jurusan.export_pdf') }}" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
                 <i class="fas fa-file-pdf"></i> Ekspor PDF
             </a>
-            <button onclick="modalAction('{{ route('admin.jurusan.create_ajax') }}')" class="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-green-700">
+            <button onclick="modalAction('{{ route('admin.jurusan.create') }}')" class="cursor-pointer bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-green-700">
                 <i class="fas fa-plus"></i> Tambah
             </button>
         </div>
     </div>
     <hr class="border-black opacity-30 mt-4">
 
-    <form id="filter-form" onsubmit="return false" class="flex flex-col gap-4 mb-4 mt-8">
-    <div class="flex justify-between items-center flex-wrap">
-        <div>
-            <label for="per_page" class="text-sm font-medium text-gray-700 mb-1">Show</label>
-            <select id="per_page" name="per_page" class="border border-gray-300 rounded-md shadow-sm sm:text-sm">
-                @foreach ([10, 25, 50, 100] as $length)
-                    <option value="{{ $length }}" {{ request('per_page', 10) == $length ? 'selected' : '' }}>{{ $length }}</option>
-                @endforeach
-            </select>
-            <span class="text-sm text-gray-700 mb-1">entries</span>
-        </div>
-        <div class="flex items-center gap-2">
-            <label for="search" class="text-sm font-medium text-gray-700">Pencarian:</label>
-            <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari pengguna..." class="w-64 border border-gray-300 rounded-md shadow-sm sm:text-sm" />
-        </div>
+<div class="flex justify-between items-center mb-4 mt-4">
+    <!-- Pagination -->
+    <div class="flex items-center gap-2">
+        <label for="per_page" class="text-sm font-medium text-gray-700">Show:</label>
+        <select id="per_page" name="per_page" class="border border-gray-300 rounded-md shadow-sm sm:text-sm">
+            @foreach ([10, 25, 50, 100] as $length)
+                <option value="{{ $length }}" {{ request('per_page', 10) == $length ? 'selected' : '' }}>{{ $length }}</option>
+            @endforeach
+        </select>
+        <span class="text-sm text-gray-700">entries</span>
     </div>
 
-    </form>
+    <!-- Pencarian -->
+    <div class="flex items-center gap-2">
+        <label for="search" class="text-sm font-medium text-gray-700">Pencarian:</label>
+        <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari jurusan..." class="w-64 border border-gray-300 rounded-md shadow-sm sm:text-sm" />
+    </div>
+</div>
 
     <div id="jurusan-table-body">
         @include('admin.jurusan.jurusan_table', ['jurusan' => $jurusan])
@@ -44,10 +44,35 @@
 
 <div id="myModal" class="fixed inset-0 z-50 hidden items-center justify-center backdrop-blur-sm bg-white/30"></div>
 
+@if (session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil',
+        text: '{{ session('success') }}',
+    }).then(()=> {
+        location.reload();
+    });
+</script>
+@endif
+
+@if ($errors->any())
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal',
+        html: `{!! implode('<br>', $errors->all()) !!}`,
+    }).then(()=> {
+        location.reload();
+    });
+</script>
+@endif
+
 @endsection
 
 @push('js')
 <script>
+
     function modalAction(url = '') {
         $.get(url, function(response) {
             $('#myModal').html(response).removeClass('hidden').addClass('flex');
@@ -60,23 +85,26 @@
     });
 
     function reloadData() {
-        $.ajax({
-            url: "{{ route('admin.jurusan') }}",
-            method: "GET",
-            data: {
-                search: $('#search').val(),
-                per_page: $('#per_page').val(),
-                sort_column: $('#sort-column').val(),
-                sort_direction: $('#sort-direction').val()
-            },
-            success: function (response) {
-                $('#jurusan-table-body').html(response.html);
-            },
-            error: function () {
-                Swal.fire('Error!', 'Gagal memuat data jurusan.', 'error');
-            }
-        });
-    }
+    $.ajax({
+        url: "{{ route('admin.jurusan') }}",
+        method: "GET",
+        data: {
+            search: $('#search').val(),
+            per_page: $('#per_page').val(),
+            id_kategori: $('#id_kategori').val(),
+            id_gedung: $('#id_gedung').val(),
+            kondisi: $('#kondisi').val(),
+            sort_column: $('#sort-column').val(),
+            sort_direction: $('#sort-direction').val()
+        },
+        success: function (response) {
+            $('#jurusan-table-body').html(response.html);
+        },
+        error: function () {
+            Swal.fire('Error!', 'Gagal memuat data jurusan.', 'error');
+        }
+    });
+}
 
     $(document).ready(function () {
         // Event untuk jumlah data per halaman
