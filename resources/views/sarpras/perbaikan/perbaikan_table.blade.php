@@ -38,7 +38,7 @@
                 </td>
             </tr>
         @empty
-            <tr>
+            <tr class="border-1">
                 <td colspan="9" class="text-center text-gray-500">Tidak ada data perbaikan.</td>
             </tr>
         @endforelse

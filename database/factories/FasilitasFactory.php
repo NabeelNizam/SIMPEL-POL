@@ -26,13 +26,13 @@ class FasilitasFactory extends Factory
         $random = fake()->randomElement(['Meja', 'PC', 'Papan Tulis', 'Kursi', 'Pintu', 'Proyektor']);
         return [
             'nama_fasilitas' => $random,
-            'kode_fasilitas' => substr($random, 0, 2). fake()->numerify('##'),
+            'kode_fasilitas' => substr($random, 0, 2). $this->faker->unique()->numerify('##'),
             'deskripsi' => fake()->sentence(5),
             'id_kategori' => fake()->randomElement([1, 2, 3]),
             'kondisi' => Kondisi::LAYAK,
             'urgensi' => Urgensi::BIASA,
             'foto_fasilitas' => fake()->image(),
-            'id_periode' => 1
+            'id_periode' => 1,
         ];
     }
     public function configure()

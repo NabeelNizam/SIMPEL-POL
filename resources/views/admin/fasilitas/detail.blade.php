@@ -5,8 +5,8 @@
         <i class="fas fa-times"></i>
     </button>
 
-    <h2 class="text-xl font-semibold text-center">Detail Pengguna</h2>
-    <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
+    <h2 class="text-xl font-semibold text-center">Detail Data Fasilitas</h2>
+    <div class="w-[185px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
     <!-- Profil Horizontal -->
     <div class="flex items-center mb-6 gap-4">

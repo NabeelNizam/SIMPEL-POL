@@ -15,15 +15,9 @@ class KriteriaSeeder extends Seeder
     {
         $data = [
             [
-                'kode_kriteria' => 'TKR',
-                'nama_kriteria' => 'Tingkat Kerusakan',
-                'bobot' => 0.3,
-            ],
-            [
-                'kode_kriteria' => 'BYA',
-                'nama_kriteria' => 'Biaya Anggaran',
-                'bobot' => 0.25
-
+                'kode_kriteria' => 'USC',
+                'nama_kriteria' => 'User Count',
+                'bobot' => 0.1
             ],
             [
                 'kode_kriteria' => 'UGS',
@@ -34,6 +28,16 @@ class KriteriaSeeder extends Seeder
                 'kode_kriteria' => 'WKT',
                 'nama_kriteria' => 'Waktu',
                 'bobot' => 0.2
+            ],
+            [
+                'kode_kriteria' => 'BYA',
+                'nama_kriteria' => 'Biaya Anggaran',
+                'bobot' => 0.25
+            ],
+            [
+                'kode_kriteria' => 'TKR',
+                'nama_kriteria' => 'Tingkat Kerusakan',
+                'bobot' => 0.2,
             ],
         ];
 

@@ -25,9 +25,9 @@
                 </x-table.cell>
             </x-table.row>
         @empty
-            <x-table.row>
-                <x-table.cell colspan="4" class="text-center text-gray-500">Tidak ada data role.</x-table.cell>
-            </x-table.row>
+            <tr class="border-1">
+                <td colspan="4" class="text-center text-gray-500 py-4">Tidak ada data role.</td>
+            </tr>
         @endforelse
     </x-slot>
 </x-table>

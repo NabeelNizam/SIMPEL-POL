@@ -5,8 +5,8 @@
         <i class="fas fa-times"></i>
     </button>
 
-    <h2 class="text-xl font-semibold mb-4 text-center">Edit Pengguna</h2>
-    <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
+    <h2 class="text-xl font-semibold mb-2 text-center">Edit Fasilitas</h2>
+    <div class="w-[120px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
     <form id="form-edit-pengguna" action="{{ route('admin.pengguna.update_ajax', $user->id_user) }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         @csrf
@@ -59,7 +59,12 @@
         </div>
 
         <div class="col-span-2 text-right mt-4">
-            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">Update</button>
+            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md cursor-pointer">
+                <div class="flex justify-center items-center gap-[10px]">
+                    <img src="{{ asset('icons/light/Check-circle.svg') }}" alt="Simpan" class="w-6 h-6">
+                    <p>Simpan</p>
+                </div>
+            </button>
         </div>
     </form>
 </div>
@@ -102,7 +107,8 @@ $(document).ready(function() {
                             title: 'Berhasil',
                             text: response.message
                         });
-                        dataUser.ajax.reload();
+                        // dataFasilitas.ajax.reload();
+                        reloadData();
                     } else {
                         $('.error-text').text('');
                         $.each(response.msgField, function(prefix, val) {

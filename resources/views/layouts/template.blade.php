@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,54 +19,62 @@
     <title>SIMPEL-POL</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('css')
-    <style>       
-    html {
-        scroll-behavior: smooth;
-    }
-    
-    /* Sidebar transitions */
-    .sidebar {
-        transition: transform 0.3s ease-in-out;
-        height: 100vh;
-        position: fixed;
-        top: 0;
-        left: 0;
-        transform: translateX(0); /* Default visible */
-        width: 16rem; /* w-64 = 16rem */
-        z-index: 40;
-    }
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
 
-    .sidebar.closed {
-        transform: translateX(-100%); /* Hide when closed */
-    }
-
-    /* Main content spacing */
-    .main-content {
-        transition: margin-left 0.3s ease-in-out;
-        margin-left: 16rem; /* Default with margin */
-    }
-
-    .main-content.full {
-        margin-left: 0; /* No margin when sidebar is closed */
-    }
-
-    /* Responsive adjustments for mobile */
-    @media (max-width: 767px) {
+        /* Sidebar transitions */
         .sidebar {
-            transform: translateX(-100%); /* Default hidden on mobile */
+            transition: transform 0.3s ease-in-out;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translateX(0);
+            /* Default visible */
+            width: 16rem;
+            /* w-64 = 16rem */
+            z-index: 40;
         }
 
-        .sidebar.open {
-            transform: translateX(0); /* Show when open on mobile */
+        .sidebar.closed {
+            transform: translateX(-100%);
+            /* Hide when closed */
         }
 
+        /* Main content spacing */
         .main-content {
-            margin-left: 0; /* No margin on mobile by default */
+            transition: margin-left 0.3s ease-in-out;
+            margin-left: 16rem;
+            /* Default with margin */
         }
-    }
-    
-</style>
+
+        .main-content.full {
+            margin-left: 0;
+            /* No margin when sidebar is closed */
+        }
+
+        /* Responsive adjustments for mobile */
+        @media (max-width: 767px) {
+            .sidebar {
+                transform: translateX(-100%);
+                /* Default hidden on mobile */
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+                /* Show when open on mobile */
+            }
+
+            .main-content {
+                margin-left: 0;
+                /* No margin on mobile by default */
+            }
+        }
+    </style>
 </head>
+
 <body class="bg-gray-50">
     <div class="flex h-screen overflow-hidden">
         @include('layouts.sidebar')
@@ -93,6 +102,7 @@
 
     <!-- Scripts -->
     @include('layouts.scripts')
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -100,7 +110,9 @@
 
 
     <!-- DataTables JS -->
-    {{-- <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> --}}
+    {{--
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> --}}
     @stack('js')
 </body>
+
 </html>

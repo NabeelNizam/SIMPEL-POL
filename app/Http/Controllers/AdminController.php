@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Sheet\Sheet;
 use App\Models\Jurusan;
 use App\Models\Mahasiswa;
 use App\Models\Pegawai;
@@ -288,5 +289,46 @@ class AdminController extends Controller
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ], 500);
         }
+    }
+    private function set_sheet()
+    {
+        $users = User::with('role')->get();
+        $data = $users->map(function ($user) {
+            return [
+                'Nama' => $user->nama,
+                'Email' => $user->email,
+                'Username' => $user->username,
+                'Telepon' => $user->no_hp,
+                'Role' => $user->role ? $user->role->nama_role : 'Tidak ada',
+                'Jurusan' => $user->jurusan ? $user->jurusan->nama_jurusan : 'Tidak ada',
+            ];
+        })->toArray();
+        $headers = [
+            'Nama',
+            'Email',
+            'Username',
+            'Telepon',
+            'Role',
+            'Jurusan'
+        ];
+        $sheet = Sheet::make(
+            [
+                'data' => $data,
+                'headers' => $headers,
+                'title' => 'Daftar Pengguna',
+                'filename' => 'daftar_pengguna_' . now()->format('Ymd_His') . '.xlsx',
+            ]
+        );
+        return $sheet;
+    }
+    public function export_excel()
+    {
+        $sheet = $this->set_sheet();
+        return $sheet->toXls();
+    }
+    public function export_pdf()
+    {
+        $sheet = $this->set_sheet();
+        return $sheet->toPdf();
     }
 }

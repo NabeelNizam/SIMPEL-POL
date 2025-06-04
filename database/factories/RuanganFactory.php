@@ -25,10 +25,10 @@ class RuanganFactory extends Factory
 
         ];
     }
-    public function configure()
-    {
-        return $this->afterCreating(function (Ruangan $ruangan) {
-            $fasilitas = Fasilitas::factory()->count(5)->create(['id_ruangan' => $ruangan->id_ruangan]);
-        });
-    }
+    // public function configure()
+    // {
+    //     return $this->afterCreating(function (Ruangan $ruangan) {
+    //         $fasilitas = Fasilitas::factory()->count(5)->create(['id_ruangan' => $ruangan->id_ruangan]);
+    //     });
+    // }
 }

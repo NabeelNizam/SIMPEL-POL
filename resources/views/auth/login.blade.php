@@ -43,7 +43,7 @@
             </div>
 
             <button type="submit"
-                class="w-full bg-blue-900 hover:bg-blue-800 text-white font-semibold py-2 rounded-md">
+                class="w-full bg-blue-900 hover:bg-blue-800 text-white font-semibold py-2 rounded-md cursor-pointer">
                 Login
             </button>
 
