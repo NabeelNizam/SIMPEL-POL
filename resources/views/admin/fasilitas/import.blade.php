@@ -2,7 +2,7 @@
     <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">Import Data Fasilitas</h2>
     <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
-    <form action="{{ route('admin.fasilitas.import') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.fasilitas.import_file') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         {{-- <div class="mb-4">
@@ -25,7 +25,7 @@
                 readonly>
                 <label for="file_input" class="font-semibold px-4 py-2 text-sm text-black bg-gray-300 hover:bg-gray-400 cursor-pointer"> Browse</label>
                 <input type="file" id="file_input" name="file_input" 
-                    accept=".jpg,.jpeg,.png" 
+                    accept=".xlsx, .xlsm, .xml" 
                     class="hidden" 
                     onchange="const input = document.getElementById('file-name-display'); input.value = this.files[0]?.name; input.classList.remove('text-gray-500'); input.classList.add('text-black');">
             </div>
@@ -37,8 +37,8 @@
 
 
         <div class="flex justify-end gap-2">
-            <button type="button" id="modal-close" class="px-4 py-2 rounded bg-gray-300 text-gray-700 hover:bg-gray-400 text-sm">Batal</button>
-            <button type="submit" class="px-4 py-2 rounded bg-blue-700 text-white hover:bg-blue-800 text-sm">Import</button>
+            <button type="button" id="modal-close" class="px-4 py-2 rounded bg-gray-300 text-gray-700 hover:bg-gray-400 text-sm cursor-pointer">Batal</button>
+            <button type="submit" class="px-4 py-2 rounded bg-blue-700 text-white hover:bg-blue-800 text-sm cursor-pointer">Import</button>
         </div>
     </form>
 

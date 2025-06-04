@@ -80,6 +80,7 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         Route::get('/create', [FasilitasController::class, 'create'])->name('admin.fasilitas.create');
         Route::post('/store', [FasilitasController::class, 'store'])->name('admin.fasilitas.store');
         Route::get('/import', [FasilitasController::class, 'import'])->name('admin.fasilitas.import');
+        Route::post('/import_file', [FasilitasController::class, 'import_file'])->name('admin.fasilitas.import_file');
         Route::get('/{fasilitas}/confirm', [FasilitasController::class, 'confirm'])->name('admin.fasilitas.confirm');
         Route::get('/{fasilitas}/show', [FasilitasController::class, 'show'])->name('admin.fasilitas.show');
         Route::get('/{fasilitas}/edit', [FasilitasController::class, 'edit'])->name('admin.fasilitas.edit');
