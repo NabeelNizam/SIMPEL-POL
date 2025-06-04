@@ -1,18 +1,9 @@
 <div class="bg-white rounded-lg shadow-lg w-full max-w-lg mx-auto p-6 relative">
-    <h2 class="text-xl font-semibold text-gray-800 mb-2 text-center">Import Data Fasilitas</h2>
-    <div class="w-[190px] h-1 bg-yellow-400 mx-auto mb-6 rounded"></div>
+    <h2 class="text-xl font-semibold text-gray-800 mb-2 text-center">Import Data Kategori</h2>
+    <div class="w-[200px] h-1 bg-yellow-400 mx-auto mb-6 rounded"></div>
 
-    <form action="{{ route('admin.fasilitas.import_file') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.kategori.import_file') }}" method="POST" enctype="multipart/form-data">
         @csrf
-
-        {{-- <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-900" for="file_input">Import File</label>
-            <input name="file" id="file_input" type="file" accept=".xlsx, .xls" required
-                class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <p class="mt-1 text-sm text-gray-500" id="file_input_help">
-                Format yang didukung: .xlsx, .xlsm, .xml. Ukuran maksimal: 2MB
-            </p>
-        </div> --}}
 
         <div class="mb-4">
             <label for="file_input" class="block text-sm font-medium mb-1">
