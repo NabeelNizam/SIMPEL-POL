@@ -6,7 +6,7 @@ use App\Http\Controllers\{
     FormPelaporanController, JurusanController, GedungController,
     KriteriaController, MahasiswaController, PerbaikanSarprasController,
     ProfilController, RiwayatMahasiswaController, RiwayatTeknisiController,
-    RoleController, SarprasController, TeknisiController, WelcomeController
+    RoleController, SarprasController, TeknisiController, WelcomeController, PeriodeController
 };
 
 // Auth & Welcome

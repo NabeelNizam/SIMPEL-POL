@@ -81,18 +81,18 @@
 
                             <div class="prose max-w-none text-gray-700">
                                 <p class="mb-4">
-                                    SOP Sarana Prasarana adalah panduan prosedur standar 
+                                    SOP Sarana Prasarana adalah panduan prosedur standar
                                     untuk pengelolaan, pemeliharaan, dan penggunaan fasilitas
-                                    di lingkungan Politeknik Negeri Malang. 
-                                    SOP ini bertujuan untuk memastikan proses pengelolaan 
+                                    di lingkungan Politeknik Negeri Malang.
+                                    SOP ini bertujuan untuk memastikan proses pengelolaan
                                     sarana dan prasarana berjalan efektif, efisien, dan sesuai
                                      dengan regulasi yang berlaku.
                                 </p>
 
                                 <p class="mb-4">
-                                    Seluruh staff dan mahasiswa Polinema diharapkan 
-                                    mengikuti SOP ini dalam penggunaan dan pengelolaan 
-                                    sarana prasarana kampus. Untuk mengakses dokumen SOP 
+                                    Seluruh staff dan mahasiswa Polinema diharapkan
+                                    mengikuti SOP ini dalam penggunaan dan pengelolaan
+                                    sarana prasarana kampus. Untuk mengakses dokumen SOP
                                     lengkap, silakan beralih ke tab "Dokumen SOP".
                                 </p>
                             </div>
@@ -134,29 +134,11 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 mt-24">
-    <div class="p-6 border-b border-gray-200 flex items-center">
-        <div class="flex-shrink-0">
-            <svg class="w-5 h-5 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                    clip-rule="evenodd"></path>
-            </svg>
-        </div>
-        <div class="ml-3">
-            <h3 class="text-sm font-medium text-blue-800">Tentang SOP Sarana Prasarana</h3>
-        </div>
-    </div>
-</div>
-
-{{-- GRID UTAMA UNTUK SEMUA GRAFIK --}}
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 my-6">
-
-    {{-- Umpan Balik --}}
-    <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Tingkat Kepuasan Pengguna</h3>
-        <canvas id="umpanBalikChart"></canvas>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 mt-6">
+       {{-- Umpan Balik --}}
+        <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Umpan Balik</h3>
+            <canvas id="umpanBalikChart"></canvas>
 
         <div class="text-center mt-4">
             <h2 class="text-base font-semibold text-gray-800">Rata-rata:</h2>
@@ -215,7 +197,7 @@
                         'rgba(255, 205, 86, 0.5)',
                         'rgba(255, 159, 64, 0.5)',
                         'rgba(255, 99, 132, 0.5)'
-                         
+
                     ],
                     borderColor: [
                         'rgba(54, 162, 235, 1)',
@@ -407,35 +389,9 @@ const kategoriKerusakanChart = new Chart(kategoriKerusakanCtx, {
             options: {
                 responsive: true,
                 plugins: {
-                    legend: { display: true },
-                    tooltip: { enabled: true }
-                },
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Bulan'
-                        },
-                        ticks: {
-                            callback: function (value, index) {
-                                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-                                return months[index]; // Menampilkan nama bulan
-                            }
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Pengeluaran (Rp)'
-                        },
-                        ticks: {
-                            stepSize: 1000000 // Atur step size sesuai kebutuhan
-                        }
-                    }
+                    legend: { display: false }
                 }
             }
-            
         });
 
             tabButtons.forEach(button => {

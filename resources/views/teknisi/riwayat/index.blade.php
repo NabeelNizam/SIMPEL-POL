@@ -36,6 +36,7 @@
 <div id="myModal" class="fixed inset-0 z-50 hidden items-center justify-center backdrop-blur-sm bg-white/30"></div>
 @endsection
 
+
 @push('js')
 <script>
     function modalAction(url = '') {
@@ -47,7 +48,7 @@
     $(document).on('click', '#modal-close', function() {
             $('#myModal').addClass('hidden').removeClass('flex').html('');
         });
-        
+
     function reloadData() {
         $.ajax({
             url: "{{ route('teknisi.riwayat') }}",
