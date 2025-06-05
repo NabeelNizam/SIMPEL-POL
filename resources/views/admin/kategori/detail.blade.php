@@ -5,18 +5,18 @@
         <i class="fas fa-times"></i>
     </button>
 
-    <h2 class="text-xl font-semibold text-center">Detail Data Jurusan</h2>
+    <h2 class="text-xl font-semibold text-center">Detail Data Kategori</h2>
     <div class="w-[180px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
     <!-- Detail Informasi -->
     <div class="grid grid-cols-1 gap-3 text-sm text-gray-700 mb-3">
         <div class="mt-2">
-            <p class="font-semibold text-gray-500">Kode Jurusan</p>
-            <p>{{ $jurusan->kode_jurusan ?? '-' }}</p>
+            <p class="font-semibold text-gray-500">Kode Kategori</p>
+            <p>{{ $kategori->kode_kategori ?? '-' }}</p>
         </div>
         <div class="mt-2">
-            <p class="font-semibold text-gray-500">Nama Jurusan</p>
-            <p>{{ $jurusan->nama_jurusan ?? '-' }}</p>
+            <p class="font-semibold text-gray-500">Nama Kategori</p>
+            <p>{{ $kategori->nama_kategori ?? '-' }}</p>
         </div>
     </div>
 </div>

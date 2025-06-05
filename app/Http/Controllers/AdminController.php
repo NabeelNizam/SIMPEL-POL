@@ -221,10 +221,11 @@ class AdminController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422);
+            // return response()->json([
+            //     'success' => false,
+            //     'errors' => $validator->errors()
+            // ], 422);
+            return redirect()->route('admin.pengguna')->withErrors($validator)->withInput();
         }
 
         try {
@@ -258,11 +259,11 @@ class AdminController extends Controller
             // ]);
             return redirect()->route('admin.pengguna')->with('success', 'Pengguna berhasil ditambahkan.');
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ], 500);
-            // return redirect()->route('admin.pengguna')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            // ], 500);
+            return redirect()->route('admin.pengguna')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 

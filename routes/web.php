@@ -5,10 +5,12 @@ use App\Http\Controllers\{
     AdminController,
     AduanController,
     AuthController,
+    CopelandTestingController,
     FasilitasController,
     FormPelaporanController,
     JurusanController,
     GedungController,
+    KategoriController,
     KriteriaController,
     LokasiController,
     MahasiswaController,
@@ -21,7 +23,9 @@ use App\Http\Controllers\{
     SarprasController,
     TeknisiController,
     WelcomeController,
-    PeriodeController
+    PeriodeController,
+    PrometheeController,
+    SarprasPenugasanController
 };
 
 // Auth & Welcome
@@ -70,13 +74,15 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
     // Jurusan
     Route::prefix('jurusan')->group(function () {
         Route::get('/', [JurusanController::class, 'index'])->name('admin.jurusan');
-        Route::get('/create', [JurusanController::class, 'create_ajax'])->name('admin.jurusan.create_ajax');
-        Route::post('/store', [JurusanController::class, 'store_ajax'])->name('admin.jurusan.store_ajax');
-        Route::get('/import', [JurusanController::class, 'import_ajax'])->name('admin.jurusan.import_ajax');
-        Route::get('/{id}/show_ajax', [JurusanController::class, 'show_ajax'])->name('admin.jurusan.show_ajax');
-        Route::get('/{id}/edit_ajax', [JurusanController::class, 'edit_ajax'])->name('admin.jurusan.edit_ajax');
-        Route::post('/{id}/edit_ajax', [JurusanController::class, 'update_ajax'])->name('admin.jurusan.update_ajax');
-        Route::delete('/{id}/remove_ajax', [JurusanController::class, 'remove_ajax'])->name('admin.jurusan.delete_ajax');
+        Route::get('/create', [JurusanController::class, 'create'])->name('admin.jurusan.create');
+        Route::post('/store', [JurusanController::class, 'store'])->name('admin.jurusan.store');
+        Route::get('/{jurusan}/confirm', [JurusanController::class, 'confirm'])->name('admin.jurusan.confirm');
+        Route::get('/{jurusan}/show', [JurusanController::class, 'show'])->name('admin.jurusan.show');
+        Route::get('/{jurusan}/edit', [JurusanController::class, 'edit'])->name('admin.jurusan.edit');
+        Route::put('/{jurusan}/update', [JurusanController::class, 'update'])->name('admin.jurusan.update');
+        Route::delete('/{jurusan}/destroy', [JurusanController::class, 'destroy'])->name('admin.jurusan.destroy');
+        Route::get('/export_pdf', [JurusanController::class, 'export_pdf'])->name('admin.jurusan.export_pdf');
+        Route::get('/export_excel', [JurusanController::class, 'export_excel'])->name('admin.jurusan.export_excel');
     });
 
     // Fasilitas
@@ -97,22 +103,20 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         Route::get('/export_excel', [FasilitasController::class, 'export_excel'])->name('admin.fasilitas.export_excel');
     });
 
-    // Lokasi
-    Route::prefix('lokasi')->group(function () {
-        Route::get('/', [LokasiController::class, 'index'])->name('admin.lokasi');
-        Route::get('/create', [LokasiController::class, 'create'])->name('admin.lokasi.create');
-        Route::post('/store', [LokasiController::class, 'store'])->name('admin.lokasi.store');
-        Route::get('/import', [LokasiController::class, 'import'])->name('admin.lokasi.import');
-        Route::post('/import_file', [LokasiController::class, 'import_file'])->name('admin.lokasi.import_file');
-        Route::get('/{lokasi}/confirm', [LokasiController::class, 'confirm'])->name('admin.lokasi.confirm');
-        Route::get('/{lokasi}/show', [LokasiController::class, 'show'])->name('admin.lokasi.show');
-        Route::get('/{lokasi}/edit', [LokasiController::class, 'edit'])->name('admin.lokasi.edit');
-        Route::put('/{lokasi}/update', [LokasiController::class, 'update'])->name('admin.lokasi.update');
-        Route::delete('/{lokasi}/destroy', [LokasiController::class, 'destroy'])->name('admin.lokasi.destroy');
-        Route::get('/get-lantai/{id_gedung}', [LokasiController::class, 'getLantai']);
-        Route::get('/get-ruangan/{id_lantai}', [LokasiController::class, 'getRuangan']);
-        Route::get('/export_pdf', [LokasiController::class, 'export_pdf'])->name('admin.lokasi.export_pdf');
-        Route::get('/export_excel', [LokasiController::class, 'export_excel'])->name('admin.lokasi.export_excel');
+    // Kategori Fasilitas
+    Route::prefix('kategori')->group(function () {
+        Route::get('/', [KategoriController::class, 'index'])->name('admin.kategori');
+        Route::get('/create', [KategoriController::class, 'create'])->name('admin.kategori.create');
+        Route::post('/store', [KategoriController::class, 'store'])->name('admin.kategori.store');
+        Route::get('/import', [KategoriController::class, 'import'])->name('admin.kategori.import');
+        Route::post('/import_file', [KategoriController::class, 'import_file'])->name('admin.kategori.import_file');
+        Route::get('/{kategori}/confirm', [KategoriController::class, 'confirm'])->name('admin.kategori.confirm');
+        Route::get('/{kategori}/show', [KategoriController::class, 'show'])->name('admin.kategori.show');
+        Route::get('/{kategori}/edit', [KategoriController::class, 'edit'])->name('admin.kategori.edit');
+        Route::put('/{kategori}/update', [KategoriController::class, 'update'])->name('admin.kategori.update');
+        Route::delete('/{kategori}/destroy', [KategoriController::class, 'destroy'])->name('admin.kategori.destroy');
+        Route::get('/export_pdf', [KategoriController::class, 'export_pdf'])->name('admin.kategori.export_pdf');
+        Route::get('/export_excel', [KategoriController::class, 'export_excel'])->name('admin.kategori.export_excel');
     });
 
     // Aduan
@@ -165,8 +169,17 @@ Route::prefix('riwayat')->group(function () {
 
 // Sarpras
 Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
+
     Route::get('/', [SarprasController::class, 'index'])->name('sarpras.dashboard');
     Route::get('/sop/download/{filename}', [SarprasController::class, 'SOPDownload'])->name('download.sop');
+
+    Route::prefix('penugasan')->group(function () {
+        Route::get('/', [SarprasPenugasanController::class, 'index'])->name('sarpras.penugasan');
+
+        Route::get('/calculate-promethee', [SarprasPenugasanController::class, 'calculatePromethee'])->name('coba-hitung');
+        // Route::get('/{id}/show_ajax', [SarprasPenugasanController::class, 'show_ajax'])->name('mahasiswa.riwayat.show_ajax');
+        // Route::get('/{id}/edit_ajax', [SarprasPenugasanController::class, 'edit_ajax'])->name('mahasiswa.riwayat.edit_ajax');
+    });
 
     Route::prefix('bobot')->group(function () {
         Route::get('/', [KriteriaController::class, 'index'])->name('sarpras.bobot');
@@ -199,11 +212,11 @@ Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
 });
 
 Route::middleware(['authorize:SARPRAS'])->group(function () {
-Route::get('/pengaduan', [AduanController::class, 'pengaduan'])->name('sarpras.pengaduan');
-Route::get('/pengaduan/{id}/detail_pengaduan', [AduanController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
-Route::get('/penugasan', [FasilitasController::class, 'penugasan']);
-Route::get('/perbaikan', [PerbaikanController::class, 'perbaikan']);
-Route::get('/perbaikan', [PerbaikanController::class, 'riwayat']);
+    Route::get('/pengaduan', [AduanController::class, 'pengaduan'])->name('sarpras.pengaduan');
+    Route::get('/pengaduan/{id}/detail_pengaduan', [AduanController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
+    Route::get('/penugasan', [FasilitasController::class, 'penugasan']);
+    Route::get('/perbaikan', [PerbaikanController::class, 'perbaikan']);
+    Route::get('/perbaikan', [PerbaikanController::class, 'riwayat']);
 });
 
 // Teknisi
@@ -217,3 +230,12 @@ Route::prefix('teknisi')->middleware(['authorize:TEKNISI'])->group(function () {
         Route::get('/export-pdf', [RiwayatTeknisiController::class, 'export_pdf'])->name('teknisi.perbaikan.export_pdf');
     });
 });
+
+use App\Http\Helpers\CopelandAggregator;
+use App\Http\Helpers\AlternativeDTO;
+
+Route::get('/test-gdss', CopelandTestingController::class)->name('test.gdss');
+Route::get('/hitung', [PrometheeController::class, 'calculatePromethee'])->name('sarpras.hitung'); // TES PROMETHEE
+Route::get('/tesMahasiswa', [PrometheeController::class, 'tesHitungMahasiswa'])->name('sarpras.tesMahasiswa');
+Route::get('/tesDosen', [PrometheeController::class, 'tesHitungDosen'])->name('sarpras.tesDosen');
+Route::get('/tesTendik', [PrometheeController::class, 'tesHitungTendik'])->name('sarpras.tesTendik');

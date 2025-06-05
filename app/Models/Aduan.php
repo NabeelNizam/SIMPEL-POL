@@ -24,7 +24,7 @@ class Aduan extends Model
 
     public function fasilitas()
     {
-        return $this->hasOne(Fasilitas::class, 'id_fasilitas', 'id_fasilitas');
+        return $this->belongsTo(Fasilitas::class, 'id_fasilitas', 'id_fasilitas');
     }
     public function umpan_balik()
     {
@@ -37,5 +37,13 @@ class Aduan extends Model
     public function perbaikan()
     {
         return $this->hasOne(Perbaikan::class, 'id_perbaikan', 'id_perbaikan');
+    }
+    public function periode()
+    {
+        return $this->belongsTo(Periode::class, 'id_periode', 'id_periode');
+    }
+    public function biaya()
+    {
+        return $this->hasManyThrough(Biaya::class, Perbaikan::class, 'id_perbaikan', 'id_perbaikan', 'id_perbaikan', 'id_perbaikan');
     }
 }

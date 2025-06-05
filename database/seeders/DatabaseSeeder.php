@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
             LantaiSeeder::class,
             RuanganSeeder::class,
             FasilitasSeeder::class,
-            AduanSeeder::class,
             KriteriaSeeder::class
         ]);
     }

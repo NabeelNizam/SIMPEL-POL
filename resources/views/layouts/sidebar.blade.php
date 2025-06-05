@@ -46,7 +46,7 @@
                             <img src="{{ ($activeMenu == 'fasilitas') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Fasilitas" class="mr-2 w-5">
                             Fasilitas
                         </a>
-                        <a href="#" class="flex items-center p-2 w-full {{ ($activeMenu == 'kategori') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        <a href="{{ route('admin.kategori') }}" class="flex items-center p-2 w-full {{ ($activeMenu == 'kategori') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                          style="{{ ($activeMenu == 'kategori') ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ ($activeMenu == 'kategori') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Kategori" class="mr-2 w-5">
                             Kategori Fasilitas
@@ -163,10 +163,10 @@
                     <div>
                         <p class="mb-1 text-xs text-gray-500 uppercase">Kelola</p>
 
-                        <a href="sarpras/bobot"
+                        <a href="/sarpras/bobot"
                         class="flex items-center p-2 w-full {{ ($activeMenu == 'bobot') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                         style="{{ ($activeMenu == 'bobot') ? 'border-color: #F99D1C;' : '' }}">
-                            <img src="{{ asset('icons/light/Settings.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">
+                            <img src="{{ ($activeMenu == 'bobot') ? asset('icons/solid/Settings.svg') : asset('icons/light/Settings.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">
                             Bobot Prioritas Perbaikan
                         </a>
 
@@ -185,7 +185,7 @@
                             <img src="{{ ($activeMenu == 'pengaduan') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">
                             Pengaduan
                         </a>
-                        <a href="/sarpras/penugasan"
+                        <a href="{{ route('sarpras.penugasan') }}"
                         class="flex items-center p-2 w-full {{ ($activeMenu == 'penugasan') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                         style="{{ ($activeMenu == 'penugasan') ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ ($activeMenu == 'penugasan') ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">

@@ -3,15 +3,18 @@
 @section('content')
 <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-600">
     <div class="flex items-center justify-between mb-4">
-        <span class="text-sm text-gray-700">Daftar Jurusan yang terdaftar dalam sistem</span>
+        <span class="text-sm text-gray-700">Daftar Kategori yang terdaftar dalam sistem</span>
         <div class="flex gap-2">
-            <a href="{{ route('admin.jurusan.export_excel') }}" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
+            <button onclick="modalAction('{{ route('admin.kategori.import') }}')" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900 cursor-pointer">
+                <i class="fas fa-file-import"></i> Import
+            </button>
+            <a href="{{ route('admin.kategori.export_excel') }}" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
                 <i class="fas fa-file-excel"></i> Ekspor Excel
             </a>
-            <a href="{{ route('admin.jurusan.export_pdf') }}" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
+            <a href="{{ route('admin.kategori.export_pdf') }}" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
                 <i class="fas fa-file-pdf"></i> Ekspor PDF
             </a>
-            <button onclick="modalAction('{{ route('admin.jurusan.create') }}')" class="cursor-pointer bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-green-700">
+            <button onclick="modalAction('{{ route('admin.kategori.create') }}')" class="cursor-pointer bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-green-700">
                 <i class="fas fa-plus"></i> Tambah
             </button>
         </div>
@@ -33,12 +36,12 @@
     <!-- Pencarian -->
     <div class="flex items-center gap-2">
         <label for="search" class="text-sm font-medium text-gray-700">Pencarian:</label>
-        <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari jurusan..." class="w-64 border border-gray-300 rounded-md shadow-sm sm:text-sm" />
+        <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari kategori..." class="w-64 border border-gray-300 rounded-md shadow-sm sm:text-sm" />
     </div>
 </div>
 
-    <div id="jurusan-table-body">
-        @include('admin.jurusan.jurusan_table', ['jurusan' => $jurusan])
+    <div id="kategori-table-body">
+        @include('admin.kategori.kategori_table', ['kategori' => $kategori])
     </div>
 </div>
 
@@ -86,7 +89,7 @@
 
     function reloadData() {
     $.ajax({
-        url: "{{ route('admin.jurusan') }}",
+        url: "{{ route('admin.kategori') }}",
         method: "GET",
         data: {
             search: $('#search').val(),
@@ -98,10 +101,10 @@
             sort_direction: $('#sort-direction').val()
         },
         success: function (response) {
-            $('#jurusan-table-body').html(response.html);
+            $('#kategori-table-body').html(response.html);
         },
         error: function () {
-            Swal.fire('Error!', 'Gagal memuat data jurusan.', 'error');
+            Swal.fire('Error!', 'Gagal memuat data kategori.', 'error');
         }
     });
 }
