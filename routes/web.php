@@ -164,7 +164,6 @@ Route::prefix('riwayat')->group(function () {
 
 // Sarpras
 Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
-    Route::get('/hitung', [PrometheeController::class, 'calculatePromethee'])->name('sarpras.hitung'); // TES PROMETHEE
 
     Route::get('/', [SarprasController::class, 'index'])->name('sarpras.dashboard');
     Route::get('/sop/download/{filename}', [SarprasController::class, 'SOPDownload'])->name('download.sop');
@@ -229,3 +228,4 @@ use App\Http\Helpers\CopelandAggregator;
 use App\Http\Helpers\AlternativeDTO;
 
 Route::get('/test-gdss', CopelandTestingController::class)->name('test.gdss');
+Route::get('/hitung', [PrometheeController::class, 'calculatePromethee'])->name('sarpras.hitung'); // TES PROMETHEE
