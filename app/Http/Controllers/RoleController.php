@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Sheet\Sheet;
 use App\Models\Jurusan;
 use App\Models\Mahasiswa;
 use App\Models\Pegawai;
@@ -9,7 +10,10 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -61,5 +65,208 @@ public function index(Request $request)
         'roles' => $roles,
     ]);
 }
+    public function create_ajax()
+    {
+        return view('admin.role.create');
+    }
+
+    public function store_ajax(Request $request)
+    {
+        $request->validate([
+            'kode_role' => 'required|string|unique:roles,kode_role',
+            'nama_role' => 'required|string|unique:roles,nama_role'
+        ]);
+
+        try {
+            Role::create([
+                'kode_role' => $request->kode_role,
+                'nama_role' => $request->nama_role,
+            ]);
+            return redirect()->back()->with('success', 'Data gedung berhasil disimpan.');
+        } catch (\Exception $e) {
+            Log::error('Gagal simpan gedung: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['general' => 'Gagal menyimpan data.']);
+        }
+    }
+
+    public function confirm_ajax(Role $role)
+    {
+        return view('admin.role.confirm')->with([
+            'role' => $role
+        ]);
+    }
+
+    public function destroy_ajax(Role $role)
+    {
+        try {
+            $role->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Role berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function show_ajax(Role $role)
+    {
+        $role = Role::findOrFail($role->id_role);
+        return view('admin.role.detail', ['role' => $role]);
+    }
+
+
+    public function edit_ajax(Role $role)
+    {
+        $role = Role::findOrFail($role->id_role);
+
+        return view('admin.role.edit', ['role' => $role]);
+    }
+
+    public function update_ajax(Request $request, Role $role)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'kode_role' => 'required|integer|unique:role,kode_role,' . $role->id_role . ',id_role',
+                'nama_role' => 'required|integer|unique:role,nama_role,' . $role->id_role . ',id_role',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            $role = Role::find($role->id_role);
+            if (!$role) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Role tidak ditemukan',
+                ]);
+            }
+
+            $role->update([
+                'kode_role' => $request->kode_role,
+                'nama_role' => $request->nama_role
+            ]);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Role berhasil diperbarui',
+            ]);
+        }
+        return response()->json([
+            'status' => false,
+            'message' => 'Data Role gagal diperbarui',
+        ]);
+    }
+
+    public function import_ajax()
+    {
+        return view('admin.role.import');
+    }
+
+    public function import_file(Request $request)
+    {
+        //if ($request->ajax() || $request->wantsJson()) {
+        $rules = [
+            'file_input' => ['required', 'mimes:xlsx,xls,csv', 'max:2048']
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi Gagal',
+                'msgField' => $validator->errors()
+            ]);
+        }
+
+        $file = $request->file('file_input');
+
+        $reader = IOFactory::createReader('Xlsx');
+        $reader->setReadDataOnly(true);
+        $spreadsheet = $reader->load($file->getRealPath());
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $data = $sheet->toArray(null, false, true, true);
+
+        $insert = [];
+        if (count($data) > 1) {
+            foreach ($data as $baris => $value) {
+                if ($baris > 1) {
+                    $insert[] = [
+                        'kode_role' => $value['A'],
+                        'nama_role' => $value['B'],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+
+            if (count($insert) > 0) {
+                Role::insertOrIgnore($insert);
+            }
+
+            return redirect()->back()->with('success', 'Data berhasil diimport.');
+        } else {
+            return redirect()->back()->withErrors(['general' => 'Data gagal diimport.']);
+        }
+    }
+
+    public function export_pdf()
+    {
+
+        $role = Role::get();
+
+        $headers = ['Kode Role', 'Nama Role'];
+        $data = $role->map(function ($item) {
+            return [
+                'kode_role' => $item->kode_role,
+                'nama_role' => $item->nama_role
+            ];
+        })->toArray();
+        $sheet = Sheet::make(
+            [
+                'title' => 'Data Role User',
+                'text' => 'Berikut adalah Daftar Role User yang terdaftar di sistem.',
+                'footer' => 'Dibuat oleh Nabeela',
+                'header' => $headers,
+                'data' => $data,
+                'filename' => 'data_role' . date('Y-m-d_H-i-s'),
+                'is_landscape' => false, // Mengatur orientasi kertas menjadi landscape
+            ]
+        );
+        return $sheet->toPdf();
+    }
+    
+    public function export_excel()
+    {
+
+        $role = Role::get();
+
+        $headers = ['Kode Role', 'Nama Role'];
+        $data = $role->map(function ($item) {
+            return [
+                'kode_role' => $item->kode_role,
+                'nama_role' => $item->nama_role,
+            ];
+        })->toArray();
+        $sheet = Sheet::make(
+            [
+                'header' => $headers,
+                'data' => $data,
+                'filename' => 'data_role' . date('Y-m-d_H-i-s'),
+            ]
+        );
+        return $sheet->toXls();
+    }
 
 }

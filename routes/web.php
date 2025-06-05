@@ -10,6 +10,7 @@ use App\Http\Controllers\{
     JurusanController,
     GedungController,
     KriteriaController,
+    LokasiController,
     MahasiswaController,
     PerbaikanController,
     PerbaikanSarprasController,
@@ -56,10 +57,14 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         Route::get('/create', [RoleController::class, 'create_ajax'])->name('admin.role.create_ajax');
         Route::post('/store', [RoleController::class, 'store_ajax'])->name('admin.role.store_ajax');
         Route::get('/import', [RoleController::class, 'import_ajax'])->name('admin.role.import_ajax');
+        Route::get('/import_file', [RoleController::class, 'import_file'])->name('admin.role.import_file');
         Route::get('/{id}/show_ajax', [RoleController::class, 'show_ajax'])->name('admin.role.show_ajax');
         Route::get('/{id}/edit_ajax', [RoleController::class, 'edit_ajax'])->name('admin.role.edit_ajax');
         Route::post('/{id}/edit_ajax', [RoleController::class, 'updated_ajax'])->name('admin.role.update_ajax');
-        Route::delete('/{id}/remove_ajax', [RoleController::class, 'remove_ajax'])->name('admin.role.delete_ajax');
+        Route::get('/{id}/confirm_ajax', [RoleController::class, 'confirm_ajax'])->name('admin.role.confirm_ajax');
+        Route::delete('/{id}/remove_ajax', [RoleController::class, 'destroy_ajax'])->name('admin.role.destroy_ajax');
+        Route::get('/export_excel', [RoleController::class, 'export_excel'])->name('admin.role.export_excel');
+        Route::get('/export_pdf', [RoleController::class, 'export_pdf'])->name('admin.role.export_pdf');
     });
 
     // Jurusan
@@ -90,6 +95,24 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         Route::get('/get-ruangan/{id_lantai}', [FasilitasController::class, 'getRuangan']);
         Route::get('/export_pdf', [FasilitasController::class, 'export_pdf'])->name('admin.fasilitas.export_pdf');
         Route::get('/export_excel', [FasilitasController::class, 'export_excel'])->name('admin.fasilitas.export_excel');
+    });
+
+    // Lokasi
+    Route::prefix('lokasi')->group(function () {
+        Route::get('/', [LokasiController::class, 'index'])->name('admin.lokasi');
+        Route::get('/create', [LokasiController::class, 'create'])->name('admin.lokasi.create');
+        Route::post('/store', [LokasiController::class, 'store'])->name('admin.lokasi.store');
+        Route::get('/import', [LokasiController::class, 'import'])->name('admin.lokasi.import');
+        Route::post('/import_file', [LokasiController::class, 'import_file'])->name('admin.lokasi.import_file');
+        Route::get('/{lokasi}/confirm', [LokasiController::class, 'confirm'])->name('admin.lokasi.confirm');
+        Route::get('/{lokasi}/show', [LokasiController::class, 'show'])->name('admin.lokasi.show');
+        Route::get('/{lokasi}/edit', [LokasiController::class, 'edit'])->name('admin.lokasi.edit');
+        Route::put('/{lokasi}/update', [LokasiController::class, 'update'])->name('admin.lokasi.update');
+        Route::delete('/{lokasi}/destroy', [LokasiController::class, 'destroy'])->name('admin.lokasi.destroy');
+        Route::get('/get-lantai/{id_gedung}', [LokasiController::class, 'getLantai']);
+        Route::get('/get-ruangan/{id_lantai}', [LokasiController::class, 'getRuangan']);
+        Route::get('/export_pdf', [LokasiController::class, 'export_pdf'])->name('admin.lokasi.export_pdf');
+        Route::get('/export_excel', [LokasiController::class, 'export_excel'])->name('admin.lokasi.export_excel');
     });
 
     // Aduan
