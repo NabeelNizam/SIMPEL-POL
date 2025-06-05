@@ -166,7 +166,7 @@
                         <a href="sarpras/bobot"
                         class="flex items-center p-2 w-full {{ ($activeMenu == 'bobot') ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                         style="{{ ($activeMenu == 'bobot') ? 'border-color: #F99D1C;' : '' }}">
-                            <img src="{{ asset('icons/light/Settings.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">
+                            <img src="{{ ($activeMenu == 'bobot') ? asset('icons/solid/Settings.svg') : asset('icons/light/Settings.svg') }}" alt="Form Pelaporan" class="mr-2 w-5">
                             Bobot Prioritas Perbaikan
                         </a>
 
