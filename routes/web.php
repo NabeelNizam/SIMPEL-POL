@@ -66,13 +66,15 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
     // Jurusan
     Route::prefix('jurusan')->group(function () {
         Route::get('/', [JurusanController::class, 'index'])->name('admin.jurusan');
-        Route::get('/create', [JurusanController::class, 'create_ajax'])->name('admin.jurusan.create_ajax');
-        Route::post('/store', [JurusanController::class, 'store_ajax'])->name('admin.jurusan.store_ajax');
-        Route::get('/import', [JurusanController::class, 'import_ajax'])->name('admin.jurusan.import_ajax');
-        Route::get('/{id}/show_ajax', [JurusanController::class, 'show_ajax'])->name('admin.jurusan.show_ajax');
-        Route::get('/{id}/edit_ajax', [JurusanController::class, 'edit_ajax'])->name('admin.jurusan.edit_ajax');
-        Route::post('/{id}/edit_ajax', [JurusanController::class, 'update_ajax'])->name('admin.jurusan.update_ajax');
-        Route::delete('/{id}/remove_ajax', [JurusanController::class, 'remove_ajax'])->name('admin.jurusan.delete_ajax');
+        Route::get('/create', [JurusanController::class, 'create'])->name('admin.jurusan.create');
+        Route::post('/store', [JurusanController::class, 'store'])->name('admin.jurusan.store');
+        Route::get('/{jurusan}/confirm', [JurusanController::class, 'confirm'])->name('admin.jurusan.confirm');
+        Route::get('/{jurusan}/show', [JurusanController::class, 'show'])->name('admin.jurusan.show');
+        Route::get('/{jurusan}/edit', [JurusanController::class, 'edit'])->name('admin.jurusan.edit');
+        Route::put('/{jurusan}/update', [JurusanController::class, 'update'])->name('admin.jurusan.update');
+        Route::delete('/{jurusan}/destroy', [JurusanController::class, 'destroy'])->name('admin.jurusan.destroy');
+        Route::get('/export_pdf', [JurusanController::class, 'export_pdf'])->name('admin.jurusan.export_pdf');
+        Route::get('/export_excel', [JurusanController::class, 'export_excel'])->name('admin.jurusan.export_excel');
     });
 
     // Fasilitas

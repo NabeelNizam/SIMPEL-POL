@@ -1,8 +1,8 @@
 <x-table>
     <x-slot name="head">
         <x-table.heading>No</x-table.heading>
-        <x-table.heading>Kode Role</x-table.heading>
-        <x-table.heading>Nama Role</x-table.heading>
+        <x-table.heading>Kode Jurusan</x-table.heading>
+        <x-table.heading>Nama Jurusan</x-table.heading>
         <x-table.heading>Aksi</x-table.heading>
     </x-slot>
 
@@ -13,20 +13,28 @@
                 <x-table.cell>{{ $j->kode_jurusan }}</x-table.cell>
                 <x-table.cell>{{ $j->nama_jurusan }}</x-table.cell>
                 <x-table.cell>
-                    <button onclick="modalAction('{{ route('admin.jurusan.show_ajax', $j->id_jurusan) }}')" class="text-blue-600 hover:underline text-sm">
-                        <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
-                    </button>
-                    <button onclick="modalAction('{{ route('admin.jurusan.edit_ajax', $j->id_jurusan) }}')" class="text-blue-600 hover:underline text-sm ml-2">
-                        <img src="{{ asset('icons/solid/Edit.svg') }}" alt="" class="h-7 w-7 inline">
-                    </button>
-                    <button onclick="removeJurusan('{{ $j->id_jurusan }}')" class="text-red-600 hover:underline text-sm ml-2">
-                        <img src="{{ asset('icons/solid/Delete.svg') }}" alt="" class="h-7 w-7 inline">
-                    </button>
+                    <div class="flex items-center space-x-2 min-w-[120px]">
+                        <button onclick="modalAction('{{ route('admin.jurusan.show', $j->id_jurusan) }}')"
+                            class="cursor-pointer text-blue-600 hover:underline text-sm">
+                            <img src="{{ asset('icons/solid/Detail.svg') }}" alt="Detail"
+                                class="h-7 w-7 min-h-[29px] min-w-[29px]">
+                        </button>
+                        <button onclick="modalAction('{{ route('admin.jurusan.edit', $j->id_jurusan) }}')"
+                            class="cursor-pointer text-blue-600 hover:underline text-sm">
+                            <img src="{{ asset('icons/solid/Edit.svg') }}" alt="Edit"
+                                class="h-7 w-7 min-h-[29px] min-w-[29px]">
+                        </button>
+                        <button onclick="modalAction('{{ route('admin.jurusan.confirm', $j->id_jurusan) }}')"
+                            class="cursor-pointer text-red-600 hover:underline text-sm">
+                            <img src="{{ asset('icons/solid/Delete.svg') }}" alt="Delete"
+                                class="h-7 w-7 min-h-[29px] min-w-[29px]">
+                        </button>
+                    </div>
                 </x-table.cell>
             </x-table.row>
         @empty
             <tr class="border-1">
-                <td colspan="4" class="text-center text-gray-500 py-4">Tidak ada data jurusan.</td>
+                <td colspan="6" class="text-center text-gray-500 py-4">Tidak ada data jurusan.</td>
             </tr>
         @endforelse
     </x-slot>

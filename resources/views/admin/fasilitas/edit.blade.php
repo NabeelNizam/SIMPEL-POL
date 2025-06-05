@@ -1,7 +1,7 @@
 <!-- Isi yang dimuat oleh AJAX ke dalam #myModal -->
 <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative border-t border-blue-700">
 
-    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 cursor-pointer">
         <i class="fas fa-times"></i>
     </button>
 
