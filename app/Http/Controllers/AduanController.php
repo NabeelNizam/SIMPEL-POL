@@ -166,7 +166,7 @@ class AduanController extends Controller
         }
         // dd($alternatives);
 
-        $promethee_mahasiswa = PrometheeCalculator::calculatePromethee($alternatives, $bobot);
+        // $promethee_mahasiswa = PrometheeCalculator::calculatePromethee($alternatives, $bobot);
         // dd($promethee_mahasiswa);
 
         // filter berdasarkan role dosen
@@ -202,7 +202,7 @@ class AduanController extends Controller
             );
         }
 
-        $promethee_dosen = PrometheeCalculator::calculatePromethee($alternatives, $bobot);
+        // $promethee_dosen = PrometheeCalculator::calculatePromethee($alternatives, $bobot);
 
         // filter berdasarkan role tendik
         $targetRole = 'TENDIK'; // Role yang ingin difilter
@@ -237,21 +237,21 @@ class AduanController extends Controller
                 ]
             );
         }
-        $promethee_tendik = PrometheeCalculator::calculatePromethee($alternatives, $bobot);
+        // $promethee_tendik = PrometheeCalculator::calculatePromethee($alternatives, $bobot);
 
-        $normalized_pred_gdss = AlternativeDTO::normalizeAlternatives(
-            [
-                $promethee_mahasiswa,
-                $promethee_dosen,
-                $promethee_tendik
-            ]
-        );
+        // $normalized_pred_gdss = AlternativeDTO::normalizeAlternatives(
+        //     [
+        //         $promethee_mahasiswa,
+        //         $promethee_dosen,
+        //         $promethee_tendik
+        //     ]
+        // );
         // dd($promethee_mahasiswa, $promethee_dosen, $promethee_tendik);
 
-        $copeland = new CopelandAggregator();
-        $copeland->alternatives =$normalized_pred_gdss;
+        // $copeland = new CopelandAggregator();
+        // $copeland->alternatives =$normalized_pred_gdss;
 
-        dd($promethee_mahasiswa, $promethee_dosen, $promethee_tendik, $normalized_pred_gdss, $copeland->run());
+        // dd($promethee_mahasiswa, $promethee_dosen, $promethee_tendik, $normalized_pred_gdss, $copeland->run());
 // return [$promethee_mahasiswa, $promethee_dosen, $promethee_tendik, $normalized_pred_gdss, $copeland->run()];
         // gdss
 

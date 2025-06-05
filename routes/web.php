@@ -229,7 +229,7 @@ Route::prefix('teknisi')->middleware(['authorize:TEKNISI'])->group(function () {
 use App\Http\Helpers\CopelandAggregator;
 use App\Http\Helpers\AlternativeDTO;
 
-Route::get('/test-gdss', CopelandTestingController::class)->name('test.gdss');
+Route::get('/test-gdss', [CopelandTestingController::class, 'copelandTest'])->name('test.gdss');
 Route::get('/hitung', [PrometheeController::class, 'calculatePromethee'])->name('sarpras.hitung'); // TES PROMETHEE
 Route::get('/tesMahasiswa', [PrometheeController::class, 'tesHitungMahasiswa'])->name('sarpras.tesMahasiswa');
 Route::get('/tesDosen', [PrometheeController::class, 'tesHitungDosen'])->name('sarpras.tesDosen');
