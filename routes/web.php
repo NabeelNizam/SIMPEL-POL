@@ -20,7 +20,8 @@ use App\Http\Controllers\{
     SarprasController,
     TeknisiController,
     WelcomeController,
-    PeriodeController
+    PeriodeController,
+    SarprasPenugasanController
 };
 
 // Auth & Welcome
@@ -144,6 +145,12 @@ Route::prefix('riwayat')->group(function () {
 Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
     Route::get('/', [SarprasController::class, 'index'])->name('sarpras.dashboard');
     Route::get('/sop/download/{filename}', [SarprasController::class, 'SOPDownload'])->name('download.sop');
+
+    Route::prefix('penugasan')->group(function () {
+    Route::get('/', [SarprasPenugasanController::class, 'index'])->name('sarpras.penugasan');
+    // Route::get('/{id}/show_ajax', [SarprasPenugasanController::class, 'show_ajax'])->name('mahasiswa.riwayat.show_ajax');
+    // Route::get('/{id}/edit_ajax', [SarprasPenugasanController::class, 'edit_ajax'])->name('mahasiswa.riwayat.edit_ajax');
+    });
 
     Route::prefix('bobot')->group(function () {
         Route::get('/', [KriteriaController::class, 'index'])->name('sarpras.bobot');

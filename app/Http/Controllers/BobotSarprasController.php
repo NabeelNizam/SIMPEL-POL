@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Controller;
-use App\Models\KriteriaModel;
+use App\Models\Kriteria;
 use Illuminate\Http\Request;
 
 class BobotSarprasController extends Controller
@@ -15,7 +15,7 @@ class BobotSarprasController extends Controller
 
         $activeMenu = '';
 
-        $kriteria = KriteriaModel::all();
+        $kriteria = Kriteria::all();
 
         return view('sarpras.bobot.index', ['breadcrumb' => $breadcrumb, 'kriteria' => $kriteria, 'activeMenu' => $activeMenu]);
     }
