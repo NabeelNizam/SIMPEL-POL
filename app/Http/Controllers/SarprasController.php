@@ -53,9 +53,9 @@ class SarprasController extends Controller
             })
             ->values();
         $trenKerusakanRaw = Aduan::selectRaw('COUNT(*) as total, MONTH(tanggal_aduan) as bulan')
-            ->groupBy('bulan')
-            ->orderBy('bulan', 'asc')
-            ->get();
+        ->groupBy('bulan')
+        ->orderBy('bulan', 'asc')
+        ->get();
 
         // Pastikan semua bulan (1 hingga 12) ada dalam data
         $trenKerusakan = collect(range(1, 12))->map(function ($bulan) use ($trenKerusakanRaw) {

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\AlternativeDTO;
 use App\Http\Helpers\CopelandAggregator;
+use App\Http\Helpers\PrometheeCalculator;
 use App\Models\Aduan;
 use App\Models\Fasilitas;
 use App\Models\Kategori;
@@ -119,45 +121,145 @@ class AduanController extends Controller
 
         $activeMenu = 'pengaduan';
 
-        // Query untuk Pengaduan
-        $query = Fasilitas::with(['kategori', 'ruangan', 'aduan.pelapor.role']);
+        $bobot = ['user_count' => 0.5, 'urgensi' => 0.5];
 
-        if ($request->has('filter_user') && $request->filter_user != 'all') {
-            $filterUser = $request->filter_user;
+        // urgensi dictionary
+        $urgensiDictionary = [
+            'DARURAT' => 3,
+            'PENTING' => 2,
+            'BIASA' => 1
+        ];
 
-            // Hitung aduan hanya dari user tertentu
-            $query->withCount([
-                'aduan as aduan_count' => function ($q) use ($filterUser) {
-                    $q->where('id_user_pelapor', $filterUser);
+        // filter berdasarkan role mahasiswa
+        $targetRole = 'MAHASISWA'; // Role yang ingin difilter
+        $query = Fasilitas::query()
+            ->with(['aduan.pelapor.role'])
+            ->whereHas('aduan.pelapor.role', function ($query) use ($targetRole) {
+                $query->where('nama_role', $targetRole);
+            })
+            ->withCount([
+                'aduan as aduan_count' => function ($query) use ($targetRole) {
+                    $query->whereHas('pelapor.role', function ($query) use ($targetRole) {
+                        $query->where('nama_role', $targetRole);
+                    });
                 }
-            ]);
-
-            // Hanya tampilkan fasilitas yang pernah diadukan oleh user tersebut
-            $query->whereHas('aduan', function ($q) use ($filterUser) {
-                $q->where('id_user_pelapor', $filterUser);
+            ])
+            ->get()
+            ->map(function ($fasilitas) use ($urgensiDictionary) {
+                return [
+                    'name' => $fasilitas->id_fasilitas,
+                    'user_count' => $fasilitas->aduan_count,
+                    'urgensi' => $urgensiDictionary[$fasilitas->urgensi->value], // or ->urgensi if string
+                ];
             });
-        } else {
-            // Kalau tidak pakai filter user, hitung semua aduan
-            $query->withCount('aduan as aduan_count');
+
+        $alternatives = [];
+
+        foreach ($query as $item) {
+            $alternatives[] = new AlternativeDTO(
+                $item['name'],
+                [
+                    'user_count' => $item['user_count'],
+                    'urgensi' => $item['urgensi']
+                ]
+            );
+        }
+        // dd($alternatives);
+
+        $promethee_mahasiswa = PrometheeCalculator::calculatePromethee($alternatives, $bobot);
+        // dd($promethee_mahasiswa);
+
+        // filter berdasarkan role dosen
+        $targetRole = 'DOSEN'; // Role yang ingin difilter
+        $query = Fasilitas::query()
+            ->with(['aduan.pelapor.role'])
+            ->whereHas('aduan.pelapor.role', function ($query) use ($targetRole) {
+                $query->where('nama_role', $targetRole);
+            })
+            ->withCount([
+                'aduan as aduan_count' => function ($query) use ($targetRole) {
+                    $query->whereHas('pelapor.role', function ($query) use ($targetRole) {
+                        $query->where('nama_role', $targetRole);
+                    });
+                }
+            ])
+            ->get()
+            ->map(function ($fasilitas) use ($urgensiDictionary) {
+                return [
+                    'name' => $fasilitas->id_fasilitas,
+                    'user_count' => $fasilitas->aduan_count,
+                    'urgensi' => $urgensiDictionary[$fasilitas->urgensi->value], // or ->urgensi if string
+                ];
+            });
+        $alternatives = [];
+        foreach ($query as $item) {
+            $alternatives[] = new AlternativeDTO(
+                $item['name'],
+                [
+                    'user_count' => $item['user_count'],
+                    'urgensi' => $item['urgensi']
+                ]
+            );
         }
 
+        $promethee_dosen = PrometheeCalculator::calculatePromethee($alternatives, $bobot);
 
-        // Filter berdasarkan pencarian
-        if ($request->search) {
-            $query->whereHas('fasilitas', function ($q) use ($request) {
-                $q->where('nama_fasilitas', 'like', "%{$request->search}%");
+        // filter berdasarkan role tendik
+        $targetRole = 'TENDIK'; // Role yang ingin difilter
+        $query = Fasilitas::query()
+            ->with(['aduan.pelapor.role'])
+            ->whereHas('aduan.pelapor.role', function ($query) use ($targetRole) {
+                $query->where('nama_role', $targetRole);
+            })
+            ->withCount([
+                'aduan as aduan_count' => function ($query) use ($targetRole) {
+                    $query->whereHas('pelapor.role', function ($query) use ($targetRole) {
+                        $query->where('nama_role', $targetRole);
+                    });
+                }
+            ])
+            ->get()
+            ->map(function ($fasilitas) use ($urgensiDictionary) {
+                return [
+                    'name' => $fasilitas->id_fasilitas,
+                    'user_count' => $fasilitas->aduan_count,
+                    'urgensi' => $urgensiDictionary[$fasilitas->urgensi->value], // or ->urgensi if string
+                ];
             });
+        $alternatives = [];
+
+        foreach ($query as $item) {
+            $alternatives[] = new AlternativeDTO(
+                $item['name'],
+                [
+                    'user_count' => $item['user_count'],
+                    'urgensi' => $item['urgensi']
+                ]
+            );
         }
+        $promethee_tendik = PrometheeCalculator::calculatePromethee($alternatives, $bobot);
 
-        // Filter berdasarkan kategori
-        if ($request->id_kategori) {
-            $query->whereHas('fasilitas', function ($q) use ($request) {
-                $q->where('id_kategori', $request->id_kategori);
-            });
-        }
+        $normalized_pred_gdss = AlternativeDTO::normalizeAlternatives(
+            [
+                $promethee_mahasiswa,
+                $promethee_dosen,
+                $promethee_tendik
+            ]
+        );
+        // dd($promethee_mahasiswa, $promethee_dosen, $promethee_tendik);
 
-        $query->orderBy('aduan_count', 'desc');
+        $copeland = new CopelandAggregator();
+        $copeland->alternatives =$normalized_pred_gdss;
 
+        dd($promethee_mahasiswa, $promethee_dosen, $promethee_tendik, $normalized_pred_gdss, $copeland->run());
+// return [$promethee_mahasiswa, $promethee_dosen, $promethee_tendik, $normalized_pred_gdss, $copeland->run()];
+        // gdss
+
+
+
+
+
+        // $query->orderBy('aduan_count', 'desc');
 
         // Pagination
         $perPage = $request->input('per_page', 10);
@@ -173,7 +275,7 @@ class AduanController extends Controller
             return response()->json(['html' => $html]);
         }
 
-        return view('sarpras.pengaduan.index', compact('breadcrumb', 'page', 'activeMenu', 'pengaduan', 'kategori'));
+        // return view('sarpras.pengaduan.index', compact('breadcrumb', 'page', 'activeMenu', 'pengaduan', 'kategori'));
     }
 
     // Detail Fasilitas & Laporan Pengaduan nya

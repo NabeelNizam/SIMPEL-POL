@@ -4,7 +4,7 @@ namespace App\Http\Helpers;
 
 use Illuminate\Support\Facades\Log;
 
-class PrometheeCalculator
+class PrometheeCalculator2
 {
     /**
      * Calculate PROMETHEE II ranking and add rank to criteria.
@@ -13,7 +13,7 @@ class PrometheeCalculator
      * @param array $weights ['user_count' => 0.5, 'urgensi' => 0.5]
      * @return array Alternatives with rank added to criteria
      */
-    public static function calculatePromethee(array $alternatives, array $weights): array
+    public function calculatePromethee2(array $alternatives, array $weights): array
     {
         // Check if alternatives array is empty
         if (empty($alternatives)) {
@@ -22,7 +22,7 @@ class PrometheeCalculator
         }
 
         $n = count($alternatives);
-        $criteria = array_keys($alternatives[0]->criteria ?? ['user_count', 'urgensi']);
+        $criteria = array_keys($alternatives[0]->criteria ?? ['waktu', 'biaya_anggaran', 'tingkat_kerusakan']);
         $preferenceMatrix = [];
 
         // Step 1: Calculate preference for each pair of alternatives
@@ -80,14 +80,10 @@ class PrometheeCalculator
             // Create new criteria array with rank
             $newCriteria = $alternative->criteria;
             $newCriteria['rank'] = $rank + 1; // Rank starts from 1
-            // $results[] = [
-            //     'name' => $alternative->name,
-            //     'criteria' => $newCriteria,
-            // ];
-            $results[] = new AlternativeDTO(
-                name: $alternative->name,
-                criteria: $newCriteria
-            );
+            $results[] = [
+                'name' => $alternative->name,
+                'criteria' => $newCriteria,
+            ];
         }
 
         return $results;
