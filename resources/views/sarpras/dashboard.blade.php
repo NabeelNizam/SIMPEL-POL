@@ -413,7 +413,7 @@
                                         display: false
                                     }
                                 }
-                            }
+                            }, 
                         });
 
                         tabButtons.forEach(button => {

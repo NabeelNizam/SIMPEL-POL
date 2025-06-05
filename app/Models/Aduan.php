@@ -38,4 +38,12 @@ class Aduan extends Model
     {
         return $this->hasOne(Perbaikan::class, 'id_perbaikan', 'id_perbaikan');
     }
+    public function periode()
+    {
+        return $this->belongsTo(Periode::class, 'id_periode', 'id_periode');
+    }
+    public function biaya()
+    {
+        return $this->hasManyThrough(Biaya::class, Perbaikan::class, 'id_perbaikan', 'id_perbaikan', 'id_perbaikan', 'id_perbaikan');
+    }
 }
