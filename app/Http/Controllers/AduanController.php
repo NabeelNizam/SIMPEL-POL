@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\CopelandAggregator;
 use App\Models\Aduan;
 use App\Models\Fasilitas;
 use App\Models\Kategori;
@@ -105,7 +106,7 @@ class AduanController extends Controller
 
     // Fitur Pengaduan yang akan di inspeksi
     // -User : Sarpras
-    public function pengaduan(Request $request)
+    public function pengaduan(Request $request, CopelandAggregator $copelandAggregator)
     {
         $breadcrumb = (object) [
             'title' => 'Laporan',
