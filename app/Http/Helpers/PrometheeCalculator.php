@@ -13,7 +13,7 @@ class PrometheeCalculator
      * @param array $weights ['user_count' => 0.5, 'urgensi' => 0.5]
      * @return array Alternatives with rank added to criteria
      */
-    public function calculatePromethee(array $alternatives, array $weights): array
+    public static function calculatePromethee(array $alternatives, array $weights): array
     {
         // Check if alternatives array is empty
         if (empty($alternatives)) {
@@ -80,10 +80,14 @@ class PrometheeCalculator
             // Create new criteria array with rank
             $newCriteria = $alternative->criteria;
             $newCriteria['rank'] = $rank + 1; // Rank starts from 1
-            $results[] = [
-                'name' => $alternative->name,
-                'criteria' => $newCriteria,
-            ];
+            // $results[] = [
+            //     'name' => $alternative->name,
+            //     'criteria' => $newCriteria,
+            // ];
+            $results[] = new AlternativeDTO(
+                name: $alternative->name,
+                criteria: $newCriteria
+            );
         }
 
         return $results;
