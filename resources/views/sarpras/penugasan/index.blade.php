@@ -35,7 +35,7 @@
 
         <!-- Tabel Data Setelah Perbaikan -->
         <div id="promethee-table-body" class="hidden">
-            <div class="text-center text-lg font-bold">TES</div>
+            <div id="promethee-results" class="text-sm text-gray-700"></div>
         </div>
     </div>
 
@@ -65,6 +65,19 @@
                 $('#aduan-table-body').removeClass('hidden');
             } else if (role === 'perbaikan') {
                 $('#promethee-table-body').removeClass('hidden');
+
+                // Muat data JSON dari endpoint
+                $.ajax({
+                    url: '{{ route('coba-hitung') }}',
+                    method: 'GET',
+                    success: function(data) {
+                        let html = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                        $('#promethee-results').html(html);
+                    },
+                    error: function() {
+                        $('#promethee-results').html('<p class="text-red-500">Gagal memuat data.</p>');
+                    }
+                });
             }
         });
     });

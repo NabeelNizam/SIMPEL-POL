@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Enums\Status;
+use App\Http\Helpers\AlternativeDTO;
+use App\Http\Helpers\PrometheeCalculator2;
 use App\Models\Aduan;
 use App\Models\Kriteria;
 use App\Models\Periode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SarprasPenugasanController extends Controller
 {
@@ -47,23 +50,48 @@ $query = Aduan::selectRaw('id_fasilitas, id_periode, id_perbaikan, COUNT(*) as j
     // Ambil data periode untuk filter
     $periode = Periode::all();
     $aduan = $query->get();
-
     
-    // Hitung PROMETHEE
-    $prometheeResults = $this->calculatePromethee($aduan, $kriteria);
 
-    return view('sarpras.penugasan.index', compact('breadcrumb', 'page', 'activeMenu', 'aduan', 'prometheeResults', 'periode', 'kriteria'));
+   
+    
+    return view('sarpras.penugasan.index', compact('breadcrumb', 'page', 'activeMenu', 'aduan', 'periode', 'kriteria'));
 }
 
 
-
-private function calculatePromethee($data, $weights)
+public function calculatePromethee(Request $request)
 {
-    $scores = [];
+    // Ambil data dari query
+    $query = Aduan::selectRaw('id_fasilitas, id_periode, id_perbaikan, COUNT(*) as jumlah_pelapor')
+        ->with(['fasilitas.kategori', 'fasilitas.ruangan.lantai.gedung', 'perbaikan.biaya'])
+        ->where('status', Status::SEDANG_INSPEKSI->value)
+        ->whereHas('perbaikan', function ($q) {
+            $q->whereNotNull('tingkat_kerusakan')
+              ->whereNotNull('tanggal_inspeksi');
+        })
+        ->groupBy(['id_fasilitas', 'id_periode', 'id_perbaikan']);
 
+    // Filter berdasarkan periode
+    if ($request->id_periode) {
+        $query->where('id_periode', $request->id_periode);
+    }
+
+    $data = $query->get();
+   
+
+    // Validasi data
+    if ($data->isEmpty()) {
+        return response()->json(['message' => 'No data available for PROMETHEE calculation.'], 404);
+    }
+
+    // Hitung PROMETHEE
+    $weights = [
+        'biaya' => 0.4,
+        'tingkat_kerusakan' => 0.4,
+        'waktu' => 0.2,
+    ];
+
+    $alternatives = [];
     foreach ($data as $item) {
-        $score = 0;
-
         // Validasi data perbaikan
         if (!$item->perbaikan || !$item->fasilitas) {
             continue; // Skip jika data tidak valid
@@ -82,38 +110,33 @@ private function calculatePromethee($data, $weights)
         // Hitung total biaya
         $totalBiaya = $item->perbaikan->biaya->sum('besaran');
 
-        // Hitung skor berdasarkan kriteria dan bobot
-        $score += $tingkatKerusakan * (float) ($weights['TKR'] ?? 0); // Kriteria Tingkat Kerusakan
-        $score += $tanggalInspeksi * (float) ($weights['WKT'] ?? 0); // Kriteria Waktu
-        $score += $totalBiaya * (float) ($weights['BYA'] ?? 0); // Kriteria Biaya
-        $score += $item->fasilitas->anggaran * (float) ($weights['ANG'] ?? 0); // Kriteria Anggaran
-
-        // Simpan skor dan detail perhitungan
-        $scores[] = [
-            'id' => $item->id,
-            'nama_fasilitas' => $item->fasilitas->nama_fasilitas,
-            'score' => $score,
-            'detail' => [
-                'tingkat_kerusakan' => $tingkatKerusakan,
-                'tanggal_inspeksi' => $item->perbaikan->tanggal_inspeksi,
+        // Tambahkan alternatif ke array
+        $alternatives[] = new AlternativeDTO(
+            name: $item->fasilitas->nama_fasilitas,
+            criteria: [
                 'biaya' => $totalBiaya,
-                'anggaran' => $item->fasilitas->anggaran,
-                'weighted_score' => [
-                    'tingkat_kerusakan' => $tingkatKerusakan * (float) ($weights['TKR'] ?? 0),
-                    'waktu' => $tanggalInspeksi * (float) ($weights['WKT'] ?? 0),
-                    'biaya' => $totalBiaya * (float) ($weights['BYA'] ?? 0),
-                    'anggaran' => $item->fasilitas->anggaran * (float) ($weights['ANG'] ?? 0),
-                ]
+                'tingkat_kerusakan' => $tingkatKerusakan,
+                'waktu' => $tanggalInspeksi,
             ]
+        );
+    }
+
+    // Hitung PROMETHEE menggunakan PrometheeCalculator2
+    $calculator = new PrometheeCalculator2();
+    $rankedAlternatives = $calculator->calculatePromethee2($alternatives, $weights);
+
+    // Format hasil sebagai JSON
+    $finalResults = [];
+    foreach ($rankedAlternatives as $rank => $alternative) {
+        $finalResults[] = [
+            'rank' => $rank + 1,
+            'name' => $alternative->name,
+            'criteria' => $alternative->criteria,
+            'score' => $alternative->score,
         ];
     }
 
-    // Urutkan berdasarkan skor (prioritas tertinggi di atas)
-    usort($scores, function ($a, $b) {
-        return $b['score'] <=> $a['score'];
-    });
-
-    return $scores;
+    // Return hasil sebagai JSON
+    return response()->json($finalResults);
 }
-    
 }

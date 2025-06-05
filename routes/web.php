@@ -170,6 +170,8 @@ Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
 
     Route::prefix('penugasan')->group(function () {
         Route::get('/', [SarprasPenugasanController::class, 'index'])->name('sarpras.penugasan');
+
+        Route::get('/calculate-promethee', [SarprasPenugasanController::class, 'calculatePromethee'])->name('coba-hitung');
         // Route::get('/{id}/show_ajax', [SarprasPenugasanController::class, 'show_ajax'])->name('mahasiswa.riwayat.show_ajax');
         // Route::get('/{id}/edit_ajax', [SarprasPenugasanController::class, 'edit_ajax'])->name('mahasiswa.riwayat.edit_ajax');
     });
