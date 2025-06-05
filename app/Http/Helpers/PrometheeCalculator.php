@@ -7,13 +7,13 @@ use Illuminate\Support\Facades\Log;
 class PrometheeCalculator
 {
     /**
-     * Calculate PROMETHEE II ranking and add rank to criteria.
+     * Calculate PROMETHEE II ranking and add rank, leaving flow, entering flow, and net flow to criteria.
      *
      * @param AlternativeDTO[] $alternatives
      * @param array $weights ['user_count' => 0.5, 'urgensi' => 0.5]
-     * @return array Alternatives with rank added to criteria
+     * @return array Alternatives with rank and flows added to criteria
      */
-    public static function calculatePromethee(array $alternatives, array $weights): array
+    public function calculatePromethee(array $alternatives, array $weights): array
     {
         // Check if alternatives array is empty
         if (empty($alternatives)) {
@@ -45,40 +45,42 @@ class PrometheeCalculator
             }
         }
 
-        // Step 2: Calculate positive and negative flows
-        $positiveFlows = [];
-        $negativeFlows = [];
-        for ($i = 0; $i < $n; $i++) {
-            $positiveFlows[$i] = array_sum($preferenceMatrix[$i] ?? []);
-            $negativeFlows[$i] = 0;
-            for ($j = 0; $j < $n; $j++) {
-                $negativeFlows[$i] += ($preferenceMatrix[$j][$i] ?? 0);
-            }
-            // Normalize flows (avoid division by zero)
-            $positiveFlows[$i] /= ($n - 1) ?: 1;
-            $negativeFlows[$i] /= ($n - 1) ?: 1;
-        }
-
-        // Step 3: Calculate net flow and assign ranks
+        // Step 2: Calculate positive (leaving) and negative (entering) flows
+        $leavingFlows = [];
+        $enteringFlows = [];
         $netFlows = [];
         for ($i = 0; $i < $n; $i++) {
-            $netFlow = $positiveFlows[$i] - $negativeFlows[$i];
+            // Leaving Flow (φ⁺): Sum of preferences of ai over others, normalized
+            $leavingFlows[$i] = array_sum($preferenceMatrix[$i] ?? []);
+            $leavingFlows[$i] /= ($n - 1) ?: 1;
+
+            // Entering Flow (φ⁻): Sum of preferences of others over ai, normalized
+            $enteringFlows[$i] = 0;
+            for ($j = 0; $j < $n; $j++) {
+                $enteringFlows[$i] += ($preferenceMatrix[$j][$i] ?? 0);
+            }
+            $enteringFlows[$i] /= ($n - 1) ?: 1;
+
+            // Net Flow (φ): Leaving Flow - Entering Flow
             $netFlows[$i] = [
                 'index' => $i,
-                'net_flow' => $netFlow,
+                'net_flow' => $leavingFlows[$i] - $enteringFlows[$i],
             ];
         }
 
-        // Sort by net flow (descending for benefit criteria)
+        // Step 3: Sort by net flow (descending for benefit criteria)
         usort($netFlows, fn($a, $b) => $b['net_flow'] <=> $a['net_flow']);
 
-        // Step 4: Add rank to alternatives' criteria
+        // Step 4: Add rank and flows to alternatives' criteria
         $results = [];
         foreach ($netFlows as $rank => $netFlow) {
             $index = $netFlow['index'];
             $alternative = $alternatives[$index];
-            // Create new criteria array with rank
+            // Create new criteria array with rank and flows
             $newCriteria = $alternative->criteria;
+            $newCriteria['leaving_flow'] = round($leavingFlows[$index], 4); // Round for readability
+            $newCriteria['entering_flow'] = round($enteringFlows[$index], 4);
+            $newCriteria['net_flow'] = round($netFlow['net_flow'], 4);
             $newCriteria['rank'] = $rank + 1; // Rank starts from 1
             // $results[] = [
             //     'name' => $alternative->name,

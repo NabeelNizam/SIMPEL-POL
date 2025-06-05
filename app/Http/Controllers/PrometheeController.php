@@ -138,4 +138,49 @@ class PrometheeController extends Controller
         // Step 8: Return results
         return response()->json($finalResults);
     }
+
+    public function tesHitungMahasiswa()
+    {
+        $promethee = new PrometheeCalculator();
+
+        $alternatives[] = [
+            new AlternativeDTO('Proyektor A', ['user_count'=> 4, 'urgensi'=> 2]),
+            new AlternativeDTO('Proyektor B', ['user_count'=> 5, 'urgensi'=> 2]),
+            new AlternativeDTO('Proyektor C', ['user_count'=> 9, 'urgensi'=> 2]),
+            new AlternativeDTO('AC', ['user_count'=> 10, 'urgensi'=> 1]),
+            new AlternativeDTO('Papan Tulis', ['user_count'=> 3, 'urgensi'=> 3]),
+        ];
+
+        return response()->json($promethee->calculatePromethee($alternatives[0], ['user_count' => 0.65, 'urgensi' => 0.35]));
+    }
+
+    public function tesHitungDosen()
+    {
+        $promethee = new PrometheeCalculator();
+
+        $alternatives[] = [
+            new AlternativeDTO('Proyektor A', ['user_count'=> 5, 'urgensi'=> 2]),
+            new AlternativeDTO('Proyektor B', ['user_count'=> 3, 'urgensi'=> 2]),
+            new AlternativeDTO('Proyektor C', ['user_count'=> 9, 'urgensi'=> 2]),
+            new AlternativeDTO('AC', ['user_count'=> 2, 'urgensi'=> 1]),
+            new AlternativeDTO('Papan Tulis', ['user_count'=> 3, 'urgensi'=> 3]),
+        ];
+
+        return response()->json($promethee->calculatePromethee($alternatives[0], ['user_count' => 0.65, 'urgensi' => 0.35]));
+    }
+
+    public function tesHitungTendik()
+    {
+        $promethee = new PrometheeCalculator();
+
+        $alternatives[] = [
+            new AlternativeDTO('Proyektor A', ['user_count'=> 6, 'urgensi'=> 2]),
+            new AlternativeDTO('Proyektor B', ['user_count'=> 2, 'urgensi'=> 2]),
+            new AlternativeDTO('Proyektor C', ['user_count'=> 8, 'urgensi'=> 2]),
+            new AlternativeDTO('AC', ['user_count'=> 5, 'urgensi'=> 1]),
+            new AlternativeDTO('Papan Tulis', ['user_count'=> 3, 'urgensi'=> 3]),
+        ];
+
+        return response()->json($promethee->calculatePromethee($alternatives[0], ['user_count' => 0.65, 'urgensi' => 0.35]));
+    }
 }
