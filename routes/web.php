@@ -23,6 +23,7 @@ use App\Http\Controllers\{
     TeknisiController,
     WelcomeController,
     PeriodeController,
+    PrometheeController,
     SarprasPenugasanController
 };
 
@@ -163,6 +164,8 @@ Route::prefix('riwayat')->group(function () {
 
 // Sarpras
 Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
+    Route::get('/hitung', [PrometheeController::class, 'calculatePromethee'])->name('sarpras.hitung'); // TES PROMETHEE
+
     Route::get('/', [SarprasController::class, 'index'])->name('sarpras.dashboard');
     Route::get('/sop/download/{filename}', [SarprasController::class, 'SOPDownload'])->name('download.sop');
 
