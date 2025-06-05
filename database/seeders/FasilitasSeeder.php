@@ -6,10 +6,12 @@ use App\Http\Enums\Kondisi;
 use App\Http\Enums\Status;
 use App\Http\Enums\Urgensi;
 use App\Models\Aduan;
+use App\Models\Biaya;
 use App\Models\Fasilitas;
 use App\Models\Perbaikan;
 use App\Models\Periode;
 use App\Models\Ruangan;
+use App\Models\UmpanBalik;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -21,9 +23,9 @@ class FasilitasSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $random = fake()->randomElement(['Meja', 'PC', 'Papan Tulis', 'Kursi', 'Pintu', 'Proyektor']);
-            $fasilitas = Fasilitas::create([
+            Fasilitas::create([
                 'nama_fasilitas' => $random,
                 'kode_fasilitas' => substr($random, 0, 2) . fake()->unique()->numerify('##'),
                 'deskripsi' => fake()->sentence(5),
@@ -34,12 +36,16 @@ class FasilitasSeeder extends Seeder
                 'id_periode' => 1,
                 'id_ruangan' => Ruangan::all()->random()->id_ruangan,
             ]);
+        }
+        for ($i = 0; $i < 20; $i++) {
 
             $state = Status::from(fake()->randomElement(['MENUNGGU_DIPROSES', 'SEDANG_INSPEKSI', 'SEDANG_DIPERBAIKI', 'SELESAI']));
             $periode = Periode::all()->random();
             $tanggal_aduan = fake()->dateTimeBetween($periode->tanggal_mulai, $periode->tanggal_selesai);
             $tanggal_mulai_perbaikan = fake()->dateTimeBetween($tanggal_aduan, $periode->tanggal_selesai);
             $tanggal_inspeksi = fake()->dateTimeBetween($tanggal_mulai_perbaikan, $periode->tanggal_selesai);
+
+            $fasilitas = Fasilitas::all()->random();
 
             // $state= Status::SEDANG_DIPERBAIKI;
             // pertama kali submit
@@ -118,7 +124,7 @@ class FasilitasSeeder extends Seeder
                                 'bukti_foto' => fake()->image(),
                                 'id_perbaikan' => $perbaikan->id_perbaikan,
                             ]);
-                            // jika teknisi belum selesai perbaikan
+                            // jika teknisi belum selesai perbaikan, tapi sudah inspeksi
                         } else {
                             $perbaikan = Perbaikan::create([
                                 'id_fasilitas' => $fasilitas->id_fasilitas,
@@ -134,6 +140,15 @@ class FasilitasSeeder extends Seeder
                                 'tingkat_kerusakan' => fake()->randomElement(['RINGAN', 'SEDANG', 'PARAH']),
                                 'tanggal_inspeksi' => $tanggal_inspeksi,
                             ]);
+
+                            for ($j = 0; $j < fake()->numberBetween(1, 3); $j++) {
+                                // buat biaya perbaikan
+                                $biaya = Biaya::create([
+                                    'id_perbaikan' => $perbaikan->id_perbaikan,
+                                    'besaran' => fake()->randomFloat(2, 1000, 100000),
+                                    'keterangan' => fake()->sentence(5),
+                                ]);
+                            }
 
                             $aduan = Aduan::create([
                                 'status' => Status::SEDANG_DIPERBAIKI,
@@ -166,6 +181,15 @@ class FasilitasSeeder extends Seeder
                             'tanggal_selesai' => fake()->dateTimeBetween($tanggal_inspeksi, $periode->tanggal_selesai),
                         ]);
 
+                        for ($j = 0; $j < fake()->numberBetween(1, 3); $j++) {
+                            // buat biaya perbaikan
+                            $biaya = Biaya::create([
+                                'id_perbaikan' => $perbaikan->id_perbaikan,
+                                'besaran' => fake()->randomFloat(2, 1000, 100000),
+                                'keterangan' => fake()->sentence(5),
+                            ]);
+                        }
+
                         $aduan = Aduan::create([
                             'status' => Status::SELESAI,
                             'tanggal_aduan' => $tanggal_aduan,
@@ -177,6 +201,10 @@ class FasilitasSeeder extends Seeder
                             'deskripsi' => fake()->sentence(5),
                             'bukti_foto' => fake()->image(),
                             'id_perbaikan' => $perbaikan->id_perbaikan,
+                        ]);
+
+                        $umpan_balik = UmpanBalik::factory()->create([
+                            'id_aduan' => $aduan->id_aduan,
                         ]);
                     }
         }

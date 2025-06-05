@@ -9,6 +9,7 @@ use App\Http\Controllers\{
     FormPelaporanController,
     JurusanController,
     GedungController,
+    KategoriController,
     KriteriaController,
     MahasiswaController,
     PerbaikanController,
@@ -93,6 +94,22 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         Route::get('/get-ruangan/{id_lantai}', [FasilitasController::class, 'getRuangan']);
         Route::get('/export_pdf', [FasilitasController::class, 'export_pdf'])->name('admin.fasilitas.export_pdf');
         Route::get('/export_excel', [FasilitasController::class, 'export_excel'])->name('admin.fasilitas.export_excel');
+    });
+
+    // Kategori Fasilitas
+    Route::prefix('kategori')->group(function () {
+        Route::get('/', [KategoriController::class, 'index'])->name('admin.kategori');
+        Route::get('/create', [KategoriController::class, 'create'])->name('admin.kategori.create');
+        Route::post('/store', [KategoriController::class, 'store'])->name('admin.kategori.store');
+        Route::get('/import', [KategoriController::class, 'import'])->name('admin.kategori.import');
+        Route::post('/import_file', [KategoriController::class, 'import_file'])->name('admin.kategori.import_file');
+        Route::get('/{kategori}/confirm', [KategoriController::class, 'confirm'])->name('admin.kategori.confirm');
+        Route::get('/{kategori}/show', [KategoriController::class, 'show'])->name('admin.kategori.show');
+        Route::get('/{kategori}/edit', [KategoriController::class, 'edit'])->name('admin.kategori.edit');
+        Route::put('/{kategori}/update', [KategoriController::class, 'update'])->name('admin.kategori.update');
+        Route::delete('/{kategori}/destroy', [KategoriController::class, 'destroy'])->name('admin.kategori.destroy');
+        Route::get('/export_pdf', [KategoriController::class, 'export_pdf'])->name('admin.kategori.export_pdf');
+        Route::get('/export_excel', [KategoriController::class, 'export_excel'])->name('admin.kategori.export_excel');
     });
 
     // Aduan
