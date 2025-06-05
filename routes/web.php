@@ -5,6 +5,7 @@ use App\Http\Controllers\{
     AdminController,
     AduanController,
     AuthController,
+    CopelandTestingController,
     FasilitasController,
     FormPelaporanController,
     JurusanController,
@@ -22,6 +23,7 @@ use App\Http\Controllers\{
     TeknisiController,
     WelcomeController,
     PeriodeController,
+    PrometheeController,
     SarprasPenugasanController
 };
 
@@ -162,13 +164,14 @@ Route::prefix('riwayat')->group(function () {
 
 // Sarpras
 Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
+
     Route::get('/', [SarprasController::class, 'index'])->name('sarpras.dashboard');
     Route::get('/sop/download/{filename}', [SarprasController::class, 'SOPDownload'])->name('download.sop');
 
     Route::prefix('penugasan')->group(function () {
-    Route::get('/', [SarprasPenugasanController::class, 'index'])->name('sarpras.penugasan');
-    // Route::get('/{id}/show_ajax', [SarprasPenugasanController::class, 'show_ajax'])->name('mahasiswa.riwayat.show_ajax');
-    // Route::get('/{id}/edit_ajax', [SarprasPenugasanController::class, 'edit_ajax'])->name('mahasiswa.riwayat.edit_ajax');
+        Route::get('/', [SarprasPenugasanController::class, 'index'])->name('sarpras.penugasan');
+        // Route::get('/{id}/show_ajax', [SarprasPenugasanController::class, 'show_ajax'])->name('mahasiswa.riwayat.show_ajax');
+        // Route::get('/{id}/edit_ajax', [SarprasPenugasanController::class, 'edit_ajax'])->name('mahasiswa.riwayat.edit_ajax');
     });
 
     Route::prefix('bobot')->group(function () {
@@ -202,11 +205,11 @@ Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
 });
 
 Route::middleware(['authorize:SARPRAS'])->group(function () {
-Route::get('/pengaduan', [AduanController::class, 'pengaduan'])->name('sarpras.pengaduan');
-Route::get('/pengaduan/{id}/detail_pengaduan', [AduanController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
-Route::get('/penugasan', [FasilitasController::class, 'penugasan']);
-Route::get('/perbaikan', [PerbaikanController::class, 'perbaikan']);
-Route::get('/perbaikan', [PerbaikanController::class, 'riwayat']);
+    Route::get('/pengaduan', [AduanController::class, 'pengaduan'])->name('sarpras.pengaduan');
+    Route::get('/pengaduan/{id}/detail_pengaduan', [AduanController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
+    Route::get('/penugasan', [FasilitasController::class, 'penugasan']);
+    Route::get('/perbaikan', [PerbaikanController::class, 'perbaikan']);
+    Route::get('/perbaikan', [PerbaikanController::class, 'riwayat']);
 });
 
 // Teknisi
@@ -220,3 +223,9 @@ Route::prefix('teknisi')->middleware(['authorize:TEKNISI'])->group(function () {
         Route::get('/export-pdf', [RiwayatTeknisiController::class, 'export_pdf'])->name('teknisi.perbaikan.export_pdf');
     });
 });
+
+use App\Http\Helpers\CopelandAggregator;
+use App\Http\Helpers\AlternativeDTO;
+
+Route::get('/test-gdss', CopelandTestingController::class)->name('test.gdss');
+Route::get('/hitung', [PrometheeController::class, 'calculatePromethee'])->name('sarpras.hitung'); // TES PROMETHEE
