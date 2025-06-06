@@ -27,7 +27,7 @@ public function index(Request $request)
     ];
 
     $page = (object) [
-        'title' => 'Daftar role yang terdaftar dalam sistem'
+        'title' => 'Daftar Role yang terdaftar dalam sistem'
     ];
 
     $activeMenu = 'role';
@@ -115,6 +115,7 @@ public function index(Request $request)
     public function show_ajax(Role $role)
     {
         $role = Role::findOrFail($role->id_role);
+
         return view('admin.role.detail', ['role' => $role]);
     }
 
@@ -128,10 +129,9 @@ public function index(Request $request)
 
     public function update_ajax(Request $request, Role $role)
     {
-        if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'kode_role' => 'required|integer|unique:role,kode_role,' . $role->id_role . ',id_role',
-                'nama_role' => 'required|integer|unique:role,nama_role,' . $role->id_role . ',id_role',
+                'kode_role' => 'required|unique:roles,kode_role,' . $role->id_role . ',id_role',
+                'nama_role' => 'required|unique:roles,nama_role,' . $role->id_role . ',id_role',
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -160,12 +160,7 @@ public function index(Request $request)
             return response()->json([
                 'status' => true,
                 'message' => 'Data Role berhasil diperbarui',
-            ]);
-        }
-        return response()->json([
-            'status' => false,
-            'message' => 'Data Role gagal diperbarui',
-        ]);
+            ]);        
     }
 
     public function import_ajax()
