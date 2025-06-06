@@ -30,7 +30,7 @@ public function index(Request $request)
     $activeMenu = 'riwayat';
 
     // Query untuk aduan dengan status selesai
-    $query = Aduan::with(['fasilitas', 'perbaikan'])->where('status', 'Selesai');
+    $query = Aduan::with(['fasilitas', 'perbaikan', 'fasilitas.ruangan'])->where('status', 'Selesai');
 
     // Filter berdasarkan pencarian
     if ($request->search) {
@@ -76,7 +76,7 @@ public function index(Request $request)
     {
         //  $aduan = Aduan::query()->where('status', 'selesai')
 
-        $aduan = Aduan::query()->where('status', 'menunggu_diproses')
+        $aduan = Aduan::query()->where('status', 'selesai')
             ->with(['fasilitas', 'perbaikan'])
             ->get();
 

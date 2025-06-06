@@ -62,11 +62,11 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         Route::post('/store', [RoleController::class, 'store_ajax'])->name('admin.role.store_ajax');
         Route::get('/import', [RoleController::class, 'import_ajax'])->name('admin.role.import_ajax');
         Route::get('/import_file', [RoleController::class, 'import_file'])->name('admin.role.import_file');
-        Route::get('/{id}/show_ajax', [RoleController::class, 'show_ajax'])->name('admin.role.show_ajax');
-        Route::get('/{id}/edit_ajax', [RoleController::class, 'edit_ajax'])->name('admin.role.edit_ajax');
-        Route::post('/{id}/edit_ajax', [RoleController::class, 'updated_ajax'])->name('admin.role.update_ajax');
-        Route::get('/{id}/confirm_ajax', [RoleController::class, 'confirm_ajax'])->name('admin.role.confirm_ajax');
-        Route::delete('/{id}/remove_ajax', [RoleController::class, 'destroy_ajax'])->name('admin.role.destroy_ajax');
+        Route::get('/{role}/show_ajax', [RoleController::class, 'show_ajax'])->name('admin.role.show_ajax');
+        Route::get('/{role}/edit_ajax', [RoleController::class, 'edit_ajax'])->name('admin.role.edit_ajax');
+        Route::put('/{role}/update_ajax', [RoleController::class, 'update_ajax'])->name('admin.role.update_ajax');
+        Route::get('/{role}/confirm_ajax', [RoleController::class, 'confirm_ajax'])->name('admin.role.confirm_ajax');
+        Route::delete('/{role}/remove_ajax', [RoleController::class, 'destroy_ajax'])->name('admin.role.destroy_ajax');
         Route::get('/export_excel', [RoleController::class, 'export_excel'])->name('admin.role.export_excel');
         Route::get('/export_pdf', [RoleController::class, 'export_pdf'])->name('admin.role.export_pdf');
     });
