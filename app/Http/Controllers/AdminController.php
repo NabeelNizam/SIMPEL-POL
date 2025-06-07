@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -152,7 +154,7 @@ class AdminController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
-                    'errors' => 'weladalah '.$validator->errors()
+                    'errors' => 'weladalah ' . $validator->errors()
                 ]);
                 // return redirect()->route('admin.pengguna', $user)->withErrors($validator)->withInput();
             }
@@ -192,6 +194,59 @@ class AdminController extends Controller
     public function import_ajax()
     {
         return view('admin.pengguna.import');
+    }
+    public function import_file(Request $request)
+    {
+        try {
+            // Validasi file yang diupload
+            $rules = [
+                'file_input' => ['required', 'mimes:xlsx', 'max:1024']
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return redirect()->route('admin.pengguna')->with(
+                    'errors', $validator->errors()
+                );
+            }
+            $file = $request->file('file_input');
+
+            $reader = IOFactory::createReader('Xlsx')->setReadDataOnly(true);
+            $spreadsheet = $reader->load($file->getRealPath());
+            $sheet = $spreadsheet->getActiveSheet();
+
+            $data = $sheet->toArray(null, true, true, true);
+
+            $insert = [];
+            if (count($data) > 1) {
+                foreach ($data as $baris => $value) {
+                    if ($baris > 1) {
+                        $insert[] = [
+                            'email' => $value['A'],
+                            'username' => $value['B'],
+                            'nama' => $value['C'],
+                            'no_hp' => $value['D'],
+                            'id_role' => Role::where('kode_role', $value['E'])->first()->id_role,
+                            'id_jurusan' => Jurusan::where('kode_jurusan', $value['F'])->first()->id_jurusan,
+                            'password' => 'password',
+                            'foto_profil' => fake()->image(),
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ];
+                    }
+                }
+
+                if (count($insert) > 0) {
+                    User::insertOrIgnore($insert);
+                }
+
+                return redirect()->route('admin.pengguna')->with('success', 'Data berhasil diimport.');
+            } else {
+                return redirect()->route('admin.pengguna')->withErrors(['general' => 'Data gagal diimport.']);
+            }
+        } catch (\Exception $e) {
+            return redirect()->route('admin.pengguna')->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
+        }
     }
 
     public function store_ajax(Request $request)
