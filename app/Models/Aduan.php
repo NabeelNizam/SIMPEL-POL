@@ -30,14 +30,6 @@ class Aduan extends Model
     {
         return $this->hasOne(UmpanBalik::class, 'id_aduan', 'id_aduan');
     }
-    public function prioritas()
-    {
-        return $this->hasOne(Prioritas::class, 'id_prioritas', 'id_prioritas');
-    }
-    public function perbaikan()
-    {
-        return $this->hasOne(Perbaikan::class, 'id_perbaikan', 'id_perbaikan');
-    }
     public function periode()
     {
         return $this->belongsTo(Periode::class, 'id_periode', 'id_periode');
