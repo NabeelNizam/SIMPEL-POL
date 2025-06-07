@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Aduan;
 use App\Models\Fasilitas;
 use App\Models\Kategori;
+use App\Models\Kriteria;
+use App\Models\Pegawai;
 use App\Models\Perbaikan;
 use App\Models\UmpanBalik;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AduanController extends Controller
 {
@@ -121,24 +124,30 @@ class AduanController extends Controller
         // Query untuk Pengaduan
         $query = Fasilitas::with(['kategori', 'ruangan', 'aduan.pelapor.role']);
 
-        if ($request->has('filter_user') && $request->filter_user != 'all') {
-            $filterUser = $request->filter_user;
+if ($request->has('filter_user') && $request->filter_user != 'all') {
+    $filterRole = $request->filter_user;
 
-            // Hitung aduan hanya dari user tertentu
-            $query->withCount([
-                'aduan as aduan_count' => function ($q) use ($filterUser) {
-                    $q->where('id_user_pelapor', $filterUser);
-                }
-            ]);
-
-            // Hanya tampilkan fasilitas yang pernah diadukan oleh user tersebut
-            $query->whereHas('aduan', function ($q) use ($filterUser) {
-                $q->where('id_user_pelapor', $filterUser);
+    // Filter dan count hanya aduan dari pelapor dengan role tertentu
+    $query->withCount([
+        'aduan as aduan_count' => function ($q) use ($filterRole) {
+            $q->whereHas('pelapor', function ($q2) use ($filterRole) {
+                $q2->where('id_role', $filterRole);
             });
-        } else {
-            // Kalau tidak pakai filter user, hitung semua aduan
-            $query->withCount('aduan as aduan_count');
         }
+    ]);
+
+    // Filter hanya fasilitas yang punya aduan dari pelapor dengan role tersebut
+    $query->whereHas('aduan', function ($q) use ($filterRole) {
+        $q->whereHas('pelapor', function ($q2) use ($filterRole) {
+            $q2->where('id_role', $filterRole);
+        });
+    });
+
+} else {
+    // Jika tidak difilter berdasarkan role
+    $query->withCount('aduan');
+}
+
 
 
         // Filter berdasarkan pencarian
@@ -156,6 +165,8 @@ class AduanController extends Controller
         }
 
         $query->orderBy('aduan_count', 'desc');
+
+        // dd($query->toSql(), $query->getBindings());
 
 
         // Pagination
@@ -179,7 +190,32 @@ class AduanController extends Controller
     public function show_pengaduan($id)
     {
         $fasilitas = Fasilitas::with(['kategori', 'ruangan', 'aduan.pelapor'])->withCount('aduan')->findOrFail($id);
-        // dd($fasilitas);
-        return view('sarpras.pengaduan.detail', ['fasilitas' => $fasilitas]);
+        $aduan = $fasilitas->aduan->first();
+        // dd($aduan);
+        return view('sarpras.pengaduan.detail', ['fasilitas' => $fasilitas, 'aduan' => $aduan]);
     }
+
+    // Method menugaskan teknisi untuk inspeksi
+    public function penugasan_teknisi($id)
+    {
+        $fasilitas = Fasilitas::with(['kategori', 'ruangan', 'aduan.pelapor'])->withCount('aduan')->findOrFail($id);
+        $aduan = $fasilitas->aduan->first();
+        $teknisi = User::where('id_role', 3)->get();
+        // dd($aduan);
+        return view('sarpras.pengaduan.edit', ['fasilitas' => $fasilitas, 'aduan' => $aduan, 'teknisi' => $teknisi]);
+    }
+    
+    public function confirm_penugasan(Request $request, $id)
+    {
+     
+        
+        // Inspeksi::create([
+        //     'id_teknisi' => $request->id_teknisi,
+        //     'id_sarpras' => auth()->user()->id_user,
+        //     'id_fasilitas' => $id,
+        // ])
+        // return view('sarpras.pengaduan.edit', ['fasilitas' => $fasilitas, 'aduan' => $aduan, 'teknisi' => $teknisi]);
+    }
+
+
 }

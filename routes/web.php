@@ -214,6 +214,8 @@ Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
 Route::middleware(['authorize:SARPRAS'])->group(function () {
     Route::get('/pengaduan', [AduanController::class, 'pengaduan'])->name('sarpras.pengaduan');
     Route::get('/pengaduan/{id}/detail_pengaduan', [AduanController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
+    Route::get('/pengaduan/{id}/penugasan_teknisi', [AduanController::class, 'penugasan_teknisi'])->name('sarpras.pengaduan.edit');
+    Route::get('/pengaduan/{id}/confirm_penugasan', [AduanController::class, 'confirm_penugasan'])->name('sarpras.pengaduan.update');
     Route::get('/penugasan', [FasilitasController::class, 'penugasan']);
     Route::get('/perbaikan', [PerbaikanController::class, 'perbaikan']);
     Route::get('/perbaikan', [PerbaikanController::class, 'riwayat']);

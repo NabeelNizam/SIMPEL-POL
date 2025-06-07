@@ -21,10 +21,10 @@
                 @endphp
                 <x-table.cell>
                     {{ $gedung->nama_gedung ?? '-' }}
-                    {{ $lantai ? ',' . $lantai->nama_lantai : '' }}
+                    {{ $lantai ? ', ' . $lantai->nama_lantai : '' }}
                     {{ $ruangan ? ', ' . $ruangan->kode_ruangan : '' }}
                 </x-table.cell>
-                <x-table.cell>{{ $a->fasilitas->kategori->nama_kategori ?? '-' }}</x-table.cell>
+                <x-table.cell>{{ ucwords($a->fasilitas->kategori->nama_kategori) ?? '-' }}</x-table.cell>
                 <x-table.cell>{{ $a->perbaikan->tanggal_mulai ?? '-'}}</x-table.cell>
                 <x-table.cell>{{ $a->perbaikan->tanggal_selesai ?? '-' }}</x-table.cell>
                 <x-table.cell>

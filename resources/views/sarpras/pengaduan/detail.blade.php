@@ -1,9 +1,9 @@
 <!-- Modal Konten Detail -->
-<div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative max-h-[80vh] overflow-y-auto">
+<div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative max-h-[80vh] overflow-y-auto border-t-4 border-blue-600">
 
     <div class="bg-white sticky mt-0">
 
-        <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl">
+        <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl cursor-pointer">
             <i class="fas fa-times"></i>
         </button>
     
@@ -75,10 +75,26 @@
                         @endif
                     </p>
                 </div>
-
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Status</label>
+                        <span class="inline-block px-4 py-1 rounded-full text-white text-sm font-medium
+                            @if($aduan->status === \App\Http\Enums\Status::SELESAI)
+                                bg-green-500
+                            @elseif($aduan->status === \App\Http\Enums\Status::MENUNGGU_DIPROSES)
+                                bg-blue-500
+                            @elseif($aduan->status === \App\Http\Enums\Status::SEDANG_INSPEKSI)
+                                bg-yellow-500
+                            @elseif($aduan->status === \App\Http\Enums\Status::SEDANG_DIPERBAIKI)
+                                bg-orange-500
+                            @else
+                                bg-gray-500
+                            @endif ">
+                            {{ $aduan->status ?? '-' }}
+                        </span>
+                </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Jumlah Pelapor</label>
-                    <p class="text-gray-700 text-sm leading-relaxed">{{ $fasilitas->aduan_count ?? '-' }}</p>
+                    <p class="font-semibold text-sm leading-relaxed">{{ $fasilitas->aduan_count ?? '-' }}</p>
                 </div>
             </div>
         </div>

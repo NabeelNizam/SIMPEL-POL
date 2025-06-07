@@ -109,7 +109,7 @@ public function index(Request $request)
     public function show_ajax($id_fasilitas)
     {
         // Ambil data aduan berdasarkan id_fasilitas
-        $aduan = Aduan::with(['fasilitas.ruangan.lantai.gedung', 'prioritas', 'perbaikan.biaya'])->where('id_fasilitas', $id_fasilitas)->firstOrFail();
+        $aduan = Aduan::with(['fasilitas.ruangan.lantai.gedung', 'perbaikan.biaya'])->where('id_fasilitas', $id_fasilitas)->firstOrFail();
 
         // Ambil data perbaikan terkait aduan
         $perbaikan = $aduan->perbaikan;
