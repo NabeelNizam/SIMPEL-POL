@@ -19,7 +19,15 @@ class Fasilitas extends Model
     {
         return $this->hasMany(Aduan::class, 'id_fasilitas');
     }
-    
+    public function inspeksi()
+    {
+        return $this->hasMany(Inspeksi::class, 'id_fasilitas', 'id_fasilitas');
+    }
+    public function periode()
+    {
+        return $this->belongsTo(Periode::class, 'id_periode', 'id_periode');
+    }
+
     public function ruangan()
     {
         return $this->belongsTo(Ruangan::class, 'id_ruangan', 'id_ruangan');
