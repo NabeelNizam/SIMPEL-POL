@@ -14,6 +14,8 @@ use App\Http\Controllers\{
     KriteriaController,
     LokasiController,
     MahasiswaController,
+    PengaduanController,
+    PengaduanSarprasController,
     PerbaikanController,
     PerbaikanSarprasController,
     ProfilController,
@@ -207,18 +209,19 @@ Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
 
     Route::prefix('perbaikan')->group(function () {
         Route::get('/', [PerbaikanSarprasController::class, 'index'])->name('sarpras.perbaikan');
-        Route::get('/{id}/show_ajax', [PerbaikanSarprasController::class, 'show_ajax'])->name('sarpras.perbaikan.show_ajax');
+        Route::get('/{id}/show_ajax', [PerbaikanSarprasController::class, 'show_ajax'])->name('sarpras.perbaikan.show');
+        Route::get('/{id}/approve', [PerbaikanSarprasController::class, 'show_ajax'])->name('sarpras.perbaikan.approve');
     });
 });
 
 Route::middleware(['authorize:SARPRAS'])->group(function () {
-    Route::get('/pengaduan', [AduanController::class, 'pengaduan'])->name('sarpras.pengaduan');
-    Route::get('/pengaduan/{id}/detail_pengaduan', [AduanController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
-    Route::get('/pengaduan/{id}/penugasan_teknisi', [AduanController::class, 'penugasan_teknisi'])->name('sarpras.pengaduan.edit');
-    Route::get('/pengaduan/{id}/confirm_penugasan', [AduanController::class, 'confirm_penugasan'])->name('sarpras.pengaduan.update');
+    Route::get('/pengaduan', [PengaduanSarprasController::class, 'index'])->name('sarpras.pengaduan');
+    Route::get('/pengaduan/{id}/detail_pengaduan', [PengaduanSarprasController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
+    Route::get('/pengaduan/{id}/penugasan_teknisi', [PengaduanSarprasController::class, 'penugasan_teknisi'])->name('sarpras.pengaduan.edit');
+    Route::put('/pengaduan/{id}/confirm_penugasan', [PengaduanSarprasController::class, 'confirm_penugasan'])->name('sarpras.pengaduan.update');
     Route::get('/penugasan', [FasilitasController::class, 'penugasan']);
-    Route::get('/perbaikan', [PerbaikanController::class, 'perbaikan']);
-    Route::get('/perbaikan', [PerbaikanController::class, 'riwayat']);
+    Route::get('/perbaikan', [PerbaikanSarprasController::class, 'perbaikan']);
+    Route::get('/perbaikan', [PerbaikanSarprasController::class, 'riwayat']);
 });
 
 // Teknisi
