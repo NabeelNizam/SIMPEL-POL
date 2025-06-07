@@ -59,16 +59,16 @@
                     <p class="text-gray-800 font-semibold">
                         @if($fasilitas->urgensi)
                             <span class="px-3 py-1 rounded-full text-white text-sm
-                                                                        @if($fasilitas->urgensi === \App\Http\Enums\Urgensi::DARURAT)
-                                                                            bg-red-500
-                                                                        @elseif($fasilitas->urgensi === \App\Http\Enums\Urgensi::PENTING)
-                                                                            bg-yellow-500
-                                                                        @elseif($fasilitas->urgensi === \App\Http\Enums\Urgensi::BIASA)
-                                                                            bg-blue-500
-                                                                        @else
-                                                                            bg-gray-500
-                                                                        @endif
-                                                                    ">
+                                    @if($fasilitas->urgensi === \App\Http\Enums\Urgensi::DARURAT)
+                                            bg-red-500
+                                    @elseif($fasilitas->urgensi === \App\Http\Enums\Urgensi::PENTING)
+                                            bg-yellow-500
+                                    @elseif($fasilitas->urgensi === \App\Http\Enums\Urgensi::BIASA)
+                                            bg-blue-500
+                                    @else
+                                            bg-gray-500
+                                    @endif
+                                    ">
                                 {{ $fasilitas->urgensi->value }}
                             </span>
                         @else
@@ -125,6 +125,26 @@
     </div>
 </div>
 
+@if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: '{{ session('success') }}',
+        });
+    </script>
+@endif
+
+@if ($errors->any())
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Validasi Gagal',
+            html: `{!! implode('<br>', $errors->all()) !!}`,
+        });
+    </script>
+@endif
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
@@ -150,7 +170,7 @@
             }
         messages: {
                 id_teknisi: {
-                    required: "Tolong pilih teknisi",
+                    required: "Harap pilih teknisi",
                 },
             }
         });
