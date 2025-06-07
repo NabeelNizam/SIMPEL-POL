@@ -156,11 +156,14 @@ Route::prefix('pelapor')->middleware(['authorize:MAHASISWA|DOSEN|TENDIK'])->grou
     // Form & Riwayat Mahasiswa
     Route::prefix('form')->group(function () {
         Route::get('/', [FormPelaporanController::class, 'index'])->name('mahasiswa.form');
-        Route::get('/create', [FormPelaporanController::class, 'create'])->name('mahasiswa.form.create_ajax');
-        Route::post('/store', [FormPelaporanController::class, 'store'])->name('mahasiswa.form.store_ajax');
+        Route::get('/create', [FormPelaporanController::class, 'create'])->name('mahasiswa.form.create');
+        Route::post('/store', [FormPelaporanController::class, 'store'])->name('mahasiswa.form.store');
         Route::get('/{id}/show_ajax', [FormPelaporanController::class, 'show_ajax'])->name('mahasiswa.form.show_ajax');
-        Route::get('/{id}/edit_ajax', [FormPelaporanController::class, 'edit_ajax'])->name('mahasiswa.form.edit_ajax');
-        Route::post('/{id}/edit_ajax', [FormPelaporanController::class, 'update_ajax'])->name('mahasiswa.form.update_ajax');
+        Route::get('/{id}/edit', [FormPelaporanController::class, 'edit'])->name('mahasiswa.form.edit');
+        Route::put('/{id}/update', [FormPelaporanController::class, 'update'])->name('mahasiswa.form.update');
+        Route::get('/get-lantai/{id_gedung}', [FormPelaporanController::class, 'getLantai']);
+        Route::get('/get-ruangan/{id_lantai}', [FormPelaporanController::class, 'getRuangan']);
+        Route::get('/get-fasilitas/{id_ruangan}', [FormPelaporanController::class, 'getFasilitas']);
     });
 
     Route::prefix('riwayat')->group(function () {
@@ -192,18 +195,6 @@ Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
         Route::get('/export_pdf', [KriteriaController::class, 'export_pdf'])->name('sarpras.bobot.export_pdf');
         Route::get('/export_excel', [KriteriaController::class, 'export_excel'])->name('sarpras.bobot.export_excel');
     });
-
-    // Route::prefix('form')->group(function () {
-    //     Route::get('/', [FormPelaporanController::class, 'index'])->name('mahasiswa.form');
-    //     Route::get('/create', [FormPelaporanController::class, 'create_ajax'])->name('mahasiswa.form.create_ajax');
-    //     Route::get('/get-lantai', [FormPelaporanController::class, 'getLantai'])->name('mahasiswa.form.get_lantai');
-    //     Route::get('/get-ruangan', [FormPelaporanController::class, 'getRuangan'])->name('mahasiswa.form.get_ruangan');
-    //     Route::get('/get-fasilitas', [FormPelaporanController::class, 'getFasilitas'])->name('mahasiswa.form.get_fasilitas');
-    //     Route::post('/store', [FormPelaporanController::class, 'store'])->name('mahasiswa.form.store_ajax');
-    //     Route::get('/{id}/show_ajax', [FormPelaporanController::class, 'show_ajax'])->name('mahasiswa.form.show_ajax');
-    //     Route::get('/{id}/edit_ajax', [FormPelaporanController::class, 'edit_ajax'])->name('mahasiswa.form.edit_ajax');
-    //     Route::post('/{id}/edit_ajax', [FormPelaporanController::class, 'update_ajax'])->name('mahasiswa.form.update_ajax');
-    // });
 
     Route::prefix('kriteria')->group(function () {
         Route::post('/list', [KriteriaController::class, 'list']);
