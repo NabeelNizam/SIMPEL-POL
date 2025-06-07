@@ -156,11 +156,12 @@ Route::prefix('pelapor')->middleware(['authorize:MAHASISWA|DOSEN|TENDIK'])->grou
         Route::post('/{id}/edit_ajax', [FormPelaporanController::class, 'update_ajax'])->name('mahasiswa.form.update_ajax');
     });
 
-Route::prefix('riwayat')->group(function () {
-    Route::get('/', [RiwayatMahasiswaController::class, 'index'])->name('mahasiswa.riwayat');
-    Route::get('/{id}/show_ajax', [RiwayatMahasiswaController::class, 'show_ajax'])->name('mahasiswa.riwayat.show_ajax');
-    Route::get('/{aduan}/edit', [RiwayatMahasiswaController::class, 'edit'])->name('mahasiswa.riwayat.edit');
-    Route::post('/{aduan}/store', [RiwayatMahasiswaController::class, 'storeUlasan'])->name('mahasiswa.riwayat.store_ulasan');
+    Route::prefix('riwayat')->group(function () {
+        Route::get('/', [RiwayatMahasiswaController::class, 'index'])->name('mahasiswa.riwayat');
+        Route::get('/{id}/show_ajax', [RiwayatMahasiswaController::class, 'show_ajax'])->name('mahasiswa.riwayat.show_ajax');
+        Route::get('/{aduan}/edit', [RiwayatMahasiswaController::class, 'edit'])->name('mahasiswa.riwayat.edit');
+        Route::post('/{aduan}/store', [RiwayatMahasiswaController::class, 'storeUlasan'])->name('mahasiswa.riwayat.store_ulasan');
+    });
 });
 
 // Sarpras
