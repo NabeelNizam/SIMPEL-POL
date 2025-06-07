@@ -31,7 +31,7 @@ return new class extends Migration
 
             $table->enum('tingkat_kerusakan', ['RINGAN', 'SEDANG', 'PARAH'])
                 ->comment('Tingkat kerusakan fasilitas yang diinspeksi')
-                ->default('RINGAN');
+                ->nullable();
 
             $table->text('deskripsi')->nullable()->comment('Deskripsi|rincian inspeksi');
 

@@ -13,13 +13,13 @@
                 <x-table.cell>{{ $role->kode_role }}</x-table.cell>
                 <x-table.cell>{{ $role->nama_role }}</x-table.cell>
                 <x-table.cell>
-                    <button onclick="modalAction('{{ route('admin.role.show_ajax', $role->id_role) }}')" class="text-blue-600 hover:underline text-sm">
+                    <button onclick="modalAction('{{ route('admin.role.show_ajax', $role->id_role) }}')" class="text-blue-600 hover:underline text-sm cursor-pointer">
                         <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
                     </button>
-                    <button onclick="modalAction('{{ route('admin.role.edit_ajax', $role->id_role) }}')" class="text-blue-600 hover:underline text-sm ml-2">
+                    <button onclick="modalAction('{{ route('admin.role.edit_ajax', $role->id_role) }}')" class="text-blue-600 hover:underline text-sm ml-2 cursor-pointer">
                         <img src="{{ asset('icons/solid/Edit.svg') }}" alt="" class="h-7 w-7 inline">
                     </button>
-                    <button onclick="removeRole('{{ $role->id_role }}')" class="text-red-600 hover:underline text-sm ml-2">
+                    <button onclick="   modalAction('{{route('admin.role.confirm_ajax', $role->id_role) }}')" class="text-red-600 hover:underline text-sm ml-2 cursor-pointer">
                         <img src="{{ asset('icons/solid/Delete.svg') }}" alt="" class="h-7 w-7 inline">
                     </button>
                 </x-table.cell>
