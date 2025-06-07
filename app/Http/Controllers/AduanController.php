@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Aduan;
-use App\Models\Fasilitas;
 use App\Models\Kategori;
-use App\Models\Perbaikan;
 use App\Models\UmpanBalik;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class AduanController extends Controller
@@ -103,83 +100,4 @@ class AduanController extends Controller
         ])->render();
     }
 
-    // Fitur Pengaduan yang akan di inspeksi
-    // -User : Sarpras
-    public function pengaduan(Request $request)
-    {
-        $breadcrumb = (object) [
-            'title' => 'Laporan',
-            'list' => ['Home', 'Laporan Pengaduan']
-        ];
-
-        $page = (object) [
-            'title' => 'Daftar Pengaduan yang terdaftar dalam sistem'
-        ];
-
-        $activeMenu = 'pengaduan';
-
-        // Query untuk Pengaduan
-        $query = Fasilitas::with(['kategori', 'ruangan', 'aduan.pelapor.role']);
-
-        if ($request->has('filter_user') && $request->filter_user != 'all') {
-            $filterUser = $request->filter_user;
-
-            // Hitung aduan hanya dari user tertentu
-            $query->withCount([
-                'aduan as aduan_count' => function ($q) use ($filterUser) {
-                    $q->where('id_user_pelapor', $filterUser);
-                }
-            ]);
-
-            // Hanya tampilkan fasilitas yang pernah diadukan oleh user tersebut
-            $query->whereHas('aduan', function ($q) use ($filterUser) {
-                $q->where('id_user_pelapor', $filterUser);
-            });
-        } else {
-            // Kalau tidak pakai filter user, hitung semua aduan
-            $query->withCount('aduan as aduan_count');
-        }
-
-
-        // Filter berdasarkan pencarian
-        if ($request->search) {
-            $query->whereHas('fasilitas', function ($q) use ($request) {
-                $q->where('nama_fasilitas', 'like', "%{$request->search}%");
-            });
-        }
-
-        // Filter berdasarkan kategori
-        if ($request->id_kategori) {
-            $query->whereHas('fasilitas', function ($q) use ($request) {
-                $q->where('id_kategori', $request->id_kategori);
-            });
-        }
-
-        $query->orderBy('aduan_count', 'desc');
-
-
-        // Pagination
-        $perPage = $request->input('per_page', 10);
-        $pengaduan = $query->paginate($perPage);
-
-        $pengaduan->appends(request()->query());
-
-        // ambil data kategori untuk filter
-        $kategori = Kategori::all();
-
-        if ($request->ajax()) {
-            $html = view('sarpras.pengaduan.table', compact('pengaduan'))->render();
-            return response()->json(['html' => $html]);
-        }
-
-        return view('sarpras.pengaduan.index', compact('breadcrumb', 'page', 'activeMenu', 'pengaduan', 'kategori'));
-    }
-
-    // Detail Fasilitas & Laporan Pengaduan nya
-    public function show_pengaduan($id)
-    {
-        $fasilitas = Fasilitas::with(['kategori', 'ruangan', 'aduan.pelapor'])->withCount('aduan')->findOrFail($id);
-        // dd($fasilitas);
-        return view('sarpras.pengaduan.detail', ['fasilitas' => $fasilitas]);
-    }
 }
