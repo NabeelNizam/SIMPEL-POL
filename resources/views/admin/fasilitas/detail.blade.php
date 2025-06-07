@@ -1,12 +1,12 @@
 <!-- Modal Konten Detail Fasilitas -->
-<div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
+<div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative max-h-[70%] overflow-y-auto">
 
-    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl">
+    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl cursor-pointer">
         <i class="fas fa-times"></i>
     </button>
 
     <h2 class="text-xl font-semibold text-center">Detail Data Fasilitas</h2>
-    <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
+    <div class="w-[185px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
     <!-- Gambar Fasilitas -->
     <div class="w-full flex justify-center mb-6">

@@ -2,10 +2,14 @@
 
 namespace Database\Factories;
 
+use App\Http\Enums\Status;
 use App\Models\Aduan;
+use App\Models\Fasilitas;
 use App\Models\Perbaikan;
+use App\Models\Periode;
 use App\Models\Prioritas;
 use App\Models\UmpanBalik;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,23 +24,15 @@ class AduanFactory extends Factory
      */
     public function definition(): array
     {
-        $numbers = [1, 5, 6];
         return [
-            'tanggal_aduan' => fake()->date(),
-            'deskripsi' => fake()->sentence(5),
-            'status' => 'MENUNGGU_DIPROSES',
-            'bukti_foto' => 'bukti_foto.jpg',
-            'id_fasilitas' => rand(1, 3),
-            'id_user_pelapor' => $numbers[array_rand($numbers)],
-            'id_periode' => 1,
-            'id_perbaikan' => 1
+            'id_fasilitas' => Fasilitas::all()->random()->id_fasilitas,
+            'id_user_pelapor' => User::all()->random()->id_user,
+            'id_periode' => Periode::find(1)->id_periode,
+            'judul' => fake()->sentence(3),
+            'deskripsi' => fake()->paragraph(2),
+            'foto_aduan' => fake()->imageUrl(640, 480, 'business', true, 'Aduan', true),
+            'status' => Status::SELESAI,
         ];
     }
-    public function configure()
-    {
-        return $this->afterCreating(function (Aduan $aduan) {
-            UmpanBalik::factory()->create(['id_aduan' => $aduan->id_aduan]);
-            // Prioritas::factory()->create(['id_aduan' => $aduan->id_aduan]);
-        });
-    }
+    public function configure() {}
 }

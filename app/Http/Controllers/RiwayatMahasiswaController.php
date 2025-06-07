@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Aduan;
 use App\Models\Kategori;
+use App\Models\UmpanBalik;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class RiwayatMahasiswaController extends Controller
 {
@@ -68,6 +70,33 @@ class RiwayatMahasiswaController extends Controller
             ->where('id_user_pelapor', auth()->user()->id_user)->findOrFail($id);
         $user = $aduan->pelapor; 
         return view('mahasiswa.riwayat.detail', compact('aduan', 'user'))->render();
+    }
+
+    public function edit(Aduan $aduan)
+    {
+        $aduan = Aduan::findOrFail($aduan->id_aduan);
+        return view('mahasiswa.riwayat.edit')->with('aduan', $aduan);
+    }
+
+public function storeUlasan(Request $request, Aduan $aduan)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'komentar' => 'required|string|min:10|max:255',
+        ]);
+         
+        try {
+            UmpanBalik::create([
+                'id_aduan' => $aduan->id_aduan,
+                'rating' => $request->rating,
+                'komentar' => $request->komentar,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Gagal menambahkan rating dan komentar: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['error' => 'Gagal menambahkan rating dan komentar.']);
+        }
+
+        return redirect()->back()->with('success', 'Rating dan komentar berhasil ditambahkan.');
     }
 
 }

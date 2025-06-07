@@ -4,7 +4,9 @@ namespace Database\Factories;
 
 use App\Models\Biaya;
 use App\Models\Perbaikan;
+use App\Models\Periode;
 use App\Models\Prioritas;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,22 +21,8 @@ class PerbaikanFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            'deskripsi_perbaikan' => fake()->sentence(5),
-            'tingkat_kerusakan' => 'RINGAN',
-            'id_user_teknisi' => 3,
-            'id_user_sarpras' => 4,
-            'tanggal_mulai' => fake()->date(),
-            'tanggal_selesai' => '2027-01-01',
-            'id_periode' => 1,
-            'is_teknisi_selesai' => fake()->boolean(),
+        return[
+            'deskripsi' => fake()->paragraph(2),
         ];
-    }
-    public function configure()
-    {
-        return $this->afterCreating(function (Perbaikan $perbaikan) {
-            Biaya::factory(3)->create(['id_perbaikan' => $perbaikan->id_perbaikan]);
-            Prioritas::factory()->create(['id_perbaikan' => $perbaikan->id_perbaikan]);
-        });
     }
 }

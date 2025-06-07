@@ -6,7 +6,9 @@ use App\Http\Enums\Kondisi;
 use App\Http\Enums\Urgensi;
 use App\Models\Aduan;
 use App\Models\Fasilitas;
+use App\Models\Kategori;
 use App\Models\Perbaikan;
+use App\Models\Periode;
 use App\Models\Ruangan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,23 +25,28 @@ class FasilitasFactory extends Factory
      */
     public function definition(): array
     {
-        $random = fake()->randomElement(['Meja', 'PC', 'Papan Tulis', 'Kursi', 'Pintu', 'Proyektor']);
+        // $random = fake()->randomElement(['Meja', 'PC', 'Papan Tulis', 'Kursi', 'Pintu', 'Proyektor']);
+        $elements =['elektronik'=>['PC', 'Proyektor', 'Kipas Angin', 'AC'],
+            'furniture'=>['Meja', 'Kursi', 'Papan Tulis'],
+            'buku'=>['Buku', 'Majalah', 'Kamus']
+        ];
+        $kategori = Kategori::all()->random();
+        $nama_fasilitas = fake()->randomElement($elements[$kategori->nama_kategori]);
         return [
-            'nama_fasilitas' => $random,
-            'kode_fasilitas' => substr($random, 0, 2). fake()->numerify('##'),
-            'deskripsi' => fake()->sentence(5),
-            'id_kategori' => fake()->randomElement([1, 2, 3]),
+            'id_kategori' => $kategori->id_kategori,
+            'nama_fasilitas' => $nama_fasilitas,
+            'kode_fasilitas' => $kategori->kode_kategori . '-'. fake()->unique()->numberBetween(1000, 9999),
             'kondisi' => Kondisi::LAYAK,
-            'urgensi' => Urgensi::BIASA,
-            'foto_fasilitas' => fake()->image(),
-            'id_periode' => 1
+            'urgensi' => fake()->randomElement(Urgensi::cases()),
+            'id_periode' => Periode::find(1)->id_periode,
+            'id_ruangan' => fake()->randomElement(Ruangan::pluck('id_ruangan')),
+            'foto_fasilitas' => fake()->imageUrl(640, 480, 'business', true, 'Fasilitas', true),
+            'deskripsi' => fake()->paragraph(2),
         ];
     }
     public function configure()
     {
         return $this->afterCreating(function (Fasilitas $fasilitas) {
-            Perbaikan::factory()->count(10)->create(['id_fasilitas' => $fasilitas->id_fasilitas]);
-            Aduan::factory()->create(['id_fasilitas' => $fasilitas->id_fasilitas]);
         });
     }
 }

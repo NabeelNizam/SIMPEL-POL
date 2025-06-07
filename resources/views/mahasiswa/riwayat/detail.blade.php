@@ -1,22 +1,22 @@
 <!-- Modal Konten Detail -->
 <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative max-h-[80vh] overflow-y-auto">
 
-    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl">
+    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl cursor-pointer">
         <i class="fas fa-times"></i>
     </button>
 
     <h2 class="text-xl font-semibold text-center">Detail Riwayat Aduan</h2>
-    <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
+    <div class="w-[198px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
     <!-- Isi pengaduan -->
     <div class="mb-6">
         <div class="flex items-center mb-4">
-            <div class="bg-blue-500 text-white p-2 rounded-md mr-3">
+            <div class="bg-blue-500 text-white p-2 rounded-md mr-3 w-8 h-8 flex justify-center items-center">
                 <i class="fas fa-clipboard-list"></i>
             </div>
             <h3 class="text-lg font-semibold text-gray-800">Isi Pengaduan</h3>
         </div>
-        <div class="w-16 h-0.5 bg-orange-400 mb-4"></div>
+        <div class="w-[160px] h-0.5 bg-orange-400 mb-4"></div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Gambar -->
@@ -64,7 +64,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-600 mb-1">Tanggal Perbaikan</label>
                         <p class="text-gray-800 font-semibold">
-                            {{ $aduan->perbaikan && $aduan->perbaikan->tanggal_selesai ? \Carbon\Carbon::parse($aduan->perbaikan->tanggal_selesai)->format('d/m/Y') : '-' }}
+                            {{ $aduan->tanggal_perbaikan ? \Carbon\Carbon::parse($aduan->tanggal_perbaikan)->format('d/m/Y') : '-' }}
                         </p>
                     </div>
                 </div>
@@ -93,12 +93,12 @@
     <!-- Umpan Balik -->
     <div class="mb-6">
         <div class="flex items-center mb-4">
-            <div class="bg-blue-500 text-white p-2 rounded-md mr-3">
+            <div class="bg-blue-500 text-white p-2 rounded-md mr-3 w-8 h-8 flex justify-center items-center">
                 <i class="fas fa-comment-dots"></i>
             </div>
-            <h3 class="text-lg font-semibold text-gray-800">Umpan Balik Pelanggan</h3>
+            <h3 class="text-lg font-semibold text-gray-800">Umpan Balik Pelapor</h3>
         </div>
-        <div class="w-16 h-0.5 bg-orange-400 mb-4"></div>
+        <div class="w-[220px] h-0.5 bg-orange-400 mb-4"></div>
 
         <div class="space-y-4">
             <div>
@@ -108,6 +108,7 @@
                         @for($i = 1; $i <= $aduan->umpan_balik->rating; $i++)
                             <i class="fas fa-star text-yellow-400 text-lg"></i>
                         @endfor
+                        <span class="pl-1 text-[13px] font-medium">{{ $aduan->umpan_balik->rating }}/5</span>
                     </div>
                     <p class="text-gray-800 font-semibold">{{ $aduan->umpan_balik->komentar ?? '-' }}</p>
                 @else

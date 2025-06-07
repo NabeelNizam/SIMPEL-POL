@@ -17,7 +17,7 @@
 
         td,
         th {
-            padding: 4px 3px;
+            padding: 7px 10px;
         }
 
         th {
@@ -122,18 +122,22 @@
         <table class="border-all">
             <thead>
                 <tr>
+                    <th class="text-center">No</th>
                     @foreach ($header as $col)
                         <th>{{ $col }}</th>
                     @endforeach
                 </tr>
             </thead>
             <tbody>
+                {{ $no = 1 }}
                 @foreach ($data as $row)
                     <tr>
+                        <td class="text-center">{{ $no }}</td>
                         @foreach ($row as $cell)
                             <td>{{ $cell }}</td>
-                        @endforeach
+                            @endforeach
                     </tr>
+                    {{ $no++ }}
                 @endforeach
             </tbody>
         </table>

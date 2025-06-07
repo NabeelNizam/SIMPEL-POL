@@ -1,127 +1,83 @@
-<!-- Modal Konten Edit -->
-<div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative">
+<!-- Isi yang dimuat oleh AJAX ke dalam #myModal -->
+<div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative border-t border-blue-700">
 
-    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 cursor-pointer">
         <i class="fas fa-times"></i>
     </button>
 
-    <h2 class="text-xl font-semibold mb-4 text-center">Edit Pengguna</h2>
-    <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
+    <h2 class="text-xl font-semibold mb-2 text-center">Edit Data Jurusan</h2>
+    <div class="w-[170px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
-    <form id="form-edit-pengguna" action="{{ route('admin.pengguna.update_ajax', $user->id_user) }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        @csrf
+    <form id="form-tambah-jurusan" action="{{ route('admin.jurusan.update', $jurusan->id_jurusan) }}" method="POST" class="grid grid-cols-1 gap-4" enctype="multipart/form-data">
         @method('PUT')
+        @csrf
 
-        <div>
-            <label class="block text-sm font-medium mb-1">Nama <span class="text-red-500">*</span></label>
-            <input type="text" name="nama" id="nama" value="{{ $user->nama }}" class="w-full border rounded-md px-3 py-2 text-sm" placeholder="Nama">
-            <span id="nama-error" class="text-xs text-red-500 mt-1 error-text"></span>
+        <div class="mt-1">
+            <label class="block text-sm font-medium mb-1">Kode Jurusan<span class="text-red-500">*</span></label>
+            <input type="text" name="kode_jurusan" id="kode_jurusan" class="w-full border rounded-md px-3 py-2 text-sm" placeholder="Kode" required value="{{ $jurusan->kode_jurusan }}">
+            <span id="kode_jurusan-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
 
         <div>
-            <label class="block text-sm font-medium mb-1">No. Telepon <span class="text-red-500">*</span></label>
-            <input type="text" name="telepon" id="telepon" value="{{ $user->no_hp }}" class="w-full border rounded-md px-3 py-2 text-sm" placeholder="No. Telepon">
-            <span id="telepon-error" class="text-xs text-red-500 mt-1 error-text"></span>
+            <label class="block text-sm font-medium mb-1">Nama Jurusan<span class="text-red-500">*</span></label>
+            <input type="text" name="nama_jurusan" id="nama_jurusan" class="w-full border rounded-md px-3 py-2 text-sm" placeholder="Nama" required value="{{ $jurusan->nama_jurusan }}">
+            <span id="nama_jurusan-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
 
-        <div>
-            <label class="block text-sm font-medium mb-1">Email <span class="text-red-500">*</span></label>
-            <input type="email" name="email" id="email" value="{{ $user->email }}" class="w-full border rounded-md px-3 py-2 text-sm" placeholder="Email">
-            <span id="email-error" class="text-xs text-red-500 mt-1 error-text"></span>
-        </div>
-
-        <div>
-            <label class="block text-sm font-medium mb-1">Username <span class="text-red-500">*</span></label>
-            <input type="text" name="username" id="username" value="{{ $user->username }}" class="w-full border rounded-md px-3 py-2 text-sm" placeholder="Username">
-            <span id="username-error" class="text-xs text-red-500 mt-1 error-text"></span>
-        </div>
-
-        <div>
-            <label class="block text-sm font-medium mb-1">Jurusan <span class="text-red-500">*</span></label>
-            <select name="jurusan" id="jurusan" class="w-full border rounded-md px-3 py-2 text-sm">
-                <option value="">- Pilih Jurusan -</option>
-                @foreach($jurusan as $j)
-                    <option value="{{ $j->id_jurusan }}" {{ $j->id_jurusan == $user->id_jurusan ? 'selected' : '' }}>{{ $j->nama_jurusan }}</option>
-                @endforeach
-            </select>
-            <span id="jurusan-error" class="text-xs text-red-500 mt-1 error-text"></span>
-        </div>
-
-        <div>
-            <label class="block text-sm font-medium mb-1">Role <span class="text-red-500">*</span></label>
-            <select name="id_role" id="id_role" class="w-full border rounded-md px-3 py-2 text-sm">
-                <option value="">- Pilih Role -</option>
-                @foreach($role as $r)
-                    <option value="{{ $r->id_role }}" {{ $r->id_role == $user->id_role ? 'selected' : '' }}>{{ $r->nama_role }}</option>
-                @endforeach
-            </select>
-            <span id="id_role-error" class="text-xs text-red-500 mt-1 error-text"></span>
-        </div>
-
-        <div class="col-span-2 text-right mt-4">
-            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">Update</button>
+        <div class="text-right mt-4">
+            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md cursor-pointer">
+                <div class="flex justify-center items-center gap-[10px]">
+                    <img src="{{ asset('icons/light/Check-circle.svg') }}" alt="Simpan" class="w-6 h-6">
+                    <p>Simpan</p>
+                </div>
+            </button>
         </div>
     </form>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
 <script>
 $(document).ready(function() {
-    $("#form-edit-pengguna").validate({
+    $("#form-tambah-jurusan").validate({
+        errorElement: 'span',
+        errorClass: 'text-xs text-red-500 mt-1 error-text',
+        highlight: function(element) {},
+        unhighlight: function(element) {},
+        errorPlacement: function(error, element) {
+            var errorContainer = element.next('.error-text');
+            if (errorContainer.length) {
+                errorContainer.replaceWith(error);
+            } else {
+                error.insertAfter(element);
+            }
+        },
         rules: {
-            nama: "required",
-            telepon: "required",
-            email: {
+            kode_jurusan: {
                 required: true,
-                email: true
+                minlength: 2,
+                maxlength: 5,
             },
-            username: "required",
-            jurusan: "required",
-            id_role: "required"
+            nama_jurusan: {
+                required: true,
+                minlength: 8,
+                maxlength: 45,
+            },
         },
         messages: {
-            nama: "Nama wajib diisi",
-            telepon: "Telepon wajib diisi",
-            email: {
-                required: "Email wajib diisi",
-                email: "Format email tidak valid"
+            kode_jurusan: {
+                required: "Kode jurusan wajib diisi",
+                minlength: "Kode jurusan minimal 2 karakter",
+                maxlength: "Kode jurusan maksimal 5 karakter"
             },
-            username: "Username wajib diisi",
-            jurusan: "Pilih jurusan",
-            id_role: "Pilih role"
+            nama_jurusan: {
+                required: "Nama jurusan wajib diisi",
+                minlength: "Nama jurusan minimal 8 karakter",
+                maxlength: "Nama jurusan maksimal 45 karakter"
+            },
         },
-        submitHandler: function(form) {
-            $.ajax({
-                url: form.action,
-                type: 'POST',
-                data: $(form).serialize(),
-                success: function(response) {
-                    if (response.status) {
-                        $('#myModal').addClass('hidden').removeClass('flex').html('');
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: response.message
-                        });
-                        dataUser.ajax.reload();
-                    } else {
-                        $('.error-text').text('');
-                        $.each(response.msgField, function(prefix, val) {
-                            $('#' + prefix + '-error').text(val[0]);
-                        });
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Terjadi Kesalahan',
-                            text: response.message
-                        });
-                    }
-                }
-            });
-            return false;
-        }
-    });
-
-    $(document).on('click', '#modal-close', function () {
-        $('#myModal').addClass('hidden').removeClass('flex').html('');
     });
 });
 </script>
+
