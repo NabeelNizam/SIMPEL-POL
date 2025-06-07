@@ -46,4 +46,17 @@ class Aduan extends Model
     {
         return $this->hasManyThrough(Biaya::class, Perbaikan::class, 'id_perbaikan', 'id_perbaikan', 'id_perbaikan', 'id_perbaikan');
     }
+    public function getTanggalPerbaikanAttribute()
+    {
+        $idFasilitas = $this->id_fasilitas;
+        $tanggalSelesaiAduan = $this->periode->tanggal_selesai;
+
+        return Perbaikan::join('inspeksi', 'perbaikan.id_inspeksi', '=', 'inspeksi.id_inspeksi')
+            ->join('periode as periode_perbaikan', 'perbaikan.id_periode', '=', 'periode_perbaikan.id_periode')
+            ->where('inspeksi.id_fasilitas', $idFasilitas)
+            ->where('periode_perbaikan.tanggal_mulai', '>', $tanggalSelesaiAduan)
+            ->orderBy('periode_perbaikan.tanggal_mulai', 'asc')
+            ->select('perbaikan.tanggal_selesai')
+            ->first()?->tanggal_selesai;
+    }
 }

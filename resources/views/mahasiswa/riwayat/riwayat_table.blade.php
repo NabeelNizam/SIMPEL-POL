@@ -30,7 +30,7 @@
                     {{ $a->tanggal_aduan ? \Carbon\Carbon::parse($a->tanggal_aduan)->format('d/m/Y') : '-'}}
                 </x-table.cell>
                 <x-table.cell>
-                    {{ $a->perbaikan && $a->perbaikan->tanggal_selesai ? \Carbon\Carbon::parse($a->perbaikan->tanggal_selesai)->format('d/m/Y') : '-' }}
+                    {{ $a->tanggal_perbaikan ? \Carbon\Carbon::parse($a->tanggal_perbaikan)->format('d/m/Y') : '-' }}
                 </x-table.cell>
                 <x-table.cell>
                     @if($a->umpan_balik && $a->umpan_balik->rating)
