@@ -281,70 +281,66 @@ class FasilitasController extends Controller
 
     public function import_file(Request $request)
     {
-        //if ($request->ajax() || $request->wantsJson()) {
-            $rules = [
-                'file_input' => ['required', 'mimes:xlsx', 'max:1024']
-            ];
+        $rules = [
+            'file_input' => ['required', 'mimes:xlsx', 'max:1024']
+        ];
 
-            $validator = Validator::make($request->all(), $rules);
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Validasi Gagal',
-                    'msgField' => $validator->errors()
-                ]);
-            }
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi Gagal',
+                'msgField' => $validator->errors()
+            ]);
+        }
 
-            $periode = Periode::where('tanggal_mulai', '<=', now())
-                ->where('tanggal_selesai', '>=', now())
-                ->first();
+        $periode = Periode::where('tanggal_mulai', '<=', now())
+            ->where('tanggal_selesai', '>=', now())
+            ->first();
 
-            if (!$periode) {
-                return redirect()->back()->withErrors(['periode_id' => 'Periode tidak ditemukan.']);
-            }
+        if (!$periode) {
+            return redirect()->back()->withErrors(['periode_id' => 'Periode tidak ditemukan.']);
+        }
 
-            $file = $request->file('file_input');
+        $file = $request->file('file_input');
 
-            $reader = IOFactory::createReader('Xlsx'); 
-            $reader->setReadDataOnly(true); 
-            $spreadsheet = $reader->load($file->getRealPath()); 
-            $sheet = $spreadsheet->getActiveSheet();
+        $reader = IOFactory::createReader('Xlsx'); 
+        $reader->setReadDataOnly(true); 
+        $spreadsheet = $reader->load($file->getRealPath()); 
+        $sheet = $spreadsheet->getActiveSheet();
 
-            $data = $sheet->toArray(null, false, true, true);
+        $data = $sheet->toArray(null, false, true, true);
 
-            $insert = [];
-            if (count($data) > 1) {
-                foreach ($data as $baris => $value) {
-                    if ($baris > 1) { 
-                        $insert[] = [
-                            'kode_fasilitas' => $value['A'],
-                            'nama_fasilitas' => $value['B'],
-                            'id_kategori' => $value['C'],
-                            'id_ruangan' => $value['D'],
-                            'urgensi' => strtoupper($value['E']),
-                            'kondisi' => strtoupper($value['F']),
-                            'deskripsi' => $value['G'],
-                            'foto_fasilitas' => '0',
-                            'id_periode' => $periode->id_periode,
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ];
-                    }
+        $insert = [];
+        if (count($data) > 1) {
+            foreach ($data as $baris => $value) {
+                if ($baris > 1) { 
+                    $insert[] = [
+                        'kode_fasilitas' => $value['A'],
+                        'nama_fasilitas' => $value['B'],
+                        'id_kategori' => Kategori::where('kode_kategori', $value['C'])->first()->id_kategori,
+                        'id_ruangan' => Ruangan::where('kode_ruangan', $value['D'])->first()->id_ruangan,
+                        'urgensi' => strtoupper($value['E']),
+                        'kondisi' => strtoupper($value['F']),
+                        'deskripsi' => $value['G'],
+                        'foto_fasilitas' => '0',
+                        'id_periode' => $periode->id_periode,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
                 }
-
-                if (count($insert) > 0) {
-                    Fasilitas::insertOrIgnore($insert);
-                }
-
-                return redirect()->back()->with('success', 'Data berhasil diimport.');
-            } else {
-                return redirect()->back()->withErrors(['general' => 'Data gagal diimport.']);
             }
-        //}
-        // return response()->json([
-        //     'status' => false,
-        //     'message' => 'Data gagal diimport'
-        // ]);
+
+            
+
+            if (count($insert) > 0) {
+                Fasilitas::insertOrIgnore($insert);
+            }
+
+            return redirect()->back()->with('success', 'Data berhasil diimport.');
+        } else {
+            return redirect()->back()->withErrors(['general' => 'Data gagal diimport.']);
+        }
     }
 
     public function export_pdf()
