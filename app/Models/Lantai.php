@@ -13,14 +13,15 @@ class Lantai extends Model
 
     protected $guarded = [];
     protected $primaryKey = 'id_lantai';
+    
+    public function gedung()
+    {
+        return $this->belongsTo(Gedung::class, 'id_gedung');
+    }
 
     public function ruangan()
     {
-        return $this->hasMany(Ruangan::class);
+        return $this->hasMany(Ruangan::class, 'id_lantai', 'id_lantai');
     }
 
-    public function gedung()
-    {
-        return $this->belongsTo(Gedung::class, 'id_gedung', 'id_gedung');
-    }
 }

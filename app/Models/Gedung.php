@@ -14,7 +14,7 @@ class Gedung extends Model
 
     public function lantai()
     {
-        return $this->hasMany(Lantai::class);
+        return $this->hasMany(Lantai::class, 'id_gedung', 'id_gedung');
     }
     public function jurusan()
     {

@@ -3,7 +3,7 @@
 @section('content')
 <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-600">
     <div class="flex items-center justify-between mb-4">
-        <span class="text-sm text-gray-700">Daftar Pengguna yang terdaftar dalam sistem</span>
+        <span class="text-sm text-gray-700">{{ $page->title }}</span>
         <div class="flex gap-2">
             <a href="{{ url('/user/export_excel') }}" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
                 <i class="fas fa-file-excel"></i> Ekspor Excel
@@ -38,7 +38,7 @@
     </form>
 
 
-    <div id="user-table-body">
+    <div id="role-table-body">
         @include('admin.role.role_table', ['roles' => $roles])
     </div>
     </div>
@@ -65,20 +65,17 @@
 
     function reloadData() {
         $.ajax({
-            url: "{{ route('admin.pengguna') }}",
+            url: "{{ route('admin.role') }}",
             method: "GET",
             data: {
-                id_role: $('#id_role').val(),
                 search: $('#search').val(),
                 per_page: $('#per_page').val(),
-                sort_column: $('#sort-column').val(),
-                sort_direction: $('#sort-direction').val()
             },
             success: function (response) {
-                $('#user-table-body').html(response.html);
+                $('#role-table-body').html(response.html);
             },
             error: function () {
-                Swal.fire('Error!', 'Gagal memuat data pengguna.', 'error');
+                Swal.fire('Error!', 'Gagal memuat data Role.', 'error');
             }
         });
     }

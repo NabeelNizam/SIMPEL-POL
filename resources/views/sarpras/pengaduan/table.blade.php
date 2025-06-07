@@ -52,7 +52,7 @@
                         class="text-blue-600 hover:underline text-sm cursor-pointer">
                         <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
                     </button>
-                    <button onclick="modalAction()" class="text-yellow-600 hover:underline text-sm cursor-pointer">
+                    <button onclick="modalAction('{{ route('sarpras.pengaduan.edit', $p->id_fasilitas) }}')" class="text-yellow-600 hover:underline text-sm cursor-pointer">
                         <img src="{{ asset('icons/crud/Case.svg') }}" alt="" class="h-7 w-7 inline">
                     </button>
                 </x-table.cell>
