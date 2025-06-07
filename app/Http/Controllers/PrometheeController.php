@@ -151,7 +151,7 @@ class PrometheeController extends Controller
             new AlternativeDTO('Papan Tulis', ['user_count'=> 3, 'urgensi'=> 3]),
         ];
 
-        return response()->json($promethee->calculatePromethee($alternatives[0], ['user_count' => 0.65, 'urgensi' => 0.35]));
+        return $promethee->calculatePromethee($alternatives[0], ['user_count' => 0.65, 'urgensi' => 0.35]);
     }
 
     public function tesHitungDosen()
@@ -166,7 +166,7 @@ class PrometheeController extends Controller
             new AlternativeDTO('Papan Tulis', ['user_count'=> 3, 'urgensi'=> 3]),
         ];
 
-        return response()->json($promethee->calculatePromethee($alternatives[0], ['user_count' => 0.65, 'urgensi' => 0.35]));
+        return $promethee->calculatePromethee($alternatives[0], ['user_count' => 0.65, 'urgensi' => 0.35]);
     }
 
     public function tesHitungTendik()
@@ -181,6 +181,6 @@ class PrometheeController extends Controller
             new AlternativeDTO('Papan Tulis', ['user_count'=> 3, 'urgensi'=> 3]),
         ];
 
-        return response()->json($promethee->calculatePromethee($alternatives[0], ['user_count' => 0.65, 'urgensi' => 0.35]));
+        return $promethee->calculatePromethee($alternatives[0], ['user_count' => 0.65, 'urgensi' => 0.35]);
     }
 }
