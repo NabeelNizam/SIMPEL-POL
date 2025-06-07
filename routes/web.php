@@ -45,6 +45,7 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         Route::get('/create', [AdminController::class, 'create_ajax'])->name('admin.pengguna.create_ajax');
         Route::post('/store', [AdminController::class, 'store_ajax'])->name('admin.pengguna.store_ajax');
         Route::get('/import', [AdminController::class, 'import_ajax'])->name('admin.pengguna.import_ajax');
+        Route::post('/import', [AdminController::class, 'import_file'])->name('admin.pengguna.import_file');
         Route::get('/{user}/confirm', [AdminController::class, 'confirm_ajax'])->name('admin.pengguna.confirm_ajax');
         Route::get('/{user}/show_ajax', [AdminController::class, 'show_ajax'])->name('admin.pengguna.show_ajax');
         Route::get('/{user}/edit_ajax', [AdminController::class, 'edit_ajax'])->name('admin.pengguna.edit_ajax');
