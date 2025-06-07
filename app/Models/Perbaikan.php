@@ -11,17 +11,13 @@ class Perbaikan extends Model
     protected $table = 'perbaikan';
     protected $guarded = ['id_perbaikan'];
     protected $primaryKey = 'id_perbaikan';
-    public function aduan()
+    public function inspeksi()
     {
-        return $this->belongsTo(Aduan::class, 'id_aduan', 'id_aduan');
+        return $this->belongsTo(Inspeksi::class, 'id_inspeksi', 'id_inspeksi');
     }
-    public function biaya()
+    public function periode()
     {
-        return $this->hasMany(Biaya::class, 'id_perbaikan', 'id_perbaikan');
-    }
-    public function teknisi()
-    {
-        return $this->belongsTo(User::class, 'id_user_teknisi', 'id_user');
+        return $this->belongsTo(Periode::class, 'id_periode', 'id_periode');
     }
 
 }
