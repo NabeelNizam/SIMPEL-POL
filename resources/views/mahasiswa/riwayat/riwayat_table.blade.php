@@ -30,7 +30,7 @@
                     {{ $a->tanggal_aduan ? \Carbon\Carbon::parse($a->tanggal_aduan)->format('d/m/Y') : '-'}}
                 </x-table.cell>
                 <x-table.cell>
-                    {{ $a->perbaikan && $a->perbaikan->tanggal_selesai ? \Carbon\Carbon::parse($a->perbaikan->tanggal_selesai)->format('d/m/Y') : '-' }}
+                    {{ $a->tanggal_perbaikan ? \Carbon\Carbon::parse($a->tanggal_perbaikan)->format('d/m/Y') : '-' }}
                 </x-table.cell>
                 <x-table.cell>
                     @if($a->umpan_balik && $a->umpan_balik->rating)
@@ -41,7 +41,7 @@
                                 @endfor
                             </div>
                             <div class="text-xs text-gray-700 mt-1 font-semibold">
-                                {{ number_format($a->umpan_balik->rating, 1) }} / 5.0
+                                {{ number_format($a->umpan_balik->rating, 0) }} / 5
                             </div>
                         </div>
                     @else
@@ -51,19 +51,19 @@
                 <x-table.cell>
                     <div class="flex gap-2">
                         <button onclick="modalAction('{{ route('mahasiswa.riwayat.show_ajax', $a->id_aduan) }}')"
-                            class="text-blue-600 hover:underline text-sm">
-                            <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
+                            class="text-blue-600 hover:underline text-sm cursor-pointer">
+                            <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 min-h-[23px] min-w-[23px] inline">
                         </button>
 
                         @if($a->umpan_balik && $a->umpan_balik->rating)
-                            <button disabled class="text-gray-400 cursor-not-allowed text-sm opacity-60">
+                            <button disabled class="text-gray-400 cursor-not-allowed text-sm opacity-60 cursor-not-allowed">
                                 <img src="{{ asset('icons/solid/message.svg') }}" alt=""
-                                    class="h-7 w-7 inline filter grayscale brightness-75">
+                                    class="h-7 w-7 min-h-[23px] min-w-[23px] inline filter grayscale brightness-75">
                             </button>
                         @else
-                            <button onclick="modalAction('{{ route('mahasiswa.riwayat.edit_ajax', $a->id_aduan) }}')"
-                                class="text-blue-600 hover:underline text-sm">
-                                <img src="{{ asset('icons/solid/message.svg') }}" alt="" class="h-7 w-7 inline">
+                            <button onclick="modalAction('{{ route('mahasiswa.riwayat.edit', $a->id_aduan) }}')"
+                                class="text-blue-600 hover:underline text-sm cursor-pointer">
+                                <img src="{{ asset('icons/solid/message.svg') }}" alt="" class="h-7 w-7 min-h-[23px] min-w-[23px] inline">
                             </button>
                         @endif
                     </div>

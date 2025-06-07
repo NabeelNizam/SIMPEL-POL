@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Mahasiswa;
 use App\Models\Pegawai;
+use App\Models\Role;
 use App\Models\User;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -72,6 +74,25 @@ class UserSeeder extends Seeder
             'id_user' => 3,
             'nip' => '9094',
         ]);
+
+        User::create([
+            'id_user' => 4,
+            'nama' => 'Garaga',
+            'email' => 'garaga@lucu.com',
+            'email_verified_at' => now(),
+            'username' => 'garaga',
+            'no_hp' => fake()->phoneNumber(),
+            'foto_profil' => fake()->image(),
+            'id_role' => Role::where('nama_role', 'MAHASISWA')->first()->id_role,
+            'password' => 'password', // password
+            'remember_token' => Str::random(10),
+            'id_jurusan' => 1
+        ]);
+        Mahasiswa
+            ::create([
+                'id_user' => 3,
+                'nim' => '9093',
+            ]);
 
 
         // make pelapor
