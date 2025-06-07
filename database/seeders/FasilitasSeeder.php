@@ -8,6 +8,7 @@ use App\Http\Enums\Urgensi;
 use App\Models\Aduan;
 use App\Models\Biaya;
 use App\Models\Fasilitas;
+use App\Models\Inspeksi;
 use App\Models\Perbaikan;
 use App\Models\Periode;
 use App\Models\Ruangan;
@@ -23,6 +24,12 @@ class FasilitasSeeder extends Seeder
      */
     public function run(): void
     {
-        Fasilitas::factory()->count(10)->create();
+        $fasilitas =  Fasilitas::factory()->count(10)->create();
+
+        foreach ($fasilitas as $item) {
+            Inspeksi::factory()->create([
+                'id_fasilitas' => $item->id_fasilitas,
+            ]);
+        }
     }
 }

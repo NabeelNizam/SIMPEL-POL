@@ -2,12 +2,12 @@
     <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">Import Data Pengguna</h2>
     <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
-    <form action="{{ url('/user/import') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.pengguna.import_file') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="mb-4">
             <label class="block text-sm font-medium text-gray-900" for="file_input">Import File</label>
-            <input name="file" id="file_input" type="file" accept=".xlsx, .xls" required
+            <input name="file_input" id="file_input" type="file" accept=".xlsx, .xls" required
                 class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
             <p class="mt-1 text-sm text-gray-500" id="file_input_help">
                 Format yang didukung: .xlsx, .xlsm, .xml. Ukuran maksimal: 2MB
@@ -26,37 +26,3 @@
         <i class="fas fa-times"></i>
     </button>
 </div>
-
-<script>
-$(document).ready(function() {
-    submitHandler: function(form) {
-            $.ajax({
-                url: form.action,
-                type: form.method,
-                data: $(form).serialize(),
-                success: function(response) {
-                    if (response.status) {
-                        $('#myModal').modal('hide');
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: response.message
-                        });
-                        dataUser.ajax.reload();
-                    } else {
-                        $('.error-text').text('');
-                        $.each(response.msgField, function(prefix, val) {
-                            $('#' + prefix + '-error').text(val[0]);
-                        });
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Terjadi Kesalahan',
-                            text: response.message
-                        });
-                    }
-                }
-            });
-            return false;
-        }
-});
-</script>

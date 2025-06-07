@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             LantaiSeeder::class,
             RuanganSeeder::class,
             FasilitasSeeder::class,
-            InspeksiSeeder::class,
+            // InspeksiSeeder::class,
             AduanSeeder::class,
             KriteriaSeeder::class
         ]);
