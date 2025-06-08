@@ -11,6 +11,7 @@ use App\Models\Lantai;
 use App\Models\Periode;
 use App\Models\Ruangan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class FormPelaporanController extends Controller
@@ -129,20 +130,19 @@ class FormPelaporanController extends Controller
             return response()->json(['status' => false, 'message' => $e->getMessage()], 422);
         }
     }
-    public function edit($id)
+    public function edit(Aduan $aduan)
     {
-        $aduan = Aduan::with(['pelapor', 'fasilitas.kategori', 'fasilitas.ruangan.lantai.gedung'])
-            ->where('id_user_pelapor', auth()->user()->id_user)->findOrFail($id);
         $gedung = Gedung::all();
         $lantai = Lantai::all();
         $ruangan = Ruangan::all();
         $fasilitas = Fasilitas::all();
+
         return view(
             'mahasiswa.form.edit',
             compact('aduan', 'gedung', 'lantai', 'ruangan', 'fasilitas')
-        )->render();
+        );
     }
-    public function update(Request $request, $id)
+    public function update(Request $request, Aduan $aduan)
     {
         try {
             $validation = Validator::make($request->all(), [
@@ -154,7 +154,6 @@ class FormPelaporanController extends Controller
                     ->withErrors($validation)
                     ->withInput();
             }
-            $aduan = Aduan::findOrFail($id);
             $aduan->update([
                 'id_fasilitas' => $request->fasilitas,
                 'deskripsi' => $request->deskripsi,
@@ -168,7 +167,9 @@ class FormPelaporanController extends Controller
     }
     public function getLantai($id_gedung)
     {
-        $lantai = Lantai::where('id_gedung', $id_gedung)->get();
+        // $lantai = Lantai::where('id_gedung', $id_gedung)->get();
+        $lantai = Lantai::with('gedung')->where('id_gedung', $id_gedung)->get();
+        Log::info('Lantai yang diambil: ' .  $lantai);
         return response()->json($lantai);
     }
 
