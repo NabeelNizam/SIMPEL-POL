@@ -27,12 +27,16 @@ public function index(Request $request)
     $periode = Periode::all();
 
     // Query untuk model Inspeksi
-    $query = Inspeksi::with([
-    'teknisi',
-    'fasilitas.ruangan.lantai.gedung',
-    'fasilitas.kategori',
-    'periode'
-]);
+   $query = Inspeksi::with([
+        'teknisi',
+        'fasilitas.ruangan.lantai.gedung',
+        'fasilitas.kategori',
+        'periode'
+    ])
+    ->whereHas('fasilitas.aduan', function ($q) {
+        $q->where('status', \App\Http\Enums\Status::SEDANG_INSPEKSI); // Filter status SEDANG_INSPEKSI
+    });
+
 
 // Filter berdasarkan pencarian
 if ($request->search) {
@@ -97,5 +101,67 @@ public function show_ajax($id_inspeksi)
 
     // Data untuk view
     return view('teknisi.penugasan.detail', compact('inspeksi', 'fasilitas', 'biaya', 'statusAduan'))->render();
+}
+public function edit_ajax($id_inspeksi)
+{
+    // Ambil data inspeksi beserta relasi terkait
+    $inspeksi = Inspeksi::with([
+        'fasilitas.ruangan.lantai.gedung',
+        'fasilitas.kategori',
+        'biaya', // Relasi ke biaya
+        'perbaikan' // Relasi ke perbaikan
+    ])->findOrFail($id_inspeksi);
+
+    // Ambil data fasilitas
+    $fasilitas = $inspeksi->fasilitas;
+
+    // Ambil data biaya
+    $biaya = $inspeksi->biaya;
+
+    // Ambil status aduan berdasarkan fasilitas dan periode yang sama
+    $aduan = $fasilitas->aduan()
+        ->where('id_periode', $inspeksi->id_periode)
+        ->first();
+
+    $statusAduan = $aduan->status->value ?? '-';
+
+    // Return view edit
+    return view('teknisi.penugasan.edit', compact('inspeksi', 'fasilitas', 'biaya', 'statusAduan'));
+}
+
+public function update_ajax(Request $request, $id_inspeksi)
+{
+    // Validasi input
+    $request->validate([
+        'tingkat_kerusakan' => 'required|in:PARAH,SEDANG,RINGAN',
+        'deskripsi_pekerjaan' => 'nullable|string',
+        'biaya.*.keterangan' => 'required|string',
+        'biaya.*.besaran' => 'required|numeric|min:0',
+    ]);
+
+    // Ambil data inspeksi
+    $inspeksi = Inspeksi::findOrFail($id_inspeksi);
+
+    // Update tingkat kerusakan
+    $inspeksi->tingkat_kerusakan = $request->tingkat_kerusakan;
+    $inspeksi->save();
+
+    // Update deskripsi pekerjaan
+    if ($inspeksi->perbaikan) {
+        $inspeksi->perbaikan->deskripsi = $request->deskripsi_pekerjaan;
+        $inspeksi->perbaikan->save();
+    }
+
+    // Update rincian anggaran
+    $inspeksi->biaya()->delete(); // Hapus semua biaya lama
+    foreach ($request->biaya as $biaya) {
+        $inspeksi->biaya()->create([
+            'keterangan' => $biaya['keterangan'],
+            'besaran' => $biaya['besaran'],
+        ]);
+    }
+
+    // Redirect atau response JSON
+    return response()->json(['message' => 'Data berhasil diperbarui.']);
 }
 }
