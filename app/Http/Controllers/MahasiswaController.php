@@ -18,7 +18,7 @@ class MahasiswaController extends Controller
         ];
 
         $page = (object) [
-            'title' => 'Beranda mahasiswa'
+            'title' => 'Beranda'
         ];
 
         $activeMenu = 'home';
@@ -39,11 +39,7 @@ class MahasiswaController extends Controller
         $sortDirection = $request->sort_direction ?? 'desc';
         $query->orderBy($sortColumn, $sortDirection);
 
-        // Pagination
-        $perPage = $request->input('per_page', 10);
-        $aduan = $query->paginate($perPage);
-
-        $aduan->appends(request()->query());
+        $aduan = $query->get();
 
         if ($request->ajax()) {
             $html = view('mahasiswa.dashboard_card', compact('aduan'))->render();
@@ -51,49 +47,32 @@ class MahasiswaController extends Controller
         }
 
         return view('mahasiswa.dashboard', [
-            'breadcrumb' => $breadcrumb, 
-            'page' => $page, 
+            'breadcrumb' => $breadcrumb,
+            'page' => $page,
             'activeMenu' => $activeMenu,
-            'aduan'=> $aduan
+            'aduan' => $aduan
         ]);
     }
 
     public function SOPDownload($filename)
     {
-        // Daftar file SOP yang tersedia
-        $allowedFiles = [
-            'sop-perbaikan-fasilitas' => [
-                'filename' => 'SOP_Perbaikan_Fasilitas.pdf',
-                'original_name' => 'SOP Perbaikan Fasilitas.pdf'
-            ]
-        ];
-
-        // Cek apakah file yang diminta valid
-        if (!array_key_exists($filename, $allowedFiles)) {
-            abort(404, 'File tidak ditemukan');
-        }
-
-        $fileInfo = $allowedFiles[$filename];
-        $filePath = 'documents/sop/' . $fileInfo['filename'];
+        $filePath = "documents/mahasiswa/{$filename}";
 
         // Cek apakah file ada di storage
         if (!Storage::disk('public')->exists($filePath)) {
-            abort(404, 'File tidak ditemukan di server');
+            abort(404, 'File SOP tidak ditemukan.');
         }
 
-        // Log download activity (optional)
-        Log::info('SOP Downloaded', [
-            'user_id' => auth()->id(),
-            'filename' => $fileInfo['original_name'],
-            'ip' => request()->ip(),
-            'user_agent' => request()->userAgent()
-        ]);
+        // Cegah akses ke file berbahaya
+        if (
+            str_contains($filename, '..') ||
+            str_contains($filename, '/') ||
+            str_contains($filename, '\\')
+        ) {
+            abort(403, 'Akses tidak sah.');
+        }
 
-        // Return file for download
-        return response()->download(
-            storage_path('app/public/' . $filePath),
-            $fileInfo['original_name']
-        );
+        // Jalankan download menggunakan response()->download()
+        return response()->download(storage_path("app/public/{$filePath}"));
     }
-
 }

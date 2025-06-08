@@ -16,7 +16,7 @@
             </div>
             <h3 class="text-lg font-semibold text-gray-800">Isi Pengaduan</h3>
         </div>
-        <div class="w-16 h-0.5 bg-orange-400 mb-4"></div>
+        <div class="w-[150px] h-0.5 bg-orange-400 mb-4"></div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Gambar -->
@@ -39,44 +39,40 @@
             <!-- Detail Aduan -->
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-1">Lokasi</label>
+                    <label class="block text-sm leading-relaxed text-gray-600 mb-1">Lokasi</label>
                     @php
                         $ruangan = $aduan->fasilitas->ruangan;
                         $lantai = $ruangan->lantai;
                         $gedung = $lantai->gedung;
                     @endphp
-                    <p class="text-gray-800 font-semibold">
-                        {{ $gedung->nama_gedung ?? '-' }}{{ $lantai ? ', Lt. ' . $lantai->nama_lantai : '' }}{{ $ruangan ? ', ' . $ruangan->nama_ruangan : '' }}
+                    <p class="text-gray-700 text-sm font-semibold">
+                        {{ $gedung->nama_gedung ?? '-' }}{{ $lantai ? ', ' . $lantai->nama_lantai : '' }}{{ $ruangan ? ', ' . $ruangan->nama_ruangan : '' }}
                     </p>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-1">Deskripsi Kerusakan</label>
-                    <p class="text-gray-700 text-sm leading-relaxed">{{ $aduan->deskripsi ?? '-' }}</p>
+                    <label class="block text-sm leading-relaxed text-gray-600 mb-1">Deskripsi Kerusakan</label>
+                    <p class="text-gray-700 text-sm font-semibold">{{ $aduan->deskripsi ?? '-' }}</p>
                 </div>
 
                 <div class="flex gap-12">
                     <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-1">Status</label>
-                        <span class="px-3 py-1 rounded-full text-white text-sm
-                        @if($aduan->status === \App\Http\Enums\Status::SELESAI)
-                            bg-green-500
-                        @elseif($aduan->status === \App\Http\Enums\Status::MENUNGGU_DIPROSES)
+                        <label class="block text-sm leading-relaxed text-gray-600 mb-1">Status</label>
+                        <span class="px-3 py-1 rounded text-white text-sm text-center w-42 block
+                        @if($aduan->status === \App\Http\Enums\Status::MENUNGGU_DIPROSES)
                             bg-blue-500
                         @elseif($aduan->status === \App\Http\Enums\Status::SEDANG_INSPEKSI)
                             bg-yellow-500
-                        @elseif($aduan->status === \App\Http\Enums\Status::SEDANG_DIPERBAIKI)
-                            bg-orange-500
                         @else
-                            bg-gray-500
+                            bg-orange-500
                         @endif">
                             {{ $aduan->status->value }}
                         </span>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-1">Tanggal Lapor</label>
-                        <p class="text-gray-800 font-semibold">
+                        <label class="block text-sm leading-relaxed text-gray-600 mb-1">Tanggal Lapor</label>
+                        <p class="text-gray-700 text-sm font-semibold">
                             {{ $aduan->tanggal_aduan ? \Carbon\Carbon::parse($aduan->tanggal_aduan)->format('d/m/Y') : '-' }}
                         </p>
                     </div>
