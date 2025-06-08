@@ -82,9 +82,9 @@ public function index(Request $request)
                 'kode_role' => $request->kode_role,
                 'nama_role' => $request->nama_role,
             ]);
-            return redirect()->back()->with('success', 'Data gedung berhasil disimpan.');
+            return redirect()->back()->with('success', 'Data Role berhasil disimpan.');
         } catch (\Exception $e) {
-            Log::error('Gagal simpan gedung: ' . $e->getMessage());
+            Log::error('Gagal simpan Role: ' . $e->getMessage());
             return redirect()->back()->withErrors(['general' => 'Gagal menyimpan data.']);
         }
     }
@@ -216,52 +216,84 @@ public function index(Request $request)
         }
     }
 
-    public function export_pdf()
-    {
+    public function set_sheet(){
+         $role = Role::get();
 
-        $role = Role::get();
+        $filename = 'data_role_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+        $sheet = new Sheet(); // Pass the data and filename to the Sheet
+        $sheet->title = 'Data Role User';
+        $sheet->text = 'Berikut adalah daftar role yang ada di sistem.';
+        $sheet->footer = 'Dibuat oleh Admin';
+        $sheet->header = ['Kode Role', 'Nama Role'];
 
-        $headers = ['Kode Role', 'Nama Role'];
-        $data = $role->map(function ($item) {
-            return [
-                'kode_role' => $item->kode_role,
-                'nama_role' => $item->nama_role
-            ];
-        })->toArray();
-        $sheet = Sheet::make(
-            [
-                'title' => 'Data Role User',
-                'text' => 'Berikut adalah Daftar Role User yang terdaftar di sistem.',
-                'footer' => 'Dibuat oleh Nabeela',
-                'header' => $headers,
-                'data' => $data,
-                'filename' => 'data_role' . date('Y-m-d_H-i-s'),
-                'is_landscape' => false, // Mengatur orientasi kertas menjadi landscape
-            ]
-        );
-        return $sheet->toPdf();
-    }
-    
-    public function export_excel()
-    {
-
-        $role = Role::get();
-
-        $headers = ['Kode Role', 'Nama Role'];
-        $data = $role->map(function ($item) {
+        $sheet->data = $role->map(function ($item) {
             return [
                 'kode_role' => $item->kode_role,
                 'nama_role' => $item->nama_role,
             ];
         })->toArray();
-        $sheet = Sheet::make(
-            [
-                'header' => $headers,
-                'data' => $data,
-                'filename' => 'data_role' . date('Y-m-d_H-i-s'),
-            ]
-        );
-        return $sheet->toXls();
+        $sheet->filename = $filename;
+
+        return $sheet;
     }
+
+     public function export_excel()
+    {
+
+        return $this->set_sheet()->toXls();
+    }
+
+    public function export_pdf()
+    {
+        return $this->set_sheet()->toPdf();
+    }
+
+    // public function export_pdf()
+    // {
+
+    //     $role = Role::get();
+
+    //     $headers = ['Kode Role', 'Nama Role'];
+    //     $data = $role->map(function ($item) {
+    //         return [
+    //             'kode_role' => $item->kode_role,
+    //             'nama_role' => $item->nama_role
+    //         ];
+    //     })->toArray();
+    //     $sheet = Sheet::make(
+    //         [
+    //             'title' => 'Data Role User',
+    //             'text' => 'Berikut adalah Daftar Role User yang terdaftar di sistem.',
+    //             'footer' => 'Dibuat oleh Nabeela',
+    //             'header' => $headers,
+    //             'data' => $data,
+    //             'filename' => 'data_role' . date('Y-m-d_H-i-s'),
+    //             'is_landscape' => false, // Mengatur orientasi kertas menjadi landscape
+    //         ]
+    //     );
+    //     return $sheet->toPdf();
+    // }
+    
+    // public function export_excel()
+    // {
+
+    //     $role = Role::get();
+
+    //     $headers = ['Kode Role', 'Nama Role'];
+    //     $data = $role->map(function ($item) {
+    //         return [
+    //             'kode_role' => $item->kode_role,
+    //             'nama_role' => $item->nama_role,
+    //         ];
+    //     })->toArray();
+    //     $sheet = Sheet::make(
+    //         [
+    //             'header' => $headers,
+    //             'data' => $data,
+    //             'filename' => 'data_role' . date('Y-m-d_H-i-s'),
+    //         ]
+    //     );
+    //     return $sheet->toXls();
+    // }
 
 }
