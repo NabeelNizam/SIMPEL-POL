@@ -18,6 +18,7 @@ use App\Http\Controllers\{
     PengaduanSarprasController,
     PerbaikanController,
     PerbaikanSarprasController,
+    PerbaikanTeknisiController,
     ProfilController,
     RiwayatMahasiswaController,
     RiwayatTeknisiController,
@@ -27,7 +28,7 @@ use App\Http\Controllers\{
     WelcomeController,
     PeriodeController,
     PrometheeController,
-    SarprasPenugasanController
+    SarprasPenugasanController,
 };
 
 // Auth & Welcome
@@ -221,6 +222,13 @@ Route::middleware(['authorize:SARPRAS'])->group(function () {
 // Teknisi
 Route::prefix('teknisi')->middleware(['authorize:TEKNISI'])->group(function () {
     Route::get('/', [TeknisiController::class, 'index'])->name('teknisi.dashboard');
+    Route::prefix('perbaikan')->group(function () {
+        Route::get('/', [PerbaikanTeknisiController::class, 'index'])->name('teknisi.perbaikan');
+        Route::get('/{id}/show', [PerbaikanTeknisiController::class, 'show'])->name('teknisi.perbaikan.show');
+        // Route::get('/{id}/edit', [PerbaikanTeknisiController::class, 'edit'])->name('teknisi.perbaikan.edit');
+        // Route::put('/{id}/update', [PerbaikanTeknisiController::class, 'update'])->name('teknisi.perbaikan.update');
+        Route::get('/{id}/approve', [PerbaikanTeknisiController::class, 'approve'])->name('teknisi.perbaikan.approve');
+    });
 
     Route::prefix('riwayat')->group(function () {
         Route::get('/', [RiwayatTeknisiController::class, 'index'])->name('teknisi.riwayat');

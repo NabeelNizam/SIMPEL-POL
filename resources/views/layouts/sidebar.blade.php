@@ -161,7 +161,7 @@
                                 alt="Laporan Pending" class="mr-2 w-5">
                             Penugasan
                         </a>
-                        <a href="/teknisi/perbaikan"
+                        <a href={{route('teknisi.perbaikan')}}
                             class="flex items-center p-2 w-full {{ $activeMenu == 'perbaikan' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                             style="{{ $activeMenu == 'perbaikan' ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ $activeMenu == 'perbaikan' ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}"
