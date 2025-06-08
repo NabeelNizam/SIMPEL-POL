@@ -234,3 +234,4 @@ Route::get('/hitung', [PrometheeController::class, 'calculatePromethee'])->name(
 Route::get('/tesMahasiswa', [PrometheeController::class, 'tesHitungMahasiswa'])->name('sarpras.tesMahasiswa');
 Route::get('/tesDosen', [PrometheeController::class, 'tesHitungDosen'])->name('sarpras.tesDosen');
 Route::get('/tesTendik', [PrometheeController::class, 'tesHitungTendik'])->name('sarpras.tesTendik');
+Route::get('/hitungTerakhir', [PrometheeController::class, 'tesLast'])->name('sarpras.last'); // TES PROMETHEE

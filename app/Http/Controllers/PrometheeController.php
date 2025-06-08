@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Enums\Urgensi;
 use App\Http\Helpers\AlternativeDTO;
 use App\Http\Helpers\PrometheeCalculator;
+use App\Http\Helpers\PrometheeCalculator2;
 use App\Models\Aduan;
 use App\Models\Kriteria;
 use App\Models\Role;
@@ -182,5 +183,20 @@ class PrometheeController extends Controller
         ];
 
         return $promethee->calculatePromethee($alternatives[0], ['user_count' => 0.65, 'urgensi' => 0.35]);
+    }
+
+    public function tesLast()
+    {
+        $promethee = new PrometheeCalculator2();
+
+        $alternatives[] = [
+            new AlternativeDTO('Proyektor A', ['riwayat_inspeksi'=> 1, 'tingkat_kerusakan'=> 1, 'biaya'=> 750000]),
+            new AlternativeDTO('Proyektor B', ['riwayat_inspeksi'=> 4, 'tingkat_kerusakan'=> 2, 'biaya'=> 800000]),
+            new AlternativeDTO('Proyektor C', ['riwayat_inspeksi'=> 3, 'tingkat_kerusakan'=> 1, 'biaya'=> 650000]),
+            new AlternativeDTO('AC', ['riwayat_inspeksi'=> 5, 'tingkat_kerusakan'=> 2, 'biaya'=> 500000]),
+            new AlternativeDTO('Papan Tulis', ['riwayat_inspeksi'=> 2, 'tingkat_kerusakan'=> 3, 'biaya'=> 1000000]),
+        ];
+
+        return $promethee->calculatePromethee($alternatives[0], ['riwayat_inspeksi' => 0.2, 'tingkat_kerusakan' => 0.3, 'biaya' => 0.5]);
     }
 }
