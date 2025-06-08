@@ -29,13 +29,8 @@
         </ul>
 
         <!-- Tabel Data Awal -->
-        <div id="aduan-table-body">
-            @include('sarpras.penugasan.penugasan_table', ['aduan' => $aduan])
-        </div>
-
-        <!-- Tabel Data Setelah Perbaikan -->
-        <div id="promethee-table-body" class="hidden">
-            <div id="promethee-results" class="text-sm text-gray-700"></div>
+        <div id="inspeksi-table-body">
+            @include('sarpras.penugasan.penugasan_table', ['penugasan' => $penugasan])
         </div>
     </div>
 
@@ -44,41 +39,58 @@
 
 @push('js')
 <script>
-    $(document).ready(function() {
-        // Event untuk tab switching
-        $('.tab-button').on('click', function() {
-            // Hapus kelas aktif dari semua tab
-            $('.tab-button').removeClass('active text-blue-600 border-yellow-400');
-            
-            // Tambahkan kelas aktif ke tab yang diklik
-            $(this).addClass('active text-blue-600 border-yellow-400');
-            
-            // Dapatkan role dari tab yang diklik
-            const role = $(this).data('role');
-            
-            // Sembunyikan semua tabel
-            $('#aduan-table-body').addClass('hidden');
-            $('#promethee-table-body').addClass('hidden');
-            
-            // Tampilkan tabel sesuai role
-            if (role === 'awal') {
-                $('#aduan-table-body').removeClass('hidden');
-            } else if (role === 'perbaikan') {
-                $('#promethee-table-body').removeClass('hidden');
 
-                // Muat data JSON dari endpoint
-                $.ajax({
-                    url: '{{ route('coba-hitung') }}',
-                    method: 'GET',
-                    success: function(data) {
-                        let html = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
-                        $('#promethee-results').html(html);
-                    },
-                    error: function() {
-                        $('#promethee-results').html('<p class="text-red-500">Gagal memuat data.</p>');
-                    }
-                });
-            }
+    function modalAction(url = '') {
+        $.get(url, function(response) {
+            $('#myModal').html(response).removeClass('hidden').addClass('flex');
+        });
+    }
+
+    // Untuk menutup modal
+    $(document).on('click', '#modal-close', function () {
+        $('#myModal').addClass('hidden').removeClass('flex').html('');
+    });
+
+    function reloadData() {
+    $.ajax({
+        url: "{{ route('sarpras.penugasan') }}",
+        method: "GET",
+        data: {
+            search: $('#search').val(),
+            per_page: $('#per_page').val(),
+            id_kategori: $('#id_kategori').val(),
+            id_gedung: $('#id_gedung').val(),
+            kondisi: $('#kondisi').val(),
+            sort_column: $('#sort-column').val(),
+            sort_direction: $('#sort-direction').val()
+        },
+        success: function (response) {
+            $('#inspeksi-table-body').html(response.html);
+        },
+        error: function () {
+            Swal.fire('Error!', 'Gagal memuat data kategori.', 'error');
+        }
+    });
+}
+
+    $(document).ready(function () {
+        // Event untuk jumlah data per halaman
+        $('#per_page').on('change', function () {
+            reloadData();
+        });
+
+        // Event untuk pencarian (dengan debounce)
+        let debounceTimer;
+        $('#search').on('input', function () {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () {
+                reloadData();
+            }, 300);
+        });
+
+        // Event untuk sorting jika ada
+        $('#sort-column, #sort-direction').on('change', function () {
+            reloadData();
         });
     });
 </script>

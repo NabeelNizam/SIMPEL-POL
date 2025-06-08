@@ -16,6 +16,7 @@ use App\Http\Controllers\{
     MahasiswaController,
     PengaduanController,
     PengaduanSarprasController,
+    PenugasanSarprasController,
     PerbaikanController,
     PerbaikanSarprasController,
     ProfilController,
@@ -177,22 +178,6 @@ Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
     Route::get('/', [SarprasController::class, 'index'])->name('sarpras.dashboard');
     Route::get('/sop/download/{filename}', [SarprasController::class, 'SOPDownload'])->name('download.sop');
 
-    Route::prefix('penugasan')->group(function () {
-        Route::get('/', [SarprasPenugasanController::class, 'index'])->name('sarpras.penugasan');
-
-        Route::get('/calculate-promethee', [SarprasPenugasanController::class, 'calculatePromethee'])->name('coba-hitung');
-        // Route::get('/{id}/show_ajax', [SarprasPenugasanController::class, 'show_ajax'])->name('mahasiswa.riwayat.show_ajax');
-        // Route::get('/{id}/edit_ajax', [SarprasPenugasanController::class, 'edit_ajax'])->name('mahasiswa.riwayat.edit_ajax');
-    });
-
-    Route::prefix('bobot')->group(function () {
-        Route::get('/', [KriteriaController::class, 'index'])->name('sarpras.bobot');
-        Route::get('/edit', [KriteriaController::class, 'edit'])->name('sarpras.bobot.edit');
-        Route::put('/update', [KriteriaController::class, 'update'])->name('sarpras.bobot.update');
-        Route::get('/export_pdf', [KriteriaController::class, 'export_pdf'])->name('sarpras.bobot.export_pdf');
-        Route::get('/export_excel', [KriteriaController::class, 'export_excel'])->name('sarpras.bobot.export_excel');
-    });
-
     // Route::prefix('form')->group(function () {
     //     Route::get('/', [FormPelaporanController::class, 'index'])->name('mahasiswa.form');
     //     Route::get('/create', [FormPelaporanController::class, 'create_ajax'])->name('mahasiswa.form.create_ajax');
@@ -217,13 +202,34 @@ Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
 });
 
 Route::middleware(['authorize:SARPRAS'])->group(function () {
+    // Bobot
+    Route::prefix('/bobot')->group(function () {
+        Route::get('/', [KriteriaController::class, 'index'])->name('sarpras.bobot');
+        Route::get('/edit', [KriteriaController::class, 'edit'])->name('sarpras.bobot.edit');
+        Route::put('/update', [KriteriaController::class, 'update'])->name('sarpras.bobot.update');
+        Route::get('/export_pdf', [KriteriaController::class, 'export_pdf'])->name('sarpras.bobot.export_pdf');
+        Route::get('/export_excel', [KriteriaController::class, 'export_excel'])->name('sarpras.bobot.export_excel');
+    });
+
+    // Pengaduan
     Route::get('/pengaduan', [PengaduanSarprasController::class, 'index'])->name('sarpras.pengaduan');
     Route::get('/pengaduan/{id}/detail_pengaduan', [PengaduanSarprasController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
     Route::get('/pengaduan/{id}/penugasan_teknisi', [PengaduanSarprasController::class, 'penugasan_teknisi'])->name('sarpras.pengaduan.edit');
     Route::put('/pengaduan/{id}/confirm_penugasan', [PengaduanSarprasController::class, 'confirm_penugasan'])->name('sarpras.pengaduan.update');
     Route::get('/penugasan', [FasilitasController::class, 'penugasan']);
+
+    // Penugasan
+    Route::prefix('/penugasan')->group(function () {
+        Route::get('/', [PenugasanSarprasController::class, 'index'])->name('sarpras.penugasan');
+        Route::get('/{inspeksi}/detail_inspeksi', [PenugasanSarprasController::class, 'show_penugasan'])->name('sarpras.penugasan.show');
+        Route::get('/{inspeksi}/penugasan_teknisi', [PenugasanSarprasController::class, 'penugasan_teknisi'])->name('sarpras.penugasan.edit');
+        Route::put('/{inspeksi}/confirm_penugasan', [PenugasanSarprasController::class, 'confirm_penugasan'])->name('sarpras.penugasan.update');
+    });
+
+    // Perbaikan
     Route::get('/perbaikan', [PerbaikanSarprasController::class, 'perbaikan']);
     Route::get('/perbaikan', [PerbaikanSarprasController::class, 'riwayat']);
+
 });
 
 // Teknisi

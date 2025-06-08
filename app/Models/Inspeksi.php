@@ -42,5 +42,13 @@ class Inspeksi extends Model
     {
         return $this->hasOne(Perbaikan::class, 'id_inspeksi', 'id_inspeksi');
     }
-
+    
+    public function getUserCountAttribute()
+    {
+        return Aduan::where('id_fasilitas', $this->id_fasilitas)
+            ->whereHas('periode', function ($query) {
+                $query->where('tanggal_selesai', '<=', $this->periode->tanggal_selesai);
+            })
+            ->count();
+    }
 }
