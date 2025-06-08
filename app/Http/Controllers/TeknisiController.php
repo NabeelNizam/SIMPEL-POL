@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TeknisiController extends Controller
 {
@@ -21,5 +22,28 @@ class TeknisiController extends Controller
 
 
         return view('teknisi.dashboard', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
+    }
+
+    public function SOPDownload($filename)
+    {
+        $role = 'teknisi'; // Bisa juga ambil dari auth jika dinamis
+        $filePath = "documents/{$role}/{$filename}";
+
+        // Cek apakah file ada di storage
+        if (!Storage::disk('public')->exists($filePath)) {
+            abort(404, 'File SOP tidak ditemukan.');
+        }
+
+        // Cegah akses ke file berbahaya
+        if (
+            str_contains($filename, '..') ||
+            str_contains($filename, '/') ||
+            str_contains($filename, '\\')
+        ) {
+            abort(403, 'Akses tidak sah.');
+        }
+
+        // Jalankan download menggunakan response()->download()
+        return response()->download(storage_path("app/public/{$filePath}"));
     }
 }

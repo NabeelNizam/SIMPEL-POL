@@ -154,7 +154,7 @@
 
                     <div>
                         <p class="mb-1 text-xs text-gray-500 uppercase">Laporan</p>
-                        <a href="/teknisi/penugasan"
+                        <a href="{{ route('teknisi.penugasan') }}"
                             class="flex items-center p-2 w-full {{ $activeMenu == 'penugasan' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                             style="{{ $activeMenu == 'penugasan' ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ $activeMenu == 'penugasan' ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}"

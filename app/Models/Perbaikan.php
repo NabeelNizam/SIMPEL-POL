@@ -19,5 +19,12 @@ class Perbaikan extends Model
     {
         return $this->belongsTo(Periode::class, 'id_periode', 'id_periode');
     }
-
+     public function fasilitas()
+    {
+        return $this->belongsTo(Fasilitas::class, 'id_fasilitas', 'id_fasilitas');
+    }
+public function biaya()
+    {
+        return $this->hasMany(Biaya::class, 'id_perbaikan', 'id_perbaikan');
+    }
 }

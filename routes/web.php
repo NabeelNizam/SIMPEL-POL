@@ -27,7 +27,8 @@ use App\Http\Controllers\{
     WelcomeController,
     PeriodeController,
     PrometheeController,
-    SarprasPenugasanController
+    SarprasPenugasanController,
+    TeknisiPenugasanController
 };
 
 // Auth & Welcome
@@ -38,6 +39,13 @@ Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+
+// Profil
+    Route::prefix('profil')->middleware(['auth'])->group(function () {
+        Route::get('/', [ProfilController::class, 'index'])->name('profil');
+        Route::get('/edit_ajax', [ProfilController::class, 'edit_ajax'])->name('profil.edit_ajax');
+        Route::put('/{id}/update_ajax', [ProfilController::class, 'update_ajax']);
+    });
 // Admin Routes
 Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
@@ -146,12 +154,7 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
 Route::prefix('pelapor')->middleware(['authorize:MAHASISWA|DOSEN|TENDIK'])->group(function () {
     Route::get('/', [MahasiswaController::class, 'index'])->name('dashboard.mahasiswa');
 
-    // Profil
-    Route::prefix('profil')->middleware(['auth'])->group(function () {
-        Route::get('/', [ProfilController::class, 'index'])->name('profil');
-        Route::get('/edit_ajax', [ProfilController::class, 'edit_ajax'])->name('profil.edit_ajax');
-        Route::put('/{id}/update_ajax', [ProfilController::class, 'update_ajax']);
-    });
+    
 
     // Form & Riwayat Mahasiswa
     Route::prefix('form')->group(function () {
@@ -220,7 +223,14 @@ Route::middleware(['authorize:SARPRAS'])->group(function () {
 // Teknisi
 Route::prefix('teknisi')->middleware(['authorize:TEKNISI'])->group(function () {
     Route::get('/', [TeknisiController::class, 'index'])->name('teknisi.dashboard');
+    Route::get('/sop/download/{filename}', [TeknisiController::class, 'SOPDownload'])->name('download.sop');
 
+    Route::prefix('penugasan')->group(function () {
+        Route::get('/', [TeknisiPenugasanController::class, 'index'])->name('teknisi.penugasan');
+        Route::get('/{id}/show_ajax', [TeknisiPenugasanController::class, 'show_ajax'])->name('teknisi.penugasan.show_ajax');
+        Route::get('/{id}/edit_ajax', [TeknisiPenugasanController::class, 'edit_ajax'])->name('teknisi.penugasan.edit_ajax');
+        Route::put('/{id}/update_ajax', [TeknisiPenugasanController::class, 'update_ajax'])->name('teknisi.penugasan.update_ajax');
+    });
     Route::prefix('riwayat')->group(function () {
         Route::get('/', [RiwayatTeknisiController::class, 'index'])->name('teknisi.riwayat');
         Route::get('/{id}/show_ajax', [RiwayatTeknisiController::class, 'show_ajax'])->name('teknisi.riwayat.show_ajax');

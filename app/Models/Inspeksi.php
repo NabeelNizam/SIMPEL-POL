@@ -42,5 +42,13 @@ class Inspeksi extends Model
     {
         return $this->hasOne(Perbaikan::class, 'id_inspeksi', 'id_inspeksi');
     }
+public function ruangan()
+{
+    return $this->belongsTo(Ruangan::class, 'id_ruangan', 'id_ruangan');
+}
+public function kategori()
+{
+    return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
+}
 
 }
