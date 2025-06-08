@@ -3,7 +3,7 @@
 @section('content')
     <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-600">
         <div class="flex items-center justify-between mb-4">
-            <span class="text-sm text-gray-700">Daftar Riwayat Perbaikan yang terdaftar dalam sistem</span>
+            <span class="text-sm text-gray-700">Daftar Proses Perbaikan Fasilitas</span>
         </div>
         <hr class="border-black opacity-30 mt-4">
 
@@ -36,7 +36,7 @@
         </form>
 
         <div id="perbaikan-table-body">
-            @include('sarpras.perbaikan.perbaikan_table', ['aduan' => $aduan])
+            @include('sarpras.perbaikan.perbaikan_table', ['perbaikan' => $perbaikan])
         </div>
     </div>
 
