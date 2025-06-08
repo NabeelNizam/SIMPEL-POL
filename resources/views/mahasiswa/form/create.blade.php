@@ -45,7 +45,7 @@
             </select>
             <span id="ruangan-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
-        <div>
+        <div class="col-span-2">
             <label class="block text-sm font-medium mb-1">Fasilitas<span class="text-red-500">*</span></label>
             <select required name="fasilitas" id="fasilitas"
                 class="w-full border rounded-md px-3 py-2 text-sm bg-gray-100 cursor-not-allowed" disabled>
