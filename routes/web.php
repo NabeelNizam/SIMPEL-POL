@@ -145,6 +145,7 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
 // Mahasiswa, Dosen, Tendik
 Route::prefix('pelapor')->middleware(['authorize:MAHASISWA|DOSEN|TENDIK'])->group(function () {
     Route::get('/', [MahasiswaController::class, 'index'])->name('dashboard.mahasiswa');
+    Route::get('/sop/download/{filename}', [MahasiswaController::class, 'SOPDownload'])->name('download.sopmhs');
 
     // Profil
     Route::prefix('profil')->middleware(['auth'])->group(function () {
