@@ -13,7 +13,7 @@
                 <x-table.cell>{{ $k->id_kriteria }}</x-table.cell>
                 <x-table.cell>{{ $k->kode_kriteria }}</x-table.cell>
                 <x-table.cell>{{ $k->nama_kriteria }}</x-table.cell>
-                <x-table.cell>{{ Str::ucfirst(Str::lower($k->jenis_kriteria)) }}</x-table.cell>
+                <x-table.cell>{{ Str::ucfirst(Str::lower($k->jenis_kriteria->value)) }}</x-table.cell>
                 <x-table.cell>{{ $k->bobot ?? '-' }}</x-table.cell>
             </x-table.row>
         @empty
