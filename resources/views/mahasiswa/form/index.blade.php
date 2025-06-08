@@ -5,7 +5,7 @@
         <div class="flex items-center justify-between mb-4">
             <span class="text-sm text-gray-700">Daftar Laporan yang terdaftar dalam sistem</span>
             <div class="flex gap-2">
-                <button onclick="modalAction('{{ route('mahasiswa.form.create_ajax') }}')"
+                <button onclick="modalAction('{{ route('mahasiswa.form.create') }}')"
                     class="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-green-700">
                     <i class="fas fa-plus"></i> Tambah
                 </button>
@@ -21,7 +21,8 @@
                     class="w-48 border border-gray-300 rounded-md shadow-sm sm:text-sm">
                     <option value="">Semua Kategori</option>
                     @foreach ($kategori as $k)
-                        <option value="{{ $k->id_kategori }}" {{ request('id_kategori') == $k->id_kategori ? 'selected' : '' }}>
+                        <option value="{{ $k->id_kategori }}"
+                            {{ request('id_kategori') == $k->id_kategori ? 'selected' : '' }}>
                             {{ $k->nama_kategori }}
                         </option>
                     @endforeach
@@ -53,7 +54,8 @@
                 <label for="per_page" class="text-sm font-medium text-gray-700">Show:</label>
                 <select id="per_page" name="per_page" class="border border-gray-300 rounded-md shadow-sm sm:text-sm">
                     @foreach ([10, 25, 50, 100] as $length)
-                        <option value="{{ $length }}" {{ request('per_page', 10) == $length ? 'selected' : '' }}>{{ $length }}
+                        <option value="{{ $length }}" {{ request('per_page', 10) == $length ? 'selected' : '' }}>
+                            {{ $length }}
                         </option>
                     @endforeach
                 </select>
@@ -63,8 +65,8 @@
             <!-- Pencarian -->
             <div class="flex items-center gap-2">
                 <label for="search" class="text-sm font-medium text-gray-700">Pencarian:</label>
-                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari fasilitas..."
-                    class="w-64 border border-gray-300 rounded-md shadow-sm sm:text-sm" />
+                <input type="text" name="search" id="search" value="{{ request('search') }}"
+                    placeholder="Cari fasilitas..." class="w-64 border border-gray-300 rounded-md shadow-sm sm:text-sm" />
             </div>
         </div>
 
@@ -75,19 +77,42 @@
 
     <div id="myModal" class="fixed inset-0 z-50 hidden items-center justify-center backdrop-blur-sm bg-white/30"></div>
 
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: '{{ session('success') }}',
+            }).then(() => {
+                location.reload();
+            });
+        </script>
+    @endif
+
+    @if ($errors->any())
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                html: `{!! implode('<br>', $errors->all()) !!}`,
+            }).then(() => {
+                location.reload();
+            });
+        </script>
+    @endif
 @endsection
 
 @push('js')
     <script>
-
         function modalAction(url = '') {
-            $.get(url, function (response) {
+            $.get(url, function(response) {
                 $('#myModal').html(response).removeClass('hidden').addClass('flex');
             });
         }
 
         // Untuk menutup modal
-        $(document).on('click', '#modal-close', function () {
+        $(document).on('click', '#modal-close', function() {
             $('#myModal').addClass('hidden').removeClass('flex').html('');
         });
 
@@ -103,31 +128,31 @@
                     sort_column: $('#sort-column').val(),
                     sort_direction: $('#sort-direction').val()
                 },
-                success: function (response) {
+                success: function(response) {
                     $('#form-table-body').html(response.html);
                 },
-                error: function () {
+                error: function() {
                     Swal.fire('Error!', 'Gagal memuat data aduan.', 'error');
                 }
             });
         }
-        $(document).ready(function () {
+        $(document).ready(function() {
             // Event untuk jumlah data per halaman
-            $('#per_page').on('change', function () {
+            $('#per_page').on('change', function() {
                 reloadData();
             });
 
             // Event untuk pencarian (dengan debounce)
             let debounceTimer;
-            $('#search').on('input', function () {
+            $('#search').on('input', function() {
                 clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(function () {
+                debounceTimer = setTimeout(function() {
                     reloadData();
                 }, 300);
             });
 
             // Event untuk sorting jika ada
-            $('#sort-column, #sort-direction').on('change', function () {
+            $('#sort-column, #sort-direction').on('change', function() {
                 reloadData();
             });
         });

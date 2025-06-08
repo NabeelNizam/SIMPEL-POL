@@ -54,7 +54,7 @@
                             <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
                         </button>
                         @if($item->status === \App\Http\Enums\Status::MENUNGGU_DIPROSES)
-                            <button onclick="modalAction('{{ route('mahasiswa.form.edit_ajax', $item->id_aduan) }}')"
+                            <button onclick="modalAction('{{ route('mahasiswa.form.edit', $item->id_aduan) }}')"
                                 class="text-blue-600 hover:underline text-sm ml-2">
                                 <img src="{{ asset('icons/solid/Edit.svg') }}" alt="" class="h-7 w-7 inline">
                             </button>
