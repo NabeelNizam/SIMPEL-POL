@@ -65,8 +65,8 @@ class SarprasController extends Controller
                 'total' => $data ? $data->total : 0, // Jika tidak ada data, set total ke 0
             ];
         });
-        $trenAnggaranRaw = Biaya::selectRaw('SUM(besaran) as total, MONTH(perbaikan.tanggal_mulai) as bulan')
-            ->join('perbaikan', 'biaya.id_perbaikan', '=', 'perbaikan.id_perbaikan') // Hubungkan tabel biaya dengan perbaikan
+        $trenAnggaranRaw = Biaya::selectRaw('SUM(besaran) as total, MONTH(inspeksi.tanggal_mulai) as bulan')
+            ->join('inspeksi', 'biaya.id_inspeksi', '=', 'inspeksi.id_inspeksi') // Hubungkan tabel biaya dengan perbaikan
             ->groupBy('bulan')
             ->orderBy('bulan', 'asc')
             ->get();

@@ -5,8 +5,8 @@
         <i class="fas fa-times"></i>
     </button>
 
-    <h2 class="text-xl font-semibold text-center">Detail Riwayat Aduan</h2>
-    <div class="w-[198px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
+    <h2 class="text-xl font-semibold text-center">Beri Umpan Balik Hasil Perbaikan</h2>
+    <div class="w-[305px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
     <!-- Isi pengaduan -->
     <div class="mb-6">
@@ -64,7 +64,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-600 mb-1">Tanggal Perbaikan</label>
                         <p class="text-gray-800 font-semibold">
-                            {{ $aduan->tanggal_perbaikan ? \Carbon\Carbon::parse($aduan->tanggal_perbaikan)->format('d/m/Y') : '-' }}
+                            {{ $aduan->perbaikan && $aduan->perbaikan->tanggal_selesai ? \Carbon\Carbon::parse($aduan->perbaikan->tanggal_selesai)->format('d/m/Y') : '-' }}
                         </p>
                     </div>
                 </div>
@@ -100,28 +100,100 @@
         </div>
         <div class="w-[220px] h-0.5 bg-orange-400 mb-4"></div>
 
-        <div class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-600 mb-2">Umpan Balik</label>
-                @if($aduan->umpan_balik && $aduan->umpan_balik->rating)
-                    <div class="flex items-center space-x-1 mb-2">
-                        @for($i = 1; $i <= $aduan->umpan_balik->rating; $i++)
-                            <i class="fas fa-star text-yellow-400 text-lg"></i>
-                        @endfor
-                        <span class="pl-1 text-[13px] font-medium">{{ $aduan->umpan_balik->rating }}/5</span>
-                    </div>
-                    <p class="text-gray-800 font-semibold">{{ $aduan->umpan_balik->komentar ?? '-' }}</p>
-                @else
-                    <span class="text-gray-500">Belum ada umpan balik.</span>
-                @endif
+        <form id="form-tambah-ulasan" action="{{ route('mahasiswa.riwayat.store_ulasan', $aduan) }}" method="POST" class="grid grid-cols-1 gap-4" enctype="multipart/form-data">
+            @csrf
+            <div class="w-[50%]">
+                <label class="block text-sm font-medium mb-2">Rating <span class="text-red-500">*</span></label>
+                <div id="star-container" class="flex items-center gap-[5px] text-xl text-gray-300 cursor-pointer">
+                    <i class="fas fa-star" data-value="1"></i>
+                    <i class="fas fa-star" data-value="2"></i>
+                    <i class="fas fa-star" data-value="3"></i>
+                    <i class="fas fa-star" data-value="4"></i>
+                    <i class="fas fa-star" data-value="5"></i>
+                </div>
+                <p id="rating-text" class="text-sm mt-2 text-gray-600">0/5</p>
+
+                <input type="hidden" name="rating" id="rating" required value="0">
+                <span id="rating-error" class="text-xs text-red-500 mt-1 error-text"></span>
             </div>
-        </div>
+
+            <div class="w-[93%]">
+                <label class="block text-sm font-medium mb-1">
+                    Ulasan <span class="text-red-500">*</span>
+                </label>
+                <textarea name="komentar" id="komentar" rows="4" class="w-full border rounded-md px-3 py-2 text-sm resize-y" placeholder="Deskripsi" required></textarea>
+                <span id="komentar-error" class="text-xs text-red-500 mt-1 error-text"></span>
+            </div>
+
+            <div class="text-right mt-4">
+                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md cursor-pointer">
+                    <div class="flex justify-center items-center gap-[10px]">
+                        <img src="{{ asset('icons/light/Check-circle.svg') }}" alt="Simpan" class="w-6 h-6">
+                        <p>Simpan</p>
+                    </div>
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
 
 <script>
-    $(document).on('click', '#modal-close', function () {
-        $('#myModal').addClass('hidden').removeClass('flex').html('');
+$(document).ready(function() {
+    // Highlight bintang
+    $('#star-container i').on('click', function () {
+        let rating = $(this).data('value');
+        $('#rating').val(rating).trigger('change'); // Trigger agar validator detect perubahan
+
+        $('#star-container i').each(function (index) {
+            $(this).toggleClass('text-yellow-400', index < rating)
+                   .toggleClass('text-gray-300', index >= rating);
+        });
+
+        $('#rating-text').text(rating + '/5');
     });
+
+    // Validasi form
+    $("#form-tambah-ulasan").validate({
+        errorElement: 'span',
+        errorClass: 'text-xs text-red-500 mt-1 error-text',
+        ignore: [], // Penting: agar input:hidden ikut divalidasi
+        rules: {
+            rating: {
+                required: true,
+                digits: true,
+                min: 1,
+                max: 5
+            },
+            komentar: {
+                required: true,
+                minlength: 10,
+                maxlength: 255
+            }
+        },
+        messages: {
+            rating: {
+                required: "Rating wajib diisi",
+                digits: "Rating harus berupa angka",
+                min: "Rating minimal 1",
+                max: "Rating maksimal 5"
+            },
+            komentar: {
+                required: "Ulasan wajib diisi",
+                minlength: "Ulasan minimal 10 karakter",
+                maxlength: "Ulasan maksimal 255 karakter"
+            }
+        },
+        errorPlacement: function(error, element) {
+            const container = element.attr('id') === 'rating'
+                ? $('#rating-error')
+                : element.next('.error-text');
+            container.html(error);
+        }
+    });
+});
 </script>

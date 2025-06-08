@@ -11,8 +11,9 @@ class Biaya extends Model
     protected $table = 'biaya';
     protected $primaryKey = 'id_biaya';
     protected $guarded = ['id_biaya'];
-    public function perbaikan()
+    
+    public function inspeksi()
     {
-        return $this->belongsTo(Perbaikan::class, 'id_perbaikan', 'id_perbaikan');
+        return $this->belongsTo(Inspeksi::class, 'id_inspeksi', 'id_inspeksi');
     }
 }

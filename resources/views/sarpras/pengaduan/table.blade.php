@@ -28,16 +28,17 @@
                     {{ $ruangan ? ', ' . $ruangan->kode_ruangan : '' }}
                 </x-table.cell>
                 <x-table.cell>
+                    <div class="flex flex-col items-center">
                     @if($p->urgensi)
-                        <span class="px-3 py-1 rounded-full text-white text-sm
+                        <span class="py-1 rounded-full text-white text-sm
                                     @if($p->urgensi === \App\Http\Enums\Urgensi::DARURAT)
-                                        bg-red-500
+                                        px-3 bg-red-500
                                     @elseif($p->urgensi === \App\Http\Enums\Urgensi::PENTING)
-                                        bg-yellow-500
+                                        px-3 bg-yellow-500
                                     @elseif($p->urgensi === \App\Http\Enums\Urgensi::BIASA)
-                                        bg-blue-500
+                                        px-6 bg-blue-500
                                     @else
-                                        bg-gray-500
+                                        px-3 bg-gray-500
                                     @endif
                                 ">
                             {{ $p->urgensi->value }}
@@ -45,6 +46,7 @@
                     @else
                         <span class="px-3 py-1 rounded-full bg-gray-500 text-white text-sm">-</span>
                     @endif
+                    </div>
                 </x-table.cell>
                 <x-table.cell>{{ $p->aduan_count ?? '-' }}</x-table.cell>
                 <x-table.cell>
@@ -52,7 +54,7 @@
                         class="text-blue-600 hover:underline text-sm cursor-pointer">
                         <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
                     </button>
-                    <button onclick="modalAction()" class="text-yellow-600 hover:underline text-sm cursor-pointer">
+                    <button onclick="modalAction('{{ route('sarpras.pengaduan.edit', $p->id_fasilitas) }}')" class="text-yellow-600 hover:underline text-sm cursor-pointer">
                         <img src="{{ asset('icons/crud/Case.svg') }}" alt="" class="h-7 w-7 inline">
                     </button>
                 </x-table.cell>
