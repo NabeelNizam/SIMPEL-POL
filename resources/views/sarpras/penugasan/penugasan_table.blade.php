@@ -70,7 +70,7 @@
                             class="text-blue-600 hover:underline text-sm cursor-pointer">
                             <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 min-h-[25px] min-w-[25px]">
                         </button>
-                        <button onclick="modalAction('{{ route('sarpras.penugasan.edit', $item['id_inspeksi']) }}')" class="text-yellow-600 hover:underline text-sm cursor-pointer">
+                        <button onclick="modalAction('{{ route('sarpras.penugasan.confirm', $item['id_inspeksi']) }}')" class="text-yellow-600 hover:underline text-sm cursor-pointer">
                             <img src="{{ asset('icons/solid/Acc.svg') }}" alt="" class="h-7 w-7 min-h-[25px] min-w-[25px]">
                         </button>
                     </div>

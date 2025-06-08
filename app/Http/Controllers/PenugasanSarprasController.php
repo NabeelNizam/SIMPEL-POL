@@ -8,10 +8,12 @@ use App\Models\Fasilitas;
 use App\Models\Inspeksi;
 use App\Models\Kategori;
 use App\Models\Kriteria;
+use App\Models\Perbaikan;
 use App\Models\Periode;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rules\In;
 
 class PenugasanSarprasController extends Controller
 {
@@ -156,28 +158,30 @@ class PenugasanSarprasController extends Controller
     }
 
     // Method menugaskan teknisi untuk inspeksi
-    public function penugasan_teknisi($id)
+    public function penugasan_teknisi(Inspeksi $inspeksi)
     {
-        $fasilitas = Fasilitas::with(['kategori', 'ruangan', 'aduan.pelapor'])->withCount('aduan')->findOrFail($id);
-        $aduan = $fasilitas->aduan->first();
-        $teknisi = User::where('id_role', 3)->get();
-        return view('sarpras.pengaduan.edit', ['fasilitas' => $fasilitas, 'aduan' => $aduan, 'teknisi' => $teknisi]);
+        return view('sarpras.penugasan.confirm', ['inspeksi' => $inspeksi]);
     }
     
-    public function confirm_penugasan(Request $request, $id)
+    public function store_penugasan(Request $request)
     {
-        $periodeSekarang = Periode::getPeriodeAktif();
+        $request->validate([
+            'id_inspeksi' => 'required|integer|exists:inspeksi,id_inspeksi',
+        ]);
         
+        $periode = Periode::getPeriodeAktif();
+
+        if (!$periode) {
+            return redirect()->back()->withErrors(['periode_id' => 'Periode tidak ditemukan.']);
+        }
+
         try {
-            Inspeksi::create([
-            'id_user_teknisi' => $request->id_teknisi,
-            'id_user_sarpras' => auth()->user()->id_user,
-            'id_fasilitas' => $id,
-            'id_periode' => $periodeSekarang->id_periode,
-            'tanggal_mulai' => now(),
-        ]);    
-        // dd($query->toSql(), $query->getBindings());
-            return redirect()->back()->with('success', 'Berhasil menugaskan inspeksi.');
+            Perbaikan::create([
+                'id_inspeksi' => $request->id_inspeksi,
+                'id_periode' => $periode->id_periode,
+                'tanggal_mulai' => now(),
+            ]);
+            return redirect()->back()->with('success', 'Berhasil menugaskan teknisi.');
         } catch (\Exception $e) {
             Log::error('Gagal menugaskan teknisi: '.$e->getMessage());
             return redirect()->back()->withErrors(['general' => 'Gagal menugaskan teknisi.']);

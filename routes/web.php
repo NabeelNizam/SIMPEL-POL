@@ -222,8 +222,8 @@ Route::middleware(['authorize:SARPRAS'])->group(function () {
     Route::prefix('/penugasan')->group(function () {
         Route::get('/', [PenugasanSarprasController::class, 'index'])->name('sarpras.penugasan');
         Route::get('/{inspeksi}/detail_inspeksi', [PenugasanSarprasController::class, 'show_penugasan'])->name('sarpras.penugasan.show');
-        Route::get('/{inspeksi}/penugasan_teknisi', [PenugasanSarprasController::class, 'penugasan_teknisi'])->name('sarpras.penugasan.edit');
-        Route::put('/{inspeksi}/confirm_penugasan', [PenugasanSarprasController::class, 'confirm_penugasan'])->name('sarpras.penugasan.update');
+        Route::get('/{inspeksi}/penugasan_teknisi', [PenugasanSarprasController::class, 'penugasan_teknisi'])->name('sarpras.penugasan.confirm');
+        Route::post('/confirm_penugasan', [PenugasanSarprasController::class, 'store_penugasan'])->name('sarpras.penugasan.store');
     });
 
     // Perbaikan
