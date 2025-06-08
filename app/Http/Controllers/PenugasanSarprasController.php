@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\PrometheeHelper;
 use App\Models\Biaya;
 use App\Models\Fasilitas;
 use App\Models\Inspeksi;
 use App\Models\Kategori;
+use App\Models\Kriteria;
 use App\Models\Periode;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -26,15 +28,30 @@ class PenugasanSarprasController extends Controller
 
         $activeMenu = 'penugasan';
 
-        // Query untuk Penugasan
-        $query = Inspeksi::with([
-                    'fasilitas',
-                    'fasilitas.kategori',
-                    'periode',
-                ])
-                ->whereNotNull('tingkat_kerusakan')
-                ->whereNotNull('tanggal_selesai');
+        // Ambil data kriteria
+        $kriteria = Kriteria::all()->keyBy('nama_kriteria')->toArray();
+        $kriteriaList = [
+            'user_count' => $kriteria['User Count'],
+            'urgensi_fasilitas' => $kriteria['Urgensi'],
+            'biaya' => $kriteria['Biaya Anggaran'],
+            'tingkat_kerusakan' => $kriteria['Tingkat Kerusakan'],
+            'waktu_selesai' => $kriteria['Waktu'],
+        ];
 
+        // Query untuk Inspeksi
+        $query = Inspeksi::with([
+            'fasilitas',
+            'fasilitas.kategori',
+            'fasilitas.ruangan',
+            'fasilitas.ruangan.lantai',
+            'fasilitas.ruangan.lantai.gedung',
+            'periode',
+        ])
+        ->select('inspeksi.*')
+        ->distinct()
+        ->whereNotNull('tingkat_kerusakan')
+        ->whereNotNull('tanggal_selesai')
+        ->whereDoesntHave('perbaikan');
 
         // Filter berdasarkan pencarian
         if ($request->search) {
@@ -43,32 +60,90 @@ class PenugasanSarprasController extends Controller
             });
         }
 
-        
-        // Filter berdasarkan kategori
-        if ($request->id_kategori) {
+        // Filter berdasarkan periode
+        if ($request->id_periode) {
             $query->whereHas('periode', function ($q) use ($request) {
                 $q->where('id_periode', $request->id_periode);
             });
         }
 
-        $query->orderBy('tanggal_selesai', 'desc');
+        // Ambil data inspeksi sebagai koleksi Eloquent
+        $inspeksiCollection = $query->get();
 
-        // dd($query->toSql(), $query->getBindings());
+        // Konversi ke array dan tambahkan user_count
+        $inspeksi = $inspeksiCollection->map(function ($item) {
+            $data = $item->toArray();
+            $data['user_count'] = $item->user_count; // Panggil accessor
+            return $data;
+        })->toArray();
 
+        // Log untuk memastikan tidak ada duplikasi sebelum PrometheeHelper
+        $idInspeksiCounts = array_count_values(array_column($inspeksi, 'id_inspeksi'));
+        foreach ($idInspeksiCounts as $id => $count) {
+            if ($count > 1) {
+                Log::warning("SarprasController: Duplikasi id_inspeksi ditemukan sebelum PrometheeHelper: id_inspeksi $id muncul $count kali", $inspeksi);
+            }
+        }
+        Log::info('SarprasController: Data Inspeksi Sebelum PrometheeHelper', [
+            'jumlah_inspeksi' => count($inspeksi),
+            'id_inspeksi' => array_column($inspeksi, 'id_inspeksi'),
+            'user_count_values' => array_map(function ($item) {
+                return [
+                    'id_inspeksi' => $item['id_inspeksi'],
+                    'user_count' => $item['user_count'] ?? null,
+                ];
+            }, $inspeksi),
+        ]);
 
-        // Pagination
+        // Proses PROMETHEE
+        if (!empty($inspeksi)) {
+            $inspeksi = PrometheeHelper::processPromethee($inspeksi, $kriteriaList);
+        }
+
+        // Konversi ke paginator
         $perPage = $request->input('per_page', 10);
-        $penugasan = $query->paginate($perPage);
+        $currentPage = $request->input('page', 1);
+        $offset = ($currentPage - 1) * $perPage;
+        $pagedInspeksi = array_slice($inspeksi, $offset, $perPage);
+        $penugasan = new \Illuminate\Pagination\LengthAwarePaginator(
+            $pagedInspeksi,
+            count($inspeksi),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
-        $penugasan->appends(request()->query());
+        // Log hasil penugasan
+        Log::info('SarprasController: Data Penugasan Setelah PrometheeHelper', [
+            'jumlah_penugasan' => count($penugasan),
+            'id_inspeksi' => array_column($penugasan->items(), 'id_inspeksi'),
+            'hasil' => array_map(function ($item) {
+                return [
+                    'id_inspeksi' => $item['id_inspeksi'],
+                    'skor' => $item['skor'] ?? null,
+                    'ranking' => $item['ranking'] ?? null,
+                    'waktu' => $item['waktu'] ?? null,
+                ];
+            }, $penugasan->items()),
+        ]);
 
-        // ambil data kategori untuk filter
+        // Periksa duplikasi di penugasan
+        $penugasanIds = array_count_values(array_column($penugasan->items(), 'id_inspeksi'));
+        foreach ($penugasanIds as $id => $count) {
+            if ($count > 1) {
+                Log::warning("SarprasController: Duplikasi id_inspeksi ditemukan di penugasan: id_inspeksi $id muncul $count kali", $penugasan->items());
+            }
+        }
+
+        // Ambil data periode untuk filter
         $periode = Periode::all();
 
         if ($request->ajax()) {
             $html = view('sarpras.penugasan.penugasan_table', compact('penugasan'))->render();
             return response()->json(['html' => $html]);
         }
+
+        // dd($penugasan);
 
         return view('sarpras.penugasan.index', compact('breadcrumb', 'page', 'activeMenu', 'penugasan', 'periode'));
     }

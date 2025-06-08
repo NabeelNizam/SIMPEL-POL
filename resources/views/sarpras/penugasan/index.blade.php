@@ -19,16 +19,29 @@
                     @endforeach
                 </select>
             </div>
-            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Filter</button>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer">Filter</button>
         </form>
 
-        <ul class="flex border-b-2 border-gray-300 mb-4 text-sm font-medium text-center" id="userTabs">
-            <li><button data-role="awal"
-                    class="tab-button active text-blue-600 border-b-3 border-yellow-400 px-4 py-2 cursor-pointer">DATA AWAL</button></li>
-            <li><button data-role="perbaikan" class="tab-button px-4 py-2 cursor-pointer">DATA SETELAH PERBAIKAN</button></li>
-        </ul>
+        <div class="flex justify-between items-center mb-4">
+            <!-- Pagination -->
+            <div class="flex items-center gap-2">
+                <label for="per_page" class="text-sm font-medium text-gray-700">Show:</label>
+                <select id="per_page" name="per_page" class="border border-gray-300 rounded-md shadow-sm sm:text-sm">
+                    @foreach ([10, 25, 50, 100] as $length)
+                        <option value="{{ $length }}" {{ request('per_page', 10) == $length ? 'selected' : '' }}>{{ $length }}
+                        </option>
+                    @endforeach
+                </select>
+                <span class="text-sm text-gray-700">entries</span>
+            </div>
+            <!-- Pencarian -->
+            <div class="flex items-center gap-2">
+                <label for="search" class="text-sm font-medium text-gray-700">Pencarian:</label>
+                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari fasilitas..."
+                    class="w-64 border border-gray-300 rounded-md shadow-sm sm:text-sm" />
+            </div>
+        </div>
 
-        <!-- Tabel Data Awal -->
         <div id="inspeksi-table-body">
             @include('sarpras.penugasan.penugasan_table', ['penugasan' => $penugasan])
         </div>
