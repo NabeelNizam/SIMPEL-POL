@@ -47,7 +47,7 @@
             </div>
             <!-- Pencarian -->
             <div class="flex items-center gap-2">
-                <label for="search" class="text-sm font-medium text-gray-700">Pencarian:</label>
+                <label for="search" class="text-sm font-medium text-gray-700">Pencarian: {{$pelapor}}</label>
                 <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari fasilitas..."
                     class="w-64 border border-gray-300 rounded-md shadow-sm sm:text-sm" />
             </div>
@@ -64,7 +64,7 @@
 
         <!-- Kontainer tabel -->
         <div id="pengaduan-table-body">
-            @include('sarpras.pengaduan.table', ['pengaduan' => $pengaduan, 'filter_user' => 'all'])
+            @include('sarpras.pengaduan.table', ['pengaduan' => $pengaduan, 'filter_user' => 'all', 'pelapor' => $pelapor])
         </div>
 
     </div>
