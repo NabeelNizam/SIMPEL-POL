@@ -14,6 +14,7 @@ use App\Http\Controllers\{
     KriteriaController,
     LokasiController,
     MahasiswaController,
+    NotifikasiController,
     PengaduanController,
     PengaduanSarprasController,
     PenugasanSarprasController,
@@ -39,6 +40,7 @@ Route::get('/', [WelcomeController::class, 'index']);
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'postMasuk']);
 Route::get('/register', [AuthController::class, 'register'])->name('register');
+
 // Profil
 Route::prefix('profil')->middleware(['auth'])->group(function () {
     Route::get('/', [ProfilController::class, 'index'])->name('profil');
@@ -50,6 +52,13 @@ Route::prefix('sop')->middleware(['auth'])->group(function () {
     });
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Notifikasi
+Route::prefix('notifikasi')->middleware(['auth'])->group(function () {
+    Route::get('/{notifikasi}/tandai_baca', [NotifikasiController::class, 'markRead'])->name('notifikasi.tandai-baca');
+    Route::get('/tandai_baca_semua', [NotifikasiController::class, 'markAllRead'])->name('notifikasi.tandai-baca-semua');
+    Route::get('/{notifikasi}/hapus', [NotifikasiController::class, 'updateDelete'])->name('notifikasi.hapus');
+});
 
 // Admin Routes
 Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {

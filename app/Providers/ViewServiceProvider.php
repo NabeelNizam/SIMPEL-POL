@@ -25,7 +25,7 @@ class ViewServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             if (Auth::check()) {
                 $notifikasi = Notifikasi::where('id_user', Auth::id())
-                    // ->where('is_delete', false)
+                    ->where('is_delete', false)
                     ->orderByDesc('created_at')
                     ->get();
 
