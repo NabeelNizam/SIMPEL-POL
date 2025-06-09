@@ -235,15 +235,7 @@
                             <img src="{{ $activeMenu == 'bobot' ? asset('icons/solid/Settings.svg') : asset('icons/light/Settings.svg') }}"
                                 alt="Form Pelaporan" class="mr-2 w-5">
                             Bobot Prioritas Perbaikan
-                        </a>
-
-                        <a href="sarpras/pelaporan"
-                            class="flex items-center p-2 w-full {{ $activeMenu == 'pelaporan' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
-                            style="{{ $activeMenu == 'pelaporan' ? 'border-color: #F99D1C;' : '' }}">
-                            <img src="{{ $activeMenu == 'pelaporan' ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}"
-                                alt="Form Pelaporan" class="mr-2 w-5">
-                            Form Pelaporan
-                        </a>
+                        </a>                        
                     </div>
                     <div>
                         <p class="mb-1 text-xs text-gray-500 uppercase">Laporan</p>

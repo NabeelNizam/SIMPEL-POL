@@ -25,7 +25,7 @@
                     {{ $ruangan ? ', ' . $ruangan->kode_ruangan : '' }}
                 </x-table.cell>
                 <x-table.cell>{{ ucwords($a->fasilitas->kategori->nama_kategori) ?? '-' }}</x-table.cell>
-                <x-table.cell>{{ $a->fasilitas->inspeksi->first()->perbaikan->tanggal_mulai ?? '-'}}</x-table.cell>
+                <x-table.cell>{{ $a->tanggal_aduan ?? '-'}}</x-table.cell>
                 <x-table.cell>{{ $a->fasilitas->inspeksi->first()->perbaikan->tanggal_selesai ?? '-' }}</x-table.cell>
                 <x-table.cell>
                     <button onclick="modalAction('{{ route('teknisi.riwayat.show_ajax', $a->fasilitas->id_fasilitas) }}')"

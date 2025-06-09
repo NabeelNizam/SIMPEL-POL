@@ -30,8 +30,8 @@ class SarprasController extends Controller
         $periode = Periode::all();
 
         $totalLaporan = Aduan::count();
-        $tertunda = Aduan::where('status', 'tertunda')->count();
-        $dalamProses = Aduan::where('status', 'dalam_proses')->count();
+        $tertunda = Aduan::where('status', 'menunggu_diproses')->count();
+        $dalamProses = Aduan::where('status', 'sedang_inspeksi')->orWhere('status', 'sedang_diperbaiki')->count();
         $selesai = Aduan::where('status', 'selesai')->count();
 
         // Data untuk grafik
