@@ -112,6 +112,9 @@ class FormPelaporanController extends Controller
                     ->withErrors($validation)
                     ->withInput();
             }
+
+
+
             $aduan = Aduan::create([
                 'id_user_pelapor' => auth()->user()->id_user,
                 'id_fasilitas' => $request->fasilitas,
@@ -121,7 +124,7 @@ class FormPelaporanController extends Controller
                 'id_periode' => Periode::where('tanggal_mulai', '<=', now())
                     ->where('tanggal_selesai', '>=', now())
                     ->value('id_periode'),
-                'status' => Status::MENUNGGU_DIPROSES->value,
+                'status' => $this->tentukanStatusFasilitas($request->fasilitas)->value,
             ]);
 
             // return response()->json(['status' => true, 'message' => 'Aduan berhasil dibuat', 'data' => $aduan]);
@@ -132,15 +135,9 @@ class FormPelaporanController extends Controller
     }
     public function edit(Aduan $aduan)
     {
+        $aduan = Aduan::with('fasilitas.ruangan.lantai.gedung')->findOrFail($aduan->id_aduan);
         $gedung = Gedung::all();
-        $lantai = Lantai::all();
-        $ruangan = Ruangan::all();
-        $fasilitas = Fasilitas::all();
-
-        return view(
-            'mahasiswa.form.edit',
-            compact('aduan', 'gedung', 'lantai', 'ruangan', 'fasilitas')
-        );
+        return view('mahasiswa.form.edit', compact('aduan', 'gedung'));
     }
     public function update(Request $request, Aduan $aduan)
     {
@@ -183,5 +180,36 @@ class FormPelaporanController extends Controller
     {
         $fasilitas = Fasilitas::where('id_ruangan', $id_ruangan)->get();
         return response()->json($fasilitas);
+    }
+    private function tentukanStatusFasilitas(int $id_fasilitas):Status
+    {
+        $periode_aktif = Periode::getPeriodeAktif();
+
+        // 1. Cek apakah ada aduan dengan status SEDANG_INSPEKSI
+        if (Aduan::where('id_fasilitas', $id_fasilitas)->where('status', Status::SEDANG_INSPEKSI->value)->exists()) {
+            return Status::SEDANG_INSPEKSI;
+        }
+
+        // 2. Cek apakah ada aduan dengan status SEDANG_DIPERBAIKI
+        if (Aduan::where('id_fasilitas', $id_fasilitas)->where('status', Status::SEDANG_DIPERBAIKI->value)->exists()) {
+            return Status::SEDANG_DIPERBAIKI;
+        }
+
+        // 3. Cek aduan SELESAI
+        $aduanSelesai = Aduan::where('id_fasilitas', $id_fasilitas)
+            ->where('status', Status::SELESAI)
+            ->orderByDesc('id_periode')
+            ->first();
+
+        if ($aduanSelesai) {
+            if ($aduanSelesai->id_periode < $periode_aktif->id) {
+                return Status::MENUNGGU_DIPROSES;
+            } elseif ($aduanSelesai->id_periode == $periode_aktif->id) {
+                return Status::SELESAI;
+            }
+        }
+
+        // Jika tidak ada aduan sama sekali, bisa return status default (opsional)
+        return Status::MENUNGGU_DIPROSES;
     }
 }
