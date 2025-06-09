@@ -55,9 +55,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Notifikasi
 Route::prefix('notifikasi')->middleware(['auth'])->group(function () {
-    Route::get('/{notifikasi}/tandai_baca', [NotifikasiController::class, 'markRead'])->name('notifikasi.tandai-baca');
-    Route::get('/tandai_baca_semua', [NotifikasiController::class, 'markAllRead'])->name('notifikasi.tandai-baca-semua');
-    Route::get('/{notifikasi}/hapus', [NotifikasiController::class, 'updateDelete'])->name('notifikasi.hapus');
+    Route::post('/{notifikasi}/tandai_baca', [NotifikasiController::class, 'markRead'])->name('notifikasi.tandai-baca');
+    Route::post('/tandai_baca_semua', [NotifikasiController::class, 'markAllRead'])->name('notifikasi.tandai-baca-semua');
+    Route::post('/{notifikasi}/hapus', [NotifikasiController::class, 'updateDelete'])->name('notifikasi.hapus');
+    Route::get('/get', [NotifikasiController::class, 'getNotifications'])->name('notifikasi.get');
 });
 
 // Admin Routes

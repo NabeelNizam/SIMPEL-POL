@@ -1,3 +1,4 @@
+<!-- Header HTML -->
 <header class="bg-white shadow-sm z-30 w-full">
     <div class="flex items-center justify-between h-16 px-4">
         <!-- Hamburger Toggle (Left Side) -->
@@ -17,20 +18,20 @@
                         data-dropdown-placement="bottom">
                     <img src="{{ asset('icons/light/Bell.svg') }}" alt="notification-icon" class="w-8 h-8">
                     @if($unreadCount > 0)
-                        <div class="absolute top-0.5 right-0.5 w-4 h-4 text-xs text-white bg-red-500 rounded-full flex items-center justify-center font-bold">
+                        <div class="absolute top-0.5 right-0.5 w-4 h-4 text-xs text-white bg-red-500 rounded-full flex items-center justify-center font-bold" id="unread-count">
                             {{ $unreadCount }}
                         </div>
                     @endif
                 </button>
 
                 <!-- Notification Dropdown Menu -->
-                <div id="notifikasi-dropdown" class="z-50 hidden absolute right-0 mt-2 w-[380px] text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-lg">
+                <div id="notifikasi-dropdown" class="z-50 hidden absolute right-0 mt-2 w-[380px] translate-x-[-50px] translate-y-[4px] text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-lg border border-gray-300">
                     <div class="px-4 py-3 relative flex justify-between items-center">
-                        <div class="w-full flex items-center justify-between">
-                            <span class="block text-md text-gray-900 font-medium">Notifikasi</span>
+                        <div class="w-full flex items-center justify-between align-middle">
+                            <span class="py-2 block text-md text-gray-900 font-medium">Notifikasi</span>
                             @if ($unreadCount > 0)
                             <div class="px-4 py-2">
-                                <a href="{{ route('notifikasi.tandai-baca-semua') }}" class="text-sm font-normal text-blue-500 hover:text-blue-700">Baca Semua</a>
+                                <a href="#" id="mark-all-read" class="text-sm font-normal text-blue-500 hover:text-blue-700">Baca Semua</a>
                             </div>
                             @endif
                         </div>
@@ -39,27 +40,27 @@
                         </button>
                     </div>
                     <div class="w-[338px] h-1 bg-orange-400 mx-3 rounded"></div>
-                    <ul class="py-2 max-h-[400px] overflow-y-auto" aria-labelledby="notifikasi-dropdown-button">
-                        @forelse ( $notifikasi as $notif )
-                            <li>
+                    <ul class="py-2 max-h-[400px] overflow-y-auto" id="notification-list" aria-labelledby="notifikasi-dropdown-button">
+                        @forelse ($notifikasi as $notif)
+                            <li data-notif-id="{{ $notif->id_notifikasi }}">
                                 <div class="px-3 py-1">
-                                    <div class="block px-3 py-2 text-sm text-black hover:bg-gray-200 rounded-lg {{ !$notif->is_read ? 'bg-[#BAE2FD]' : 'bg-gray-100' }} relative">
+                                    <div class="block px-3 py-2 text-sm text-black rounded-lg {{ !$notif->is_read ? 'bg-[#BAE2FD] hover:bg-[#A6D7F7]' : 'bg-gray-100 hover:bg-gray-200' }} relative notification-item">
                                         <p class="break-words max-w-[280px]">{!! $notif->pesan !!}</p>
                                         <div class="flex justify-between items-center mt-1.5">
                                             <span class="text-xs text-gray-600 block">{{ \Carbon\Carbon::parse($notif->waktu_kirim)->format('d/m/Y') }}</span>
                                             <span class="text-xs text-gray-600 block">{{ \Carbon\Carbon::parse($notif->waktu_kirim)->format('H:i') }}</span>
                                         </div>
                                         <div class="absolute top-2 right-2">
-                                            <button type="button" class="px-1 text-black focus:outline-none cursor-pointer" data-notif-id="{{ $notif->id_notifikasi }}" id="options-button-{{ $notif->id_notifikasi }}">
+                                            <button type="button" class="px-1 text-black focus:outline-none cursor-pointer options-button" data-notif-id="{{ $notif->id_notifikasi }}">
                                                 <i class="fas fa-ellipsis-h"></i>
                                             </button>
-                                            <div id="options-dropdown-{{ $notif->id_notifikasi }}" class="hidden absolute -mt-2 right-0 w-[180px] bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                                            <div id="options-dropdown-{{ $notif->id_notifikasi }}" class="hidden absolute -mt-2 right-0 w-[180px] bg-white border border-gray-200 rounded-md shadow-lg z-[60]">
                                                 @if(!$notif->is_read)
-                                                    <a href="{{ route('notifikasi.tandai-baca', $notif->id_notifikasi) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center mark-read" data-notif-id="{{ $notif->id_notifikasi }}">
                                                         <i class="fas fa-check-circle mr-2 text-blue-500"></i> Tandai sebagai Baca
                                                     </a>
                                                 @endif
-                                                <a href="{{ route('notifikasi.hapus', $notif->id_notifikasi) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center delete-notif" data-notif-id="{{ $notif->id_notifikasi }}">
                                                     <i class="fas fa-trash-alt mr-2 text-red-500"></i> Hapus
                                                 </a>
                                             </div>
@@ -136,54 +137,144 @@
 <!-- Ensure Flowbite is included -->
 <script src="https://unpkg.com/flowbite@1.8.1/dist/flowbite.min.js"></script>
 
-<!-- Custom JavaScript for dropdowns and close button -->
+<!-- Custom JS -->
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Notification Dropdown
-    const notifButton = document.getElementById('notifikasi-dropdown-button');
-    const notifDropdown = document.getElementById('notifikasi-dropdown');
-    const notifCloseButton = document.getElementById('notifikasi-close-button');
+document.addEventListener('DOMContentLoaded', () => {
+  const notifButton       = document.getElementById('notifikasi-dropdown-button');
+  const notifDropdown     = document.getElementById('notifikasi-dropdown');
+  const notifCloseButton  = document.getElementById('notifikasi-close-button');
+  const notificationList  = document.getElementById('notification-list');
+  const unreadCountElem   = document.getElementById('unread-count');
+  const markAllReadBtn    = document.getElementById('mark-all-read');
+  const userButton        = document.getElementById('user-menu-button');
+  const userDropdown      = document.getElementById('user-dropdown');
 
-    notifButton.addEventListener('click', function (event) {
-        event.stopPropagation();
-        notifDropdown.classList.toggle('hidden');
-    });
+  // Toggle dropdowns
+  notifButton.addEventListener('click', e => { e.stopPropagation(); notifDropdown.classList.toggle('hidden'); });
+  notifCloseButton.addEventListener('click', e => { e.stopPropagation(); notifDropdown.classList.add('hidden'); });
+  userButton.addEventListener('click', e => { e.stopPropagation(); userDropdown.classList.toggle('hidden'); });
+  document.addEventListener('click', e => {
+    if (!notifButton.contains(e.target) && !notifDropdown.contains(e.target)) notifDropdown.classList.add('hidden');
+    if (!userButton.contains(e.target) && !userDropdown.contains(e.target))     userDropdown.classList.add('hidden');
+    document.querySelectorAll('[id^="options-dropdown-"]').forEach(d => d.classList.add('hidden'));
+  });
 
-    notifCloseButton.addEventListener('click', function (event) {
-        event.stopPropagation();
-        notifDropdown.classList.add('hidden');
-    });
+  // Update notifications list & badge
+  async function updateNotifications() {
+    try {
+      const res  = await fetch('{{ route('notifikasi.get') }}', {
+        headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+      });
+      const { notifications, unreadCount } = await res.json();
 
-    // User Dropdown
-    const userButton = document.getElementById('user-menu-button');
-    const userDropdown = document.getElementById('user-dropdown');
-    
-    userButton.addEventListener('click', function (event) {
-        event.stopPropagation();
-        userDropdown.classList.toggle('hidden');
-    });
-
-    // Options Dropdown for Each Notification
-    document.querySelectorAll('[id^="options-button-"]').forEach(button => {
-        button.addEventListener('click', function (event) {
-            event.stopPropagation();
-            const notifId = this.getAttribute('data-notif-id');
-            const dropdown = document.getElementById(`options-dropdown-${notifId}`);
-            dropdown.classList.toggle('hidden');
-        });
-    });
-
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', function (event) {
-        if (!notifButton.contains(event.target) && !notifDropdown.contains(event.target)) {
-            notifDropdown.classList.add('hidden');
+      // Badge & “Baca Semua”
+      if (unreadCountElem) {
+        if (unreadCount > 0) {
+          unreadCountElem.innerText = unreadCount;
+          unreadCountElem.style.display = 'flex';
+          markAllReadBtn.parentElement.style.display = 'block';
+        } else {
+          unreadCountElem.style.display = 'none';
+          markAllReadBtn.parentElement.style.display = 'none';
         }
-        if (!userButton.contains(event.target) && !userDropdown.contains(event.target)) {
-            userDropdown.classList.add('hidden');
-        }
-        document.querySelectorAll('[id^="options-dropdown-"]').forEach(dropdown => {
-            dropdown.classList.add('hidden');
+      }
+
+      // Rebuild list
+      notificationList.innerHTML = '';
+      if (notifications.length === 0) {
+        notificationList.innerHTML = `
+          <li>
+            <div class="p-1">
+              <p class="px-4 py-2 text-sm text-gray-700 rounded-md">Tidak ada notifikasi</p>
+            </div>
+          </li>`;
+      } else {
+        notifications.forEach(notif => {
+          const bgClass = notif.is_read ? 'bg-gray-100 hover:bg-gray-200' : 'bg-[#BAE2FD] hover:bg-[#A6D7F7]';
+          notificationList.innerHTML += `
+            <li data-notif-id="${notif.id_notifikasi}">
+              <div class="px-3 py-1">
+                <div class="px-3 py-2 text-sm text-black rounded-lg ${bgClass} relative">
+                  <p class="break-words max-w-[280px]">${notif.pesan}</p>
+                  <div class="flex justify-between items-center mt-1.5">
+                    <span class="text-xs text-gray-600">${notif.waktu_kirim_formatted}</span>
+                    <span class="text-xs text-gray-600">${notif.waktu_kirim_time}</span>
+                  </div>
+                  <div class="absolute top-2 right-2">
+                    <button class="options-button px-1 focus:outline-none cursor-pointer" data-notif-id="${notif.id_notifikasi}">
+                      <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                    <div id="options-dropdown-${notif.id_notifikasi}"
+                         class="hidden absolute -mt-2 right-0 w-[180px] bg-white border rounded-md shadow-lg z-60 border-gray-200">
+                      ${!notif.is_read ? `
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center mark-read" data-notif-id="${notif.id_notifikasi}">
+                          <i class="fas fa-check-circle mr-2 text-blue-500"></i> Tandai sebagai Baca
+                        </a>` : ''}
+                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center delete-notif" data-notif-id="${notif.id_notifikasi}">
+                        <i class="fas fa-trash-alt mr-2 text-red-500"></i> Hapus
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>`;
         });
+      }
+
+      attachListeners();
+    } catch (err) {
+      console.error('Gagal memuat notifikasi:', err);
+    }
+  }
+
+  // Event delegation untuk opsi, mark-read, delete
+  function attachListeners() {
+    notificationList.addEventListener('click', async e => {
+      const optBtn = e.target.closest('.options-button');
+      if (optBtn) {
+        e.stopPropagation();
+        const id = optBtn.dataset.notifId;
+        document.querySelectorAll('[id^="options-dropdown-"]').forEach(d => d.classList.add('hidden'));
+        document.getElementById(`options-dropdown-${id}`).classList.toggle('hidden');
+        return;
+      }
+      const markBtn = e.target.closest('.mark-read');
+      if (markBtn) {
+        e.preventDefault(); e.stopPropagation();
+        const id = markBtn.dataset.notifId;
+        await fetch(`{{ url('notifikasi') }}/${id}/tandai_baca`, {
+          method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+        });
+        await updateNotifications();
+        notifDropdown.classList.remove('hidden');
+        return;
+      }
+      const delBtn = e.target.closest('.delete-notif');
+      if (delBtn) {
+        e.preventDefault(); e.stopPropagation();
+        const id = delBtn.dataset.notifId;
+        await fetch(`{{ url('notifikasi') }}/${id}/hapus`, {
+          method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+        });
+        await updateNotifications();
+        notifDropdown.classList.remove('hidden');
+      }
     });
+  }
+
+  // “Baca Semua”
+  if (markAllReadBtn) {
+    markAllReadBtn.addEventListener('click', async e => {
+      e.preventDefault(); e.stopPropagation();
+      await fetch('{{ route('notifikasi.tandai-baca-semua') }}', { method: 'POST',
+        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+      });
+      await updateNotifications();
+      notifDropdown.classList.remove('hidden');
+    });
+  }
+
+  // Inisialisasi
+  updateNotifications();
 });
 </script>

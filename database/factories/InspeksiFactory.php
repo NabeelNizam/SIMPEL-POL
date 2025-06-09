@@ -75,6 +75,7 @@ class InspeksiFactory extends Factory
                     'id_periode' => $inspeksi->id_periode + 1,
                     'tanggal_mulai' => $tanggalMulai,
                     'tanggal_selesai' => $tanggalSelesai,
+                    // 'teknisi_selesai' => $teknisiSelesai
                 ]);
 
                 Biaya::factory()->create([
