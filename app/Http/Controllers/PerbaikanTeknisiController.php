@@ -81,4 +81,15 @@ class PerbaikanTeknisiController extends Controller
             throw $th;
         }
     }
+    public function cycle($id)
+    {
+        $perbaikan = Perbaikan::findOrFail($id);
+        if ($perbaikan->teknisi_selesai) {
+            $perbaikan->tanggal_selesai = null;
+        }else{
+            $perbaikan->tanggal_selesai = now();
+        }
+        $perbaikan->update();
+        return redirect()->back();
+    }
 }

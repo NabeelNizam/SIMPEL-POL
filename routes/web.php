@@ -260,6 +260,7 @@ Route::prefix('teknisi')->middleware(['authorize:TEKNISI'])->group(function () {
     Route::prefix('perbaikan')->group(function () {
         Route::get('/', [PerbaikanTeknisiController::class, 'index'])->name('teknisi.perbaikan');
         Route::get('/{id}/show', [PerbaikanTeknisiController::class, 'show'])->name('teknisi.perbaikan.show');
+        Route::get('/{id}/cycle', [PerbaikanTeknisiController::class, 'cycle'])->name('teknisi.perbaikan.cycle');
         // Route::get('/{id}/edit', [PerbaikanTeknisiController::class, 'edit'])->name('teknisi.perbaikan.edit');
         // Route::put('/{id}/update', [PerbaikanTeknisiController::class, 'update'])->name('teknisi.perbaikan.update');
         Route::get('/{id}/approve', [PerbaikanTeknisiController::class, 'approve'])->name('teknisi.perbaikan.approve');
