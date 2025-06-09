@@ -132,15 +132,9 @@ class FormPelaporanController extends Controller
     }
     public function edit(Aduan $aduan)
     {
+        $aduan = Aduan::with('fasilitas.ruangan.lantai.gedung')->findOrFail($aduan->id_aduan);
         $gedung = Gedung::all();
-        $lantai = Lantai::all();
-        $ruangan = Ruangan::all();
-        $fasilitas = Fasilitas::all();
-
-        return view(
-            'mahasiswa.form.edit',
-            compact('aduan', 'gedung', 'lantai', 'ruangan', 'fasilitas')
-        );
+        return view('mahasiswa.form.edit', compact('aduan', 'gedung'));
     }
     public function update(Request $request, Aduan $aduan)
     {
