@@ -49,4 +49,8 @@ class Fasilitas extends Model
         }
         return 'Lokasi tidak diketahui';
     }
+    public function getLokasiAttribute(): string
+    {
+        return $this->getLokasiString();
+    }
 }

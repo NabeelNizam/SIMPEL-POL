@@ -24,13 +24,13 @@ public function index(Request $request)
     ];
 
     $page = (object) [
-        'title' => 'Daftar aduan dengan status selesai'
+        'title' => 'Daftar Aduan dengan status selesai'
     ];
 
     $activeMenu = 'riwayat';
 
     // Query untuk aduan dengan status selesai
-    $query = Aduan::with(['fasilitas', 'perbaikan', 'fasilitas.ruangan'])->where('status', 'Selesai');
+    $query = Aduan::with(['fasilitas', 'fasilitas.inspeksi.perbaikan', 'fasilitas.ruangan'])->where('status', 'Selesai');
 
     // Filter berdasarkan pencarian
     if ($request->search) {
@@ -77,7 +77,7 @@ public function index(Request $request)
         //  $aduan = Aduan::query()->where('status', 'selesai')
 
         $aduan = Aduan::query()->where('status', 'selesai')
-            ->with(['fasilitas', 'perbaikan'])
+            ->with(['fasilitas', 'fasilitas.inspeksi.perbaikan'])
             ->get();
 
         $filename = 'riwayat_perbaikan_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
@@ -92,7 +92,7 @@ public function index(Request $request)
                 'nama_fasilitas' => $item->fasilitas->nama_fasilitas,
                 'kategori' => $item->fasilitas->kategori->nama_kategori,
                 'tanggal_aduan' => $item->tanggal_aduan,
-                'tanggal_perbaikan' => $item->perbaikan ? $item->perbaikan->tanggal_selesai : 'Belum diperbaiki',
+                'tanggal_perbaikan' => $item->fasilitas->inspeksi->first()->perbaikan ? $item->fasilitas->inspeksi->first()->perbaikan->tanggal_selesai : 'Belum diperbaiki',
             ];
         })->toArray();
         $sheet->filename = $filename;
@@ -109,15 +109,16 @@ public function index(Request $request)
     public function show_ajax($id_fasilitas)
     {
         // Ambil data aduan berdasarkan id_fasilitas
-        $aduan = Aduan::with(['fasilitas.ruangan.lantai.gedung', 'perbaikan.biaya'])->where('id_fasilitas', $id_fasilitas)->firstOrFail();
+        $aduan = Aduan::with(['fasilitas.inspeksi.perbaikan', 'fasilitas.inspeksi.biaya', 'fasilitas.ruangan.lantai.gedung', ])->where('id_fasilitas', $id_fasilitas)->firstOrFail();
 
         // Ambil data perbaikan terkait aduan
-        $perbaikan = $aduan->perbaikan;
+        $perbaikan = $aduan->fasilitas->inspeksi->first()->perbaikan;
+        $biaya = $aduan->fasilitas->inspeksi->first()->biaya;
 
         $fasilitas = Fasilitas::with('kategori')->findOrFail($id_fasilitas); // Ambil fasilitas beserta kategori
         $kategori = $fasilitas->kategori;
 
-        return view('teknisi.riwayat.detail', compact('aduan', 'perbaikan', 'fasilitas', 'kategori'))->render();
+        return view('teknisi.riwayat.detail', compact('aduan', 'biaya', 'perbaikan', 'fasilitas', 'kategori'))->render();
     }
     public function export_pdf()
     {

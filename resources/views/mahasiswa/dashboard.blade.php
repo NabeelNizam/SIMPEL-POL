@@ -5,14 +5,10 @@
         <div class="flex">
             <div class="flex-1 p-6">
                 {{-- SOP Section --}}
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="bg-white rounded-lg shadow p-2 border-t-4 border-blue-600 mb-8">
                     <div class="p-6 border-b border-gray-200">
                         <h2 class="text-lg font-semibold text-gray-800 flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                </path>
-                            </svg>
+                            <img src="{{ asset('icons/light/Book.svg') }}" alt="" class="w-5 h-5 mr-2 text-blue-600">
                             Standar Operasional Prosedur (SOP)
                         </h2>
                     </div>
@@ -37,11 +33,7 @@
                             <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                                 <div class="flex items-start">
                                     <div class="flex-shrink-0">
-                                        <svg class="w-5 h-5 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                                                clip-rule="evenodd"></path>
-                                        </svg>
+                                        <img src='{{ asset('icons/light/info.svg') }}' alt="" class="w-6 h-6 text-blue-600">
                                     </div>
                                     <div class="ml-3">
                                         <h3 class="text-sm font-medium text-blue-800">Tentang SOP Sarana Prasarana</h3>
@@ -75,24 +67,16 @@
                                     class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0">
-                                            <svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd"
-                                                    d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
-                                                    clip-rule="evenodd"></path>
-                                            </svg>
+                                            <img src="{{ asset('icons/solid/Doc2.svg') }}" alt="">
                                         </div>
                                         <div class="ml-3">
                                             <div class="text-sm font-medium text-gray-900">SOP Perbaikan Fasilitas</div>
                                         </div>
                                     </div>
                                     <div class="flex-shrink-0">
-                                        <a href="{{ route('download.sop', 'sop-mahasiswa') }}"
+                                        <a href="{{ route('sopDownload', ['role' => $sedangLogin, 'filename' => 'SOP_' . strtoupper($sedangLogin) . '.pdf']) }}"
                                             class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                                </path>
-                                            </svg>
+                                            <img src="{{ asset('icons/light/Download.svg') }}" alt="">
                                             Unduh
                                         </a>
                                     </div>
@@ -103,23 +87,18 @@
                 </div>
 
                 <!-- status riwayat aduan-->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 mt-8 mb-8">
+                <div class="bg-white rounded-lg shadow p-2 border-t-4 border-blue-600">
                     <div>
                         <div class="p-6 border-b border-gray-200">
                             <h2 class="text-lg font-semibold text-gray-800 flex items-center">
-                                <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                    </path>
-                                </svg>
+                                <img src="{{ asset('icons/light/History.svg') }}" alt="" class="w-5 h-5 mr-2 text-blue-600">
                                 Daftar Status Riwayat Aduan
                             </h2>
                         </div>
 
                         <!-- Pencarian -->
                         <div class="p-6 border-b border-gray-200">
-                            <div class="relative">
+                            <div class="flex items-center gap-2">
                                 <label for="search" class="text-sm font-medium text-gray-700">Pencarian:</label>
                                 <input type="text" name="search" id="search" value="{{ request('search') }}"
                                     placeholder="Cari fasilitas..."
@@ -132,80 +111,74 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
 @endsection
 
 @push('js')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
 
-        tabButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const tabId = this.id.replace('tab-', '');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const tabId = this.id.replace('tab-', '');
 
-                // Reset all tabs
-                tabButtons.forEach(btn => {
-                    btn.classList.remove('active', 'border-orange-500', 'text-blue-600');
-                    btn.classList.add('border-transparent', 'text-gray-500');
+                    // Reset all tabs
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active', 'border-orange-500', 'text-blue-600');
+                        btn.classList.add('border-transparent', 'text-gray-500');
+                    });
+
+                    tabContents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+
+                    // Activate clicked tab
+                    this.classList.add('active', 'border-orange-500', 'text-blue-600');
+                    this.classList.remove('border-transparent', 'text-gray-500');
+
+                    document.getElementById(`content-${tabId}`).classList.remove('hidden');
                 });
-
-                tabContents.forEach(content => {
-                    content.classList.add('hidden');
-                });
-
-                // Activate clicked tab
-                this.classList.add('active', 'border-orange-500', 'text-blue-600');
-                this.classList.remove('border-transparent', 'text-gray-500');
-
-                document.getElementById(`content-${tabId}`).classList.remove('hidden');
             });
         });
-    });
 
 
-    function reloadData() {
-        $.ajax({
-            url: "{{ route('dashboard.mahasiswa') }}",
-            method: 'GET',
-            data: {
-                search: $('#search').val(),
-                per_page: $('#per_page').val(),
-                sort_column: $('#sort-column').val(),
-                sort_direction: $('#sort-direction').val()
-            },
-            success: function (response) {
-                $('#dashboard-table-body').html(response.html);
-            },
-            error: function () {
-                Swal.fire('Error', 'Gagal memuat data riwayat aduan', 'error');
-            }
-        });
-    }
+        function reloadData() {
+            $.ajax({
+                url: "{{ route('dashboard.mahasiswa') }}",
+                method: 'GET',
+                data: {
+                    search: $('#search').val(),
+                    sort_column: $('#sort-column').val(),
+                    sort_direction: $('#sort-direction').val()
+                },
+                success: function (response) {
+                    $('#dashboard-table-body').html(response.html);
+                },
+                error: function () {
+                    Swal.fire('Error', 'Gagal memuat data riwayat aduan', 'error');
+                }
+            });
+        }
 
-    $(document).ready(function () {
-        // Event untuk jumlah data per halaman
-        $('#per_page').on('change', function () {
-            reloadData();
-        });
+        $(document).ready(function () {
 
-        // Event untuk pencarian (dengan debounce)
-        let debounceTimer;
-        $('#search').on('input', function () {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(function () {
+            // Event untuk pencarian (dengan debounce)
+            let debounceTimer;
+            $('#search').on('input', function () {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(function () {
+                    reloadData();
+                }, 300);
+            });
+
+            // Event untuk sorting jika ada
+            $('#sort-column, #sort-direction').on('change', function () {
                 reloadData();
-            }, 300);
+            });
         });
-
-        // Event untuk sorting jika ada
-        $('#sort-column, #sort-direction').on('change', function () {
-            reloadData();
-        });
-    });
-</script>
+    </script>
+@endpush

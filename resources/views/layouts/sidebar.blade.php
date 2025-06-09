@@ -1,23 +1,32 @@
 <!-- Sidebar - Left Side -->
 <div id="sidebar" class="sidebar w-64 bg-white shadow-lg z-40">
-    <!-- Logo at the top of sidebar -->
+    {{-- <!-- Logo at the top of sidebar -->
     <div class="flex items-center justify-center h-16 bg-white">
         <span class="text-lg font-bold text-black-800 flex items-center">
             <img src="{{ asset('img/logo primer.svg') }}" alt="SIMPEL-POL Logo" class="h-6 mr-2">
             SIMPEL-POL
         </span>
-    </div>
+    </div> --}}
 
     <!-- Sidebar Navigation -->
     @if (Auth::check())
         @if (Auth::user()->id_role == 2)
             {{-- Admin --}}
+            <!-- Logo at the top of sidebar -->
+            <div class="flex items-center justify-center h-16 bg-white">
+                <a href="{{ route('admin.dashboard') }}">
+                    <span class="text-lg font-bold text-black-800 flex items-center">
+                        <img src="{{ asset('img/logo primer.svg') }}" alt="SIMPEL-POL Logo" class="h-6 mr-2">
+                        SIMPEL-POL
+                    </span>
+                </a>
+            </div>
             <div class="h-full overflow-y-auto">
                 <nav class="p-4 space-y-4 text-sm text-gray-700">
                     <a href="{{ route('admin.dashboard') }}"
-                        class="flex items-center p-2 w-full {{ $activeMenu == 'dashboard' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
-                        style="{{ $activeMenu == 'dashboard' ? 'border-color: #F99D1C;' : '' }}">
-                        <img src="{{ $activeMenu == 'dashboard' ? asset('icons/solid/Home.svg') : asset('icons/light/Home.svg') }}"
+                        class="flex items-center p-2 w-full {{ $activeMenu == 'home' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                        style="{{ $activeMenu == 'home' ? 'border-color: #F99D1C;' : '' }}">
+                        <img src="{{ $activeMenu == 'home' ? asset('icons/solid/Home.svg') : asset('icons/light/Home.svg') }}"
                             alt="Dashboard" class="mr-2 w-5">
                         Dashboard
                     </a>
@@ -63,7 +72,7 @@
                                 alt="Kategori" class="mr-2 w-5">
                             Kategori Fasilitas
                         </a>
-                        <a href="lokasi"
+                        <a href="{{ route('admin.lokasi') }}"
                             class="flex items-center p-2 w-full {{ $activeMenu == 'lokasi' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                             style="{{ $activeMenu == 'lokasi' ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ $activeMenu == 'lokasi' ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}"
@@ -99,7 +108,7 @@
                                 alt="Kriteria" class="mr-2 w-5">
                             Kriteria Prioritas Perbaikan
                         </a>
-                        <a href="#"
+                        <a href="{{ route('admin.sop') }}"
                             class="flex items-center p-2 w-full {{ $activeMenu == 'sop' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                             style="{{ $activeMenu == 'sop' ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ $activeMenu == 'sop' ? asset('icons/solid/Settings.svg') : asset('icons/light/Settings.svg') }}"
@@ -111,6 +120,15 @@
             </div>
         @elseif(in_array(Auth::user()->id_role, [1, 5, 6]))
             {{-- Mahasiswa|Dosen|Tendik --}}
+            <!-- Logo at the top of sidebar -->
+            <div class="flex items-center justify-center h-16 bg-white">
+                <a href="{{ route('dashboard.mahasiswa') }}">
+                    <span class="text-lg font-bold text-black-800 flex items-center">
+                        <img src="{{ asset('img/logo primer.svg') }}" alt="SIMPEL-POL Logo" class="h-6 mr-2">
+                        SIMPEL-POL
+                    </span>
+                </a>
+            </div>
             <div class="h-full overflow-y-auto">
                 <nav class="p-4 space-y-4 text-sm text-gray-700">
                     <a href="{{ route('dashboard.mahasiswa') }}"
@@ -142,6 +160,15 @@
             </div>
         @elseif(Auth::user()->id_role == 3)
             {{-- Teknisi --}}
+            <!-- Logo at the top of sidebar -->
+            <div class="flex items-center justify-center h-16 bg-white">
+                <a href="{{ route('teknisi.dashboard') }}">
+                    <span class="text-lg font-bold text-black-800 flex items-center">
+                        <img src="{{ asset('img/logo primer.svg') }}" alt="SIMPEL-POL Logo" class="h-6 mr-2">
+                        SIMPEL-POL
+                    </span>
+                </a>
+            </div>
             <div class="h-full overflow-y-auto">
                 <nav class="p-4 space-y-4 text-sm text-gray-700">
                     <a href="{{ route('teknisi.dashboard') }}"
@@ -154,14 +181,14 @@
 
                     <div>
                         <p class="mb-1 text-xs text-gray-500 uppercase">Laporan</p>
-                        <a href="/teknisi/penugasan"
+                        <a href="{{ route('teknisi.penugasan') }}"
                             class="flex items-center p-2 w-full {{ $activeMenu == 'penugasan' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                             style="{{ $activeMenu == 'penugasan' ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ $activeMenu == 'penugasan' ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}"
                                 alt="Laporan Pending" class="mr-2 w-5">
                             Penugasan
                         </a>
-                        <a href="/teknisi/perbaikan"
+                        <a href={{route('teknisi.perbaikan')}}
                             class="flex items-center p-2 w-full {{ $activeMenu == 'perbaikan' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                             style="{{ $activeMenu == 'perbaikan' ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ $activeMenu == 'perbaikan' ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}"
@@ -180,6 +207,15 @@
             </div>
         @elseif(Auth::user()->id_role == 4)
             {{-- Sarpras --}}
+            <!-- Logo at the top of sidebar -->
+            <div class="flex items-center justify-center h-16 bg-white">
+                <a href="{{ route('sarpras.dashboard') }}">
+                    <span class="text-lg font-bold text-black-800 flex items-center">
+                        <img src="{{ asset('img/logo primer.svg') }}" alt="SIMPEL-POL Logo" class="h-6 mr-2">
+                        SIMPEL-POL
+                    </span>
+                </a>
+            </div>
             <div class="h-full overflow-y-auto">
                 <nav class="p-4 space-y-4 text-sm text-gray-700">
                     <a href="/sarpras"
@@ -193,7 +229,7 @@
                     <div>
                         <p class="mb-1 text-xs text-gray-500 uppercase">Kelola</p>
 
-                        <a href="/sarpras/bobot"
+                        <a href="{{ route('sarpras.bobot') }}"
                             class="flex items-center p-2 w-full {{ $activeMenu == 'bobot' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                             style="{{ $activeMenu == 'bobot' ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ $activeMenu == 'bobot' ? asset('icons/solid/Settings.svg') : asset('icons/light/Settings.svg') }}"
@@ -225,7 +261,7 @@
                                 alt="Form Pelaporan" class="mr-2 w-5">
                             Penugasan
                         </a>
-                        <a href="/sarpras/perbaikan"
+                        <a href="{{route('sarpras.perbaikan')}}"
                             class="flex items-center p-2 w-full {{ $activeMenu == 'perbaikan' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                             style="{{ $activeMenu == 'perbaikan' ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ $activeMenu == 'perbaikan' ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}"

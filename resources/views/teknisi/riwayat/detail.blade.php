@@ -40,7 +40,7 @@
         <div>
             <p class="text-gray-500">Urgensi</p>
             <span class="inline-block mt-2 px-8 py-1 text-xs font-semibold text-white bg-red-600 rounded-lg">
-                {{ Str::ucfirst(Str::lower($aduan->fasilitas->urgensi)) ?? '-' }}
+                {{ Str::ucfirst(Str::lower($aduan->fasilitas->urgensi->value)) ?? '-' }}
             </span>
         </div>
         <div>
@@ -91,11 +91,11 @@
                     </tr>
                 </thead>
                 <tbody class="text-gray-800">
-                    @foreach ($perbaikan->biaya as $index => $biaya)
+                    @foreach ($biaya as $index => $cost)
                         <tr>
                             <td class="border p-2">{{ $index + 1 }}</td>
-                            <td class="border p-2">{{ $biaya->keterangan }}</td>
-                            <td class="border p-2 text-right">{{ number_format($biaya->besaran, 0, ',', '.') }}</td>
+                            <td class="border p-2">{{ $cost->keterangan }}</td>
+                            <td class="border p-2 text-right">{{ number_format($cost->besaran, 0, ',', '.') }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -103,7 +103,7 @@
                     <tr class="font-bold bg-gray-50">
                         <td colspan="2" class="border p-2 text-right">Total (Rp):</td>
                         <td class="border p-2 text-right">
-                            {{ number_format($perbaikan->biaya->sum('besaran'), 0, ',', '.') }}
+                            {{ number_format($biaya->sum('besaran'), 0, ',', '.') }}
                         </td>
                     </tr>
                 </tfoot>

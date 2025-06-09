@@ -1,4 +1,4 @@
-<div class="bg-white rounded-lg shadow-lg max-w-xl w-full p-6 relative border-t border-blue-700">
+<div class="bg-white rounded-lg shadow-lg max-w-xl w-full p-6 relative border-t-4 border-blue-700">
 
     <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 cursor-pointer">
         <i class="fas fa-times"></i>
@@ -22,7 +22,7 @@
                     Ya, Hapus
                 </button>
             </form>
-    
+
             <button type="button" id="modal-close"
                 class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-300 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 cursor-pointer">Batal
             </button>
@@ -31,30 +31,39 @@
 </div>
 
 <script>
-$(document).ready(function() {
-    $('form').on('submit', function(e) {
-        e.preventDefault(); // mencegah reload halaman
+    $(document).ready(function () {
+        $('form').on('submit', function (e) {
+            e.preventDefault(); // mencegah reload halaman
 
-        const form = this;
+            const form = this;
 
-        $.ajax({
-            url: form.action,
-            type: form.method,
-            data: $(form).serialize(),
-            success: function(response) {
-                if (response.status) {
-                    $('#myModal').addClass('hidden').removeClass('flex').html('');
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: response.message
-                    });
-                    reloadData();
-                } else {
-                    $('.error-text').text('');
-                    $.each(response.msgField, function(prefix, val) {
-                        $('#' + prefix + '-error').text(val[0]);
-                    });
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                success: function (response) {
+                    if (response.status) {
+                        $('#myModal').addClass('hidden').removeClass('flex').html('');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message
+                        });
+                        reloadData();
+                    } else {
+                        $('.error-text').text('');
+                        $.each(response.msgField, function (prefix, val) {
+                            $('#' + prefix + '-error').text(val[0]);
+                        });
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Terjadi Kesalahan',
+                            text: response.message
+                        });
+                        $('#myModal').addClass('hidden').removeClass('flex').html('');
+                    }
+                },
+                error: function (xhr) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Terjadi Kesalahan',
@@ -62,18 +71,9 @@ $(document).ready(function() {
                     });
                     $('#myModal').addClass('hidden').removeClass('flex').html('');
                 }
-            },
-            error: function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Terjadi Kesalahan',
-                    text: response.message
-                });
-                $('#myModal').addClass('hidden').removeClass('flex').html('');
-            }
-        });
+            });
 
-        return false;
+            return false;
+        });
     });
-});
 </script>

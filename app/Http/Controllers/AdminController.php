@@ -3,13 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Sheet\Sheet;
+use App\Models\Aduan;
+use App\Models\Biaya;
 use App\Models\Jurusan;
 use App\Models\Mahasiswa;
 use App\Models\Pegawai;
+use App\Models\Periode;
 use App\Models\Role;
+use App\Models\UmpanBalik;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
@@ -19,22 +25,95 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $breadcrumb = (object) [
-            'title' => 'Dashboard Admin',
-            'list' => ['Home', 'Dashboard']
+            'title' => 'Dashboard Sarana Prasarana',
+            'list' => ['Home', 'dashboard']
         ];
 
         $page = (object) [
             'title' => 'Daftar user yang terdaftar dalam sistem'
         ];
 
-        $activeMenu = 'dashboard';
+        $activeMenu = 'home';
 
+        $periode = Periode::all();
 
-        return view('admin.dashboard', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
+        $totalLaporan = Aduan::count();
+        $tertunda = Aduan::where('status', 'menunggu_diproses')->count();
+        $dalamProses = Aduan::where('status', 'sedang_inspeksi')
+        ->orWhere('status', 'sedang_diperbaiki')
+        ->count();
+        $selesai = Aduan::where('status', 'selesai')->count();
+
+        // Data untuk grafik
+        $umpanBalik = UmpanBalik::selectRaw('COUNT(*) as total, rating')
+            ->groupBy('rating')
+            ->orderBy('rating', 'desc')
+            ->get();
+
+        $periodeId = $request->input('id_periode');
+        $statusPerbaikan = Aduan::selectRaw('COUNT(*) as total, status')->groupBy('status')->get();
+        $kategoriKerusakan = Aduan::with('fasilitas.kategori') // Ambil relasi kategori dari fasilitas
+            ->get()
+            ->groupBy(fn($item) => $item->fasilitas->kategori->nama_kategori ?? 'Tidak ada kategori') // Kelompokkan berdasarkan kategori
+            ->map(function ($items, $kategori) {
+                return [
+                    'kategori' => $kategori,
+                    'total' => $items->count(), // Hitung jumlah aduan dalam kategori
+                ];
+            })
+            ->values();
+        $trenKerusakanRaw = Aduan::selectRaw('COUNT(*) as total, MONTH(tanggal_aduan) as bulan')
+        ->groupBy('bulan')
+        ->orderBy('bulan', 'asc')
+        ->get();
+
+        // Pastikan semua bulan (1 hingga 12) ada dalam data
+        $trenKerusakan = collect(range(1, 12))->map(function ($bulan) use ($trenKerusakanRaw) {
+            $data = $trenKerusakanRaw->firstWhere('bulan', $bulan);
+            return [
+                'bulan' => $bulan,
+                'total' => $data ? $data->total : 0, // Jika tidak ada data, set total ke 0
+            ];
+        });
+        $trenAnggaranRaw = Biaya::selectRaw('SUM(besaran) as total, MONTH(inspeksi.tanggal_mulai) as bulan')
+            ->join('inspeksi', 'biaya.id_inspeksi', '=', 'inspeksi.id_inspeksi') // Hubungkan tabel biaya dengan perbaikan
+            ->groupBy('bulan')
+            ->orderBy('bulan', 'asc')
+            ->get();
+
+        // Pastikan semua bulan (1 hingga 12) ada dalam data
+        $trenAnggaran = collect(range(1, 12))->map(function ($bulan) use ($trenAnggaranRaw) {
+            $data = $trenAnggaranRaw->firstWhere('bulan', $bulan);
+            return [
+                'bulan' => $bulan,
+                'total' => $data ? $data->total : 0, // Jika tidak ada data, set total ke 0
+            ];
+        });
+
+        $sedangLogin = Auth::user()->role->nama_role;
+        $sedangLogin = strtolower(Auth::user()->role->nama_role);
+
+        return view('admin.dashboard', compact(
+            'breadcrumb',
+            'page',
+            'activeMenu',
+            'periode',
+            'totalLaporan',
+            'tertunda',
+            'dalamProses',
+            'selesai',
+            'umpanBalik',
+            'statusPerbaikan',
+            'kategoriKerusakan',
+            'trenKerusakan',
+            'trenAnggaran',
+            'sedangLogin'
+        ));
     }
+    
     public function pengguna(Request $request)
     {
         $breadcrumb = (object) [
@@ -47,6 +126,8 @@ class AdminController extends Controller
         ];
 
         $activeMenu = 'pengguna';
+
+        $sedangLogin = auth()->user()->nama_role;
 
         $role = Role::all();
         $query = User::with('role');
@@ -79,13 +160,14 @@ class AdminController extends Controller
             $html = view('admin.pengguna.user_table', compact('users'))->render();
             return response()->json(['html' => $html]);
         }
-
+        
         return view('admin.pengguna.user', [
             'breadcrumb' => $breadcrumb,
             'page' => $page,
             'activeMenu' => $activeMenu,
             'role' => $role,
             'users' => $users,
+            'sedangLogin' => $sedangLogin,
         ]);
     }
     public function create_ajax()

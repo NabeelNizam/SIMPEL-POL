@@ -43,12 +43,7 @@
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                     <div class="p-6 border-b border-gray-200">
                         <h2 class="text-lg font-semibold text-gray-800 flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                </path>
-                            </svg>
+                            <img src="{{ asset('icons/light/Book.svg') }}" alt="" class="w-5 h-5 mr-2 text-blue-600">
                             Standar Operasional Prosedur (SOP)
                         </h2>
                     </div>
@@ -73,11 +68,7 @@
                             <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                                 <div class="flex items-start">
                                     <div class="flex-shrink-0">
-                                        <svg class="w-5 h-5 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                                                clip-rule="evenodd"></path>
-                                        </svg>
+                                        <img src='{{ asset('icons/light/info.svg') }}' alt="" class="w-6 h-6 text-blue-600">
                                     </div>
                                     <div class="ml-3">
                                         <h3 class="text-sm font-medium text-blue-800">Tentang SOP Sarana Prasarana</h3>
@@ -114,11 +105,7 @@
                                     class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0">
-                                            <svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd"
-                                                    d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
-                                                    clip-rule="evenodd"></path>
-                                            </svg>
+                                            <img src="{{ asset('icons/solid/Doc2.svg') }}" alt="">
                                         </div>
                                         <div class="ml-3">
                                             <div class="text-sm font-medium text-gray-900">SOP Untuk Pihak Sarana Prasarana
@@ -126,10 +113,9 @@
                                         </div>
                                     </div>
                                     <div class="flex-shrink-0">
-                                        <a href="{{ route('download.sop', ['filename' => 'SOP_SARPRAS.pdf']) }}"
+                                        <a href="{{ route('sopDownload', ['role' => $sedangLogin, 'filename' => 'SOP_' . strtoupper($sedangLogin) . '.pdf']) }}"
                                             class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                                                 </path>
