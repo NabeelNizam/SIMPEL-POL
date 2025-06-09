@@ -25,13 +25,13 @@
                         {{ $a->status }}
                     </span>
                 </x-table.cell>
-                <x-table.cell class="px-4 py-2">
+                <x-table.cell class="px-4 py-2 min-w-[120px]">
                     <button onclick="modalAction('{{ route('teknisi.perbaikan.show', $a->id_perbaikan) }}')"
-                        class="text-blue-600 hover:underline text-sm">
-                        <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline"></button>
+                        class="text-blue-600 cursor-pointer hover:underline text-sm">
+                        <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline min-w-[29px]"></button>
                     <button onclick="modalAction('{{ route('teknisi.perbaikan.approve', $a->id_perbaikan) }}')"
-                        class="text-green-600 hover:underline ml-2">
-                        <img src="{{ asset('icons/solid/Acc.svg') }}" alt="Approve" class="h-7 w-7 inline">
+                        class="text-green-600 cursor-pointer hover:underline ml-2">
+                        <img src="{{ asset('icons/solid/Acc.svg') }}" alt="Approve" class="h-7 w-7 inline min-w-[29px]">
                     </button>
                 </x-table.cell>
             </x-table.row>

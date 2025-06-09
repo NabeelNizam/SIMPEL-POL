@@ -148,7 +148,7 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
     });
     Route::prefix('sop')->group(function () {
         Route::get('/', [SOPController::class, 'index'])->name('admin.sop');
-    }); 
+    });
     // Aduan
     Route::prefix('aduan')->group(function () {
         Route::get('/', [AduanController::class, 'index'])->name('admin.aduan');
