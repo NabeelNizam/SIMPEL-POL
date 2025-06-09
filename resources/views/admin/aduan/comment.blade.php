@@ -31,7 +31,7 @@
                     <div class="mb-4 p-3 bg-blue-50 rounded-lg">
                         <p class="text-sm text-blue-600">
                             <i class="fas fa-info-circle mr-1"></i>
-                            Menampilkan data periode: <strong>{{ $aduan->periode->kode_periode ?? 'Tidak diketahui' }}</strong>
+                            Menampilkan data periode: <strong>{{ $aduan->first()->periode->kode_periode }}</strong>
                         </p>
                     </div>
                 @endif

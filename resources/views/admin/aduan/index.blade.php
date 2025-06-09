@@ -31,20 +31,6 @@
                     @endforeach
                 </select>
             </div>
-            {{-- filter status --}}
-            <div class="flex items-center gap-2">
-                <label for="status" class="text-sm font-medium text-gray-700">Status Aduan:</label>
-                <select id="status" name="status" class="w-48 border border-gray-300 rounded-md shadow-sm sm:text-sm">
-                    <option value="">Semua Status</option>
-                    <option value="MENUNGGU_DIPROSES" {{ request('status') == 'MENUNGGU_DIPROSES' ? 'selected' : '' }}>
-                        Menunggu Diproses</option>
-                    <option value="SEDANG_INSPEKSI" {{ request('status') == 'SEDANG_INSPEKSI' ? 'selected' : '' }}>Sedang
-                        Inspeksi</option>
-                    <option value="SEDANG_DIPERBAIKI" {{ request('status') == 'SEDANG_DIPERBAIKI' ? 'selected' : '' }}>Sedang
-                        Diperbaiki</option>
-                    <option value="SELESAI" {{ request('status') == 'SELESAI' ? 'selected' : '' }}>Selesai</option>
-                </select>
-            </div>
         </form>
 
         <div class="flex justify-between items-center mb-4">
@@ -98,7 +84,8 @@
                     search: $('#search').val(),
                     per_page: $('#per_page').val(),
                     id_periode: $('#id_periode').val(),
-                    status: $('#status').val()
+                    sort_column: $('#sort-column').val(),
+                    sort_direction: $('#sort-direction').val(),
                 },
                 success: function (response) {
                     $('#aduan-table-body').html(response.html);
@@ -126,11 +113,6 @@
 
             // Event untuk filter kategori
             $('#id_periode').on('change', function () {
-                reloadData();
-            });
-
-            // event untuk filter status
-            $('#status').on('change', function () {
                 reloadData();
             });
         });

@@ -25,25 +25,8 @@ class AduanController extends Controller
 
         $activeMenu = 'aduan';
 
-        // Query untuk aduan
-        // Ambil aduan, group by fasilitas & periode
-        $query = Aduan::with([
-            'fasilitas.kategori',
-            'fasilitas.ruangan',
-            'fasilitas.inspeksi.perbaikan',
-            'pelapor',
-            'umpan_balik'
-        ]);
-
-        // filter periode
-        if ($request->id_periode) {
-            $query->where('id_periode', $request->id_periode);
-        }
-
-        // filter status
-        if ($request->status) {
-            $query->where('status', $request->status);
-        }
+        // Query untuk aduan dengan status selesai
+        $query = Aduan::with(['fasilitas', 'fasilitas.inspeksi.perbaikan', 'fasilitas.ruangan'])->where('status', 'Selesai');
 
         // Filter berdasarkan pencarian
         if ($request->search) {
@@ -52,17 +35,19 @@ class AduanController extends Controller
             });
         }
 
-        // Group by fasilitas & periode
-        $query->select('id_fasilitas', 'id_periode')
-            ->groupBy('id_fasilitas', 'id_periode')
-            ->orderBy('id_periode', 'desc')
-            ->orderByRaw("FIELD(MAX(status), 'MENUNGGU_DIPROSES', 'SEDANG_INSPEKSI', 'SEDANG_DIPERBAIKI', 'SELESAI') DESC")
-            ->orderBy('id_fasilitas', 'asc');
+        // filter periode
+        if ($request->id_periode) {
+            $query->where('id_periode', $request->id_periode);
+        }
+
+        // Sorting
+        $sortColumn = $request->sort_column ?? 'tanggal_aduan';
+        $sortDirection = $request->sort_direction ?? 'asc';
+        $query->orderBy($sortColumn, $sortDirection);
 
         // Pagination
         $perPage = $request->input('per_page', 10);
         $aduan = $query->paginate($perPage);
-
         $aduan->appends(request()->query());
 
         // ambil data periode untuk filter
@@ -72,13 +57,15 @@ class AduanController extends Controller
             $html = view('admin.aduan.aduan_table', compact('aduan'))->render();
             return response()->json(['html' => $html]);
         }
+
+        
         return view('admin.aduan.index', compact('breadcrumb', 'page', 'activeMenu', 'aduan', 'periode'));
     }
 
     public function show_ajax($id_fasilitas)
     {
         // Ambil data aduan berdasarkan id_fasilitas
-        $aduan = Aduan::with(['fasilitas.inspeksi.perbaikan', 'fasilitas.inspeksi.biaya', 'fasilitas.ruangan.lantai.gedung', ])->where('id_fasilitas', $id_fasilitas)->firstOrFail();
+        $aduan = Aduan::with(['fasilitas.inspeksi.perbaikan', 'fasilitas.inspeksi.biaya', 'fasilitas.ruangan.lantai.gedung',])->where('id_fasilitas', $id_fasilitas)->firstOrFail();
 
         // Ambil data perbaikan terkait aduan
         $perbaikan = $aduan->fasilitas->inspeksi->first()->perbaikan;
@@ -87,7 +74,7 @@ class AduanController extends Controller
         $fasilitas = Fasilitas::with('kategori')->findOrFail($id_fasilitas); // Ambil fasilitas beserta kategori
         $kategori = $fasilitas->kategori;
 
-        
+
 
         // Ambil rata-rata rating untuk fasilitas & tanggal aduan yang sama
         $avgRating = null;
@@ -99,8 +86,7 @@ class AduanController extends Controller
             $avgRating = $avgRating ? number_format($avgRating, 1) : null;
         }
 
-        return view('admin.aduan.detail', compact('aduan', 'biaya', 'perbaikan', 'fasilitas', 'kategori', 'avgRating'))->render();
-
+        return view('admin.aduan.detail', compact('aduan', 'biaya', 'perbaikan', 'fasilitas', 'avgRating'))->render();
     }
 
     public function comment_ajax($id, Request $request)
@@ -134,10 +120,11 @@ class AduanController extends Controller
         $sheet->title = 'Riwayat Perbaikan';
         $sheet->text = 'Berikut adalah daftar perbaikan fasilitas.';
         $sheet->footer = 'Dibuat oleh Sistem';
-        $sheet->header = ['Nama Fasilitas', 'Lokasi', 'Kategori', 'Tanggal Aduan', 'Tanggal Perbaikan'];
+        $sheet->header = ['Periode', 'Nama Fasilitas', 'Lokasi', 'Kategori', 'Tanggal Aduan', 'Tanggal Perbaikan'];
 
         $sheet->data = $aduan->map(function ($item) {
             return [
+                'periode' => $item->periode->kode_periode,
                 'nama_fasilitas' => $item->fasilitas->nama_fasilitas,
                 'lokasi' => $item->fasilitas->ruangan->lantai->gedung->nama_gedung . ' - ' . $item->fasilitas->ruangan->lantai->nama_lantai . ' - ' . $item->fasilitas->ruangan->nama_ruangan,
                 'kategori' => $item->fasilitas->kategori->nama_kategori,
@@ -155,9 +142,8 @@ class AduanController extends Controller
         return $this->set_sheet()->toXls();
     }
 
-    public function export_pdf(){
+    public function export_pdf()
+    {
         return $this->set_sheet()->toPdf();
     }
-
-
 }

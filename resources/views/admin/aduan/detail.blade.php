@@ -37,7 +37,7 @@
                     <!-- Lokasi -->
                     <div>
                         <label class="block text-sm leading-relaxed text-gray-500 mb-1">Lokasi</label>
-                        <p class="text-gray-500 text-sm font-semibold">
+                        <p class="text-gray-800 text-sm font-semibold">
                             {{ $fasilitas->ruangan->lantai->gedung->nama_gedung ?? '-' }},
                             {{ $fasilitas->ruangan->lantai->nama_lantai ?? '-' }},
                             {{ $fasilitas->ruangan->nama_ruangan ?? '-' }}
@@ -168,27 +168,27 @@
             </div>
             <div class="w-16 h-0.5 bg-orange-400 mb-4"></div>
 
-            <div class="flex space-x-4 mb-4">
+            <div class="flex space-x-4 mb-4 gap-32">
                 {{-- tingkat kerusakan --}}
                 <div class="text">
                     <label class="block text-sm font-medium text-gray-500 mb-1">Tingkat Kerusakan</label>
-                    <span class="inline-block px-4 py-1 rounded-full text-white text-sm font-medium
-                        @if($aduan->fasilitas->inspeksi->tingkat_kerusakan === \App\Http\Enums\TingkatKerusakan::PARAH)
+                    <span class="inline-block px-4 py-1 rounded text-white text-sm font-medium
+                        @if($aduan->fasilitas->inspeksi->first()->tingkat_kerusakan === \App\Http\Enums\TingkatKerusakan::PARAH)
                             bg-red-500
-                        @elseif($aduan->fasilitas->inspeksi->tingkat_kerusakan === \App\Http\Enums\TingkatKerusakan::SEDANG)
+                        @elseif($aduan->fasilitas->inspeksi->first()->tingkat_kerusakan === \App\Http\Enums\TingkatKerusakan::SEDANG)
                             bg-yellow-500
-                        @elseif($aduan->fasilitas->inspeksi->tingkat_kerusakan === \App\Http\Enums\TingkatKerusakan::RINGAN)
+                        @elseif($aduan->fasilitas->inspeksi->first()->tingkat_kerusakan === \App\Http\Enums\TingkatKerusakan::RINGAN)
                             bg-blue-500
                         @else
                             bg-gray-500
                         @endif ">
-                        {{ $aduan->fasilitas->inspeksi->tingkat_kerusakan ?? '-' }}
+                        {{ $aduan->fasilitas->inspeksi->first()->tingkat_kerusakan ?? '-' }}
                     </span>
                 </div>
                 {{-- deskripsi pekerjaan --}}
                 <div class="text">
                     <label class="block text-gray-600 font-medium mb-2 text-sm">Deskripsi Pekerjaan</label>
-                    <p class="text-dark font-sm">{{ $aduan->inspeksi->deskripsi ?? '-' }}</p>
+                    <p class="text-gray-800 font-sm">{{ $aduan->fasilitas->inspeksi->first()->deskripsi ?? '-' }}</p>
                 </div>
             </div>
 
@@ -206,13 +206,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if($inspeksi->biaya->count())
-                                @foreach($inspeksi->biaya as $i => $biaya)
+                            @if($biaya)
+                                @foreach($biaya as $i => $b)
                                     <tr class="hover:bg-gray-50">
                                         <td class="border border-gray-300 px-3 py-2 text-center">{{ $i + 1 }}</td>
-                                        <td class="border border-gray-300 px-3 py-2">{{ $biaya->keterangan }}</td>
+                                        <td class="border border-gray-300 px-3 py-2">{{ $b->keterangan }}</td>
                                         <td class="border border-gray-300 px-3 py-2 text-right">
-                                            {{ number_format($biaya->besaran, 0, ',', '.') }}
+                                            {{ number_format($b->besaran, 0, ',', '.') }}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -228,7 +228,7 @@
                             <tr class="bg-gray-100 font-semibold">
                                 <td colspan="2" class="border border-gray-300 px-3 py-2 text-right">Total (Rp):</td>
                                 <td class="border border-gray-300 px-3 py-2 text-right">
-                                    {{ $inspeksi->biaya ? number_format($inspeksi->biaya->sum('besaran'), 0, ',', '.') : 0 }}
+                                    {{ number_format($biaya->sum('besaran'), 0, ',', '.') }}
                                 </td>
                             </tr>
                         </tfoot>
