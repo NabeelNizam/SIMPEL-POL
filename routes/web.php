@@ -279,12 +279,3 @@ Route::prefix('teknisi')->middleware(['authorize:TEKNISI'])->group(function () {
         Route::get('/export-pdf', [RiwayatTeknisiController::class, 'export_pdf'])->name('teknisi.perbaikan.export_pdf');
     });
 });
-
-use App\Http\Helpers\CopelandAggregator;
-use App\Http\Helpers\AlternativeDTO;
-
-Route::get('/test-gdss', [CopelandTestingController::class, 'copelandTest'])->name('test.gdss');
-Route::get('/hitung', [PrometheeController::class, 'calculatePromethee'])->name('sarpras.hitung'); // TES PROMETHEE
-Route::get('/tesMahasiswa', [PrometheeController::class, 'tesHitungMahasiswa'])->name('sarpras.tesMahasiswa');
-Route::get('/tesDosen', [PrometheeController::class, 'tesHitungDosen'])->name('sarpras.tesDosen');
-Route::get('/tesTendik', [PrometheeController::class, 'tesHitungTendik'])->name('sarpras.tesTendik');
