@@ -8,7 +8,7 @@
     <h2 class="text-xl font-semibold text-center">Detail Aduan</h2>
     <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
-    <!-- Isi pengaduan -->
+    <!-- Detail Fasilitas -->
     <div class="mb-6">
         <div class="flex items-center mb-4">
             <div class="bg-blue-500 text-white px-3 py-2 rounded-md mr-3">
@@ -22,16 +22,11 @@
             <!-- Gambar -->
             <div class="flex-shrink-0">
                 <div class="bg-gray-100 rounded-lg shadow-sm p-4">
-                    @if($aduan->foto)
-                        <img src="{{ asset('storage/' . $aduan->fasilitas->foto_fasilitas) }}" alt="Foto Aduan"
-                            class="w-64 h-48 object-cover rounded-lg shadow">
-                    @else
-                        <img src="{{ asset('img/no-image.svg') }}" alt="No Image"
-                            class="w-64 h-48 object-cover rounded-lg shadow">
-                    @endif
-                    <div class="mt-4">
-                        <h4 class="font-bold text-gray-800 text-lg">{{ $aduan->fasilitas->nama_fasilitas ?? '-' }}</h4>
-                        <p class="text-gray-600">{{ $aduan->fasilitas->kategori->nama_kategori ?? '-' }}</p>
+                    <img src="{{ asset($aduan->fasilitas->gambar ?? 'img/no-image.svg') }}" alt="Gambar Fasilitas"
+                        class="w-full h-32 object-cover rounded-lg border">
+                    <div class="mt-2">
+                        <p class="font-semibold text-black-700">{{ $aduan->fasilitas->nama_fasilitas ?? '-' }}</p>
+                        <p class="text-gray-700">{{ ucwords($aduan->fasilitas->kategori->nama_kategori) ?? '-' }}</p>
                     </div>
                 </div>
             </div>
@@ -41,64 +36,61 @@
                 <div class="grid grid-cols-2 gap-x-8 gap-y-6">
                     <!-- Lokasi -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-500 mb-1">Lokasi</label>
-                        @php
-                            $ruangan = $aduan->fasilitas->ruangan;
-                            $lantai = $ruangan->lantai;
-                            $gedung = $lantai->gedung;
-                        @endphp
-                        <p class="text-gray-800 font-semibold">
-                            {{ $gedung->nama_gedung ?? '-' }}{{ $lantai ? ', ' . $lantai->nama_lantai : '' }}{{ $ruangan ? ', ' . $ruangan->nama_ruangan : '' }}
+                        <label class="block text-sm leading-relaxed text-gray-500 mb-1">Lokasi</label>
+                        <p class="text-gray-500 text-sm font-semibold">
+                            {{ $fasilitas->ruangan->lantai->gedung->nama_gedung ?? '-' }},
+                            {{ $fasilitas->ruangan->lantai->nama_lantai ?? '-' }},
+                            {{ $fasilitas->ruangan->nama_ruangan ?? '-' }}
                         </p>
                     </div>
 
                     <!-- Tanggal Mulai Perbaikan -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-500 mb-1">Tanggal Mulai Perbaikan</label>
-                        <p class="text-gray-800 font-semibold">
-                            {{ $aduan->perbaikan && $aduan->perbaikan->tanggal_mulai ? \Carbon\Carbon::parse($aduan->perbaikan->tanggal_mulai)->format('d/m/Y') : '08/05/2025' }}
+                        <label class="block text-sm leading-relaxed text-gray-500 mb-1">Tanggal Mulai
+                            Perbaikan</label>
+                        <p class="text-gray-700 text-sm font-semibold">
+                            {{ $fasilitas->inspeksi->first()->perbaikan->tanggal_mulai ?? '-' }}
                         </p>
                     </div>
 
                     <!-- Urgensi -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-500 mb-1">Urgensi</label>
-                        <span class="inline-block px-4 py-1 rounded-full text-white text-sm font-medium
-                                @if($aduan->fasilitas->urgensi === \App\Http\Enums\Urgensi::DARURAT)
+                        <label class="block text-sm leading-relaxed text-gray-600 mb-1">Urgensi</label>
+                        <span class="inline-block px-4 py-1 rounded text-white text-sm font-medium
+                                @if($fasilitas->urgensi === \App\Http\Enums\Urgensi::DARURAT)
                                     bg-red-500
-                                @elseif($aduan->fasilitas->urgensi === \App\Http\Enums\Urgensi::PENTING)
+                                @elseif($fasilitas->urgensi === \App\Http\Enums\Urgensi::PENTING)
                                     bg-yellow-500
-                                @elseif($aduan->fasilitas->urgensi === \App\Http\Enums\Urgensi::BIASA)
-                                    bg-blue-500
                                 @else
-                                    bg-gray-500
+                                    bg-blue-500
                                 @endif">
-                            {{ $aduan->fasilitas->urgensi ?? '-' }}
+                            {{ $fasilitas->urgensi->value ?? '-' }}
                         </span>
                     </div>
 
                     <!-- Tanggal Selesai Perbaikan -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-500 mb-1">Tanggal Selesai Perbaikan</label>
+                        <label class="block text-sm leading-relaxed text-gray-500 mb-1">Tanggal Selesai
+                            Perbaikan</label>
                         <p class="text-gray-800 font-semibold">
-                            {{ $aduan->perbaikan && $aduan->perbaikan->tanggal_selesai ? \Carbon\Carbon::parse($aduan->perbaikan->tanggal_selesai)->format('d/m/Y') : '19/05/2025' }}
+                            {{ $fasilitas->inspeksi->first()->perbaikan->tanggal_selesai ?? '-' }}
                         </p>
                     </div>
 
                     <!-- Status -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-500 mb-1">Status</label>
-                        <span class="inline-block px-4 py-1 rounded-full text-white text-sm font-medium
+
+                        <label class="block text-sm leading-relaxed text-gray-500 mb-1">Status</label>
+                        <span class="inline-block px-4 py-1 rounded text-white text-sm font-medium w-42 block text-center
+
                             @if($aduan->status === \App\Http\Enums\Status::SELESAI)
                                 bg-green-500
                             @elseif($aduan->status === \App\Http\Enums\Status::MENUNGGU_DIPROSES)
                                 bg-blue-500
                             @elseif($aduan->status === \App\Http\Enums\Status::SEDANG_INSPEKSI)
                                 bg-yellow-500
-                            @elseif($aduan->status === \App\Http\Enums\Status::SEDANG_DIPERBAIKI)
-                                bg-orange-500
                             @else
-                                bg-gray-500
+                                bg-orange-500
                             @endif ">
                             {{ $aduan->status ?? '-' }}
                         </span>
@@ -106,8 +98,8 @@
 
                     <!-- Jumlah Pelapor -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-500 mb-1">Jumlah Pelapor</label>
-                        <p class="text-gray-800 font-semibold">5</p>
+                        <label class="block text-sm leading-relaxed text-gray-600 mb-1">Jumlah Pelapor</label>
+                        <p class="font-semibold text-sm leading-relaxed">{{ $fasilitas->aduan_count ?? '-' }}</p>
                     </div>
                 </div>
             </div>
@@ -125,33 +117,38 @@
             </div>
             <div class="w-16 h-0.5 bg-orange-400 mb-4"></div>
 
-            @if($aduan->perbaikan && $aduan->perbaikan->teknisi)
+            @if($aduan->fasilitas && $aduan->fasilitas->inspeksi)
                 <div class="grid grid-cols-3 gap-4 text-sm">
                     <div>
                         <label class="block text-gray-600 font-medium mb-1">Nama</label>
-                        <p class="text-gray-800 font-semibold">{{ $aduan->perbaikan->teknisi->nama ?? '-' }}</p>
+                        <p class="text-gray-800 font-semibold">
+                            {{ $aduan->fasilitas->inspeksi->first()->teknisi->nama ?? '-' }}</p>
                     </div>
                     <div>
                         <label class="block text-gray-600 font-medium mb-1">Jurusan</label>
                         <p class="text-gray-800 font-semibold">
-                            {{ $aduan->perbaikan->teknisi->jurusan->nama_jurusan ?? '-' }}
+                            {{ $aduan->fasilitas->inspeksi->first()->teknisi->jurusan->nama_jurusan ?? '-' }}
                         </p>
                     </div>
                     <div>
                         <label class="block text-gray-600 font-medium mb-1">NIP</label>
-                        <p class="text-gray-800 font-semibold">{{ $aduan->perbaikan->teknisi->pegawai->nip ?? '-' }}</p>
+                        <p class="text-gray-800 font-semibold">
+                            {{ $aduan->fasilitas->inspeksi->first()->teknisi->pegawai->nip ?? '-' }}</p>
                     </div>
                     <div>
                         <label class="block text-gray-600 font-medium mb-1">Username</label>
-                        <p class="text-gray-800 font-semibold">{{ $aduan->perbaikan->teknisi->username ?? '-' }}</p>
+                        <p class="text-gray-800 font-semibold">
+                            {{ $aduan->fasilitas->inspeksi->first()->teknisi->username ?? '-' }}</p>
                     </div>
                     <div>
                         <label class="block text-gray-600 font-medium mb-1">Email</label>
-                        <p class="text-gray-800 font-semibold">{{ $aduan->perbaikan->teknisi->email ?? '-' }}</p>
+                        <p class="text-gray-800 font-semibold">
+                            {{ $aduan->fasilitas->inspeksi->first()->teknisi->email ?? '-' }}</p>
                     </div>
                     <div>
                         <label class="block text-gray-600 font-medium mb-1">No. Telepon</label>
-                        <p class="text-gray-800 font-semibold">{{ $aduan->perbaikan->teknisi->no_hp ?? '-' }}</p>
+                        <p class="text-gray-800 font-semibold">
+                            {{ $aduan->fasilitas->inspeksi->first()->teknisi->no_hp ?? '-' }}</p>
                     </div>
                 </div>
             @else
@@ -174,24 +171,24 @@
             <div class="flex space-x-4 mb-4">
                 {{-- tingkat kerusakan --}}
                 <div class="text">
-                    <label class="block text-gray-600 font-medium mb-2 text-sm">Tingkat Kerusakan</label>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Tingkat Kerusakan</label>
                     <span class="inline-block px-4 py-1 rounded-full text-white text-sm font-medium
-                        @if($aduan->perbaikan->tingkat_kerusakan === 'PARAH')
+                        @if($aduan->fasilitas->inspeksi->tingkat_kerusakan === \App\Http\Enums\TingkatKerusakan::PARAH)
                             bg-red-500
-                        @elseif($aduan->perbaikan->tingkat_kerusakan === 'SEDANG')
+                        @elseif($aduan->fasilitas->inspeksi->tingkat_kerusakan === \App\Http\Enums\TingkatKerusakan::SEDANG)
                             bg-yellow-500
-                        @elseif($aduan->perbaikan->tingkat_kerusakan === 'RINGAN')
+                        @elseif($aduan->fasilitas->inspeksi->tingkat_kerusakan === \App\Http\Enums\TingkatKerusakan::RINGAN)
                             bg-blue-500
                         @else
                             bg-gray-500
                         @endif ">
-                        {{ $aduan->perbaikan->tingkat_kerusakan ?? '-' }}
+                        {{ $aduan->fasilitas->inspeksi->tingkat_kerusakan ?? '-' }}
                     </span>
                 </div>
                 {{-- deskripsi pekerjaan --}}
                 <div class="text">
                     <label class="block text-gray-600 font-medium mb-2 text-sm">Deskripsi Pekerjaan</label>
-                    <p class="text-dark font-sm">{{ $aduan->perbaikan->deskripsi_perbaikan ?? '-' }}</p>
+                    <p class="text-dark font-sm">{{ $aduan->inspeksi->deskripsi ?? '-' }}</p>
                 </div>
             </div>
 
@@ -209,8 +206,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if($aduan->perbaikan && $aduan->perbaikan->biaya && $aduan->perbaikan->biaya->count())
-                                @foreach($aduan->perbaikan->biaya as $i => $biaya)
+                            @if($inspeksi->biaya->count())
+                                @foreach($inspeksi->biaya as $i => $biaya)
                                     <tr class="hover:bg-gray-50">
                                         <td class="border border-gray-300 px-3 py-2 text-center">{{ $i + 1 }}</td>
                                         <td class="border border-gray-300 px-3 py-2">{{ $biaya->keterangan }}</td>
@@ -221,7 +218,9 @@
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="3" class="text-center text-gray-400">Tidak ada rincian anggaran.</td>
+                                    <td colspan="3" class="border border-gray-300 text-center text-gray-400">Tidak ada
+                                        rincian
+                                        anggaran.</td>
                                 </tr>
                             @endif
                         </tbody>
@@ -229,7 +228,7 @@
                             <tr class="bg-gray-100 font-semibold">
                                 <td colspan="2" class="border border-gray-300 px-3 py-2 text-right">Total (Rp):</td>
                                 <td class="border border-gray-300 px-3 py-2 text-right">
-                                    {{ $aduan->perbaikan && $aduan->perbaikan->biaya ? number_format($aduan->perbaikan->biaya->sum('besaran'), 0, ',', '.') : 0 }}
+                                    {{ $inspeksi->biaya ? number_format($inspeksi->biaya->sum('besaran'), 0, ',', '.') : 0 }}
                                 </td>
                             </tr>
                         </tfoot>

@@ -1,10 +1,10 @@
 <x-table>
     <x-slot name="head">
         <x-table.heading>No</x-table.heading>
+        <x-table.heading>Periode</x-table.heading>
         <x-table.heading>Nama Fasilitas</x-table.heading>
         <x-table.heading>Kategori</x-table.heading>
         <x-table.heading>Lokasi</x-table.heading>
-        <x-table.heading>Tanggal Lapor</x-table.heading>
         <x-table.heading>Tanggal Perbaikan</x-table.heading>
         <x-table.heading>Status Perbaikan</x-table.heading>
         <x-table.heading>Umpan Balik</x-table.heading>
@@ -13,71 +13,69 @@
 
     <x-slot name="body">
         @forelse ($aduan as $index => $a)
+            @php
+                $fasilitas = $a->fasilitas;
+                $periode = $a->id_periode;
+                // Ambil semua aduan pada fasilitas & periode ini
+                $aduanPeriode = \App\Models\Aduan::where('id_fasilitas', $fasilitas->id_fasilitas)
+                    ->where('id_periode', $periode)
+                    ->get();
+                $lastAduan = $aduanPeriode->sortByDesc('tanggal_aduan')->first();
+                $avgRating = \App\Models\UmpanBalik::whereHas('aduan', function ($q) use ($fasilitas, $periode) {
+                    $q->where('id_fasilitas', $fasilitas->id_fasilitas)
+                        ->where('id_periode', $periode);
+                })->avg('rating');
+                $avgRating = $avgRating ? number_format($avgRating, 1) : null;
+            @endphp
             <x-table.row>
                 <x-table.cell>{{ $aduan->firstItem() + $index }}</x-table.cell>
-                <x-table.cell>{{ $a->fasilitas->nama_fasilitas }}</x-table.cell>
-                <x-table.cell>{{ $a->fasilitas->kategori->nama_kategori ?? '-' }}</x-table.cell>
-                @php
-                    $ruangan = $a->fasilitas->ruangan;
-                    $lantai = $ruangan->lantai;
-                    $gedung = $lantai->gedung;
-                @endphp
+                <x-table.cell>{{ $a->periode->kode_periode ?? '-' }}</x-table.cell>
+                <x-table.cell>{{ $fasilitas->nama_fasilitas }}</x-table.cell>
+                <x-table.cell>{{ $fasilitas->kategori->nama_kategori ?? '-' }}</x-table.cell>
                 <x-table.cell>
-                    {{ $gedung->nama_gedung ?? '-' }}
-                    {{ $lantai ? ', Lt. ' . $lantai->nama_lantai : '' }}
-                    {{ $ruangan ? ', ' . $ruangan->nama_ruangan : '' }}
+                    {{ $fasilitas->ruangan->lantai->gedung->nama_gedung ?? '-' }},
+                    {{ $fasilitas->ruangan->lantai->nama_lantai ?? '-' }},
+                    {{ $fasilitas->ruangan->nama_ruangan ?? '-' }}
                 </x-table.cell>
                 <x-table.cell>
-                    {{ $a->tanggal_aduan ? \Carbon\Carbon::parse($a->tanggal_aduan)->format('d/m/Y') : '-'}}
+                    {{ $lastAduan && $lastAduan->tanggal_perbaikan ? \Carbon\Carbon::parse($lastAduan->tanggal_perbaikan)->format('d/m/Y') : '-' }}
                 </x-table.cell>
                 <x-table.cell>
-                    {{ $a->perbaikan && $a->perbaikan->tanggal_selesai ? \Carbon\Carbon::parse($a->perbaikan->tanggal_selesai)->format('d/m/Y') : '-' }}
+                    <span class="px-3 py-1 rounded text-white text-sm w-42 block text-center
+                                @if($lastAduan->status === \App\Http\Enums\Status::SELESAI)
+                                    bg-green-500
+                                @elseif($lastAduan->status === \App\Http\Enums\Status::MENUNGGU_DIPROSES)
+                                    bg-blue-500
+                                @elseif($lastAduan->status === \App\Http\Enums\Status::SEDANG_INSPEKSI)
+                                    bg-yellow-500
+                                @else
+                                    bg-orange-500
+                                @endif">
+                        {{ $lastAduan->status->value }}
+                    </span>
                 </x-table.cell>
-                <x-table.cell>
-                    @if($a->status)
-                        <span class="px-3 py-1 rounded-full text-white text-sm
-                            @if($a->status === \App\Http\Enums\Status::SELESAI)
-                                bg-green-500
-                            @elseif($a->status === \App\Http\Enums\Status::MENUNGGU_DIPROSES)
-                                bg-blue-500
-                            @elseif($a->status === \App\Http\Enums\Status::SEDANG_INSPEKSI)
-                                bg-yellow-500
-                            @elseif($a->status === \App\Http\Enums\Status::SEDANG_DIPERBAIKI)
-                                bg-orange-500
-                            @endif   ">
-                            {{ $a->status->value }}
-                        </span>
-                    @else
-                        <span class="px-3 py-1 rounded-full bg-gray-500 text-white text-sm">-</span>
-                    @endif
-                </x-table.cell>
-                @php
-                    $avgRating = \App\Models\UmpanBalik::whereHas('aduan', function ($q) use ($a) {
-                        $q->where('id_fasilitas', $a->id_fasilitas)
-                            ->where('tanggal_aduan', $a->tanggal_aduan);
-                    })->avg('rating');
-                    $avgRating = $avgRating ? number_format($avgRating, 1) : null;
-                @endphp
                 <x-table.cell>
                     @if($avgRating)
-                        <div class="flex items-center mb-2">
+                        <div class="flex items-center mb-2 gap-1">
                             <i class="fas fa-star text-yellow-400 text-lg"></i>
                             <span class="text-yellow-500 font-bold text-lg mr-1">{{ $avgRating }}</span>
-                            <span class="text-gray-600 text-sm">/ 5.0</span>
+                            <span class="text-gray-600 text-sm">/5.0</span>
                         </div>
                     @else
                         <span class="text-gray-500">-</span>
                     @endif
                 </x-table.cell>
                 <x-table.cell>
-                    <div class="flex gap-2">
-                        <button onclick="modalAction('{{ route('admin.aduan.show_ajax', $a->id_aduan) }}')"
-                            class="text-blue-600 hover:underline text-sm">
-                            <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
+                    <div class="flex gap-1">
+                        <button onclick="modalAction('{{ route('admin.aduan.show_ajax', $fasilitas->id_fasilitas) }}')"
+                            class="cursor-pointer text-blue-600 hover:underline text-sm">
+                            <img src="{{ asset('icons/solid/Detail.svg') }}" alt="Detail"
+                                class="h-7 w-7 min-h-[27px] min-w-[27px]">
                         </button>
-                        <button onclick="modalAction('{{ route('admin.aduan.comment_ajax', $a->id_aduan) }}')"
+                        <button onclick="modalAction('{{ route('admin.aduan.comment_ajax', $fasilitas->id_fasilitas) }}')"
                             class="text-blue-600 hover:underline text-sm">
-                            <img src="{{ asset('icons/solid/message.svg') }}" alt="" class="h-7 w-7 inline">
+                            <img src="{{ asset('icons/solid/message.svg') }}" alt="Comment"
+                                class="h-7 w-7 min-h-[20px] min-w-[20px]">
                         </button>
                     </div>
                 </x-table.cell>
