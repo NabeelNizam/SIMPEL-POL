@@ -29,6 +29,7 @@ use App\Http\Controllers\{
     WelcomeController,
     PeriodeController,
     PrometheeController,
+    RiwayatSarprasController,
     SarprasPenugasanController,
     SOPController,
     TeknisiPenugasanController,
@@ -250,6 +251,14 @@ Route::middleware(['authorize:SARPRAS'])->group(function () {
         Route::get('/{id}/approve', [PerbaikanSarprasController::class, 'approve'])->name('sarpras.perbaikan.approve');
         Route::get('/export_excel', [PerbaikanSarprasController::class, 'export_excel'])->name('sarpras.perbaikan.export_excel');
         Route::get('/export_pdf', [PerbaikanSarprasController::class, 'export_pdf'])->name('sarpras.perbaikan.export_pdf');
+    });
+    // Riwayat
+    Route::prefix('riwayat')->group(function () {
+        Route::get('/', [RiwayatSarprasController::class, 'index'])->name('sarpras.riwayat');
+        Route::get('/{id}/show_ajax', [RiwayatSarprasController::class, 'show_ajax'])->name('sarpras.riwayat.show_ajax');
+        Route::get('/{id}/comment_ajax', [RiwayatSarprasController::class, 'comment_ajax'])->name('sarpras.riwayat.comment_ajax');
+        Route::get('/export-pdf', [RiwayatSarprasController::class, 'export_pdf'])->name('sarpras.riwayat.export_pdf');
+        Route::get('/export-excel', [RiwayatSarprasController::class, 'export_excel'])->name('sarpras.riwayat.export_excel');
     });
 
 });
