@@ -115,14 +115,14 @@ class LokasiController extends Controller
         }
     }
 
-    public function confirm(gedung $gedung)
+    public function confirm(Gedung $gedung)
     {
         return view('admin.lokasi.confirm')->with([
             'gedung' => $gedung
         ]);
     }
 
-    public function destroy(gedung $gedung)
+    public function destroy(Request $request,Gedung $gedung)
     {
         try {
             if ($gedung->foto_gedung) {
