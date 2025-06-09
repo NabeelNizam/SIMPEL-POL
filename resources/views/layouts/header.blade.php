@@ -11,7 +11,9 @@
 
         <!-- User Profile Dropdown (Right Side) -->
         <div class="flex items-center mr-6">
-            <i class="fas fa-bell mr-2"></i>
+            <button type="button" class="mr-4 cursor-pointer">
+                <img src="{{ asset('icons/light/Bell.svg') }}" alt="notification-icon">
+            </button>
             <div class="relative">
                 <button type="button"
                     class="flex items-center space-x-3 hover:bg-gray-400 p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none cursor-pointer"
@@ -29,6 +31,7 @@
                         <span class="block text-sm text-gray-900 font-medium">{{ auth()->user()->nama }}</span>
                         <span class="block text-sm text-gray-500 truncate">{{ auth()->user()->email }}</span>
                     </div>
+                    <div class="w-40 h-1 bg-orange-400 mx-4 rounded"></div>
                     <ul class="py-2" aria-labelledby="user-menu-button">
                         <li>
                             <a href="/profil"

@@ -16,6 +16,7 @@ use App\Http\Controllers\{
     MahasiswaController,
     PengaduanController,
     PengaduanSarprasController,
+    PenugasanSarprasController,
     PerbaikanController,
     PerbaikanSarprasController,
     PerbaikanTeknisiController,
@@ -36,6 +37,12 @@ Route::get('/', [WelcomeController::class, 'index']);
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'postMasuk']);
 Route::get('/register', [AuthController::class, 'register'])->name('register');
+// Profil
+Route::prefix('profil')->middleware(['auth'])->group(function () {
+    Route::get('/', [ProfilController::class, 'index'])->name('profil');
+    Route::get('/edit_ajax', [ProfilController::class, 'edit_ajax'])->name('profil.edit_ajax');
+    Route::put('/{id}/update_ajax', [ProfilController::class, 'update_ajax']);
+});
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -148,13 +155,6 @@ Route::prefix('pelapor')->middleware(['authorize:MAHASISWA|DOSEN|TENDIK'])->grou
     Route::get('/', [MahasiswaController::class, 'index'])->name('dashboard.mahasiswa');
     Route::get('/sop/download/{filename}', [MahasiswaController::class, 'SOPDownload'])->name('download.sopmhs');
 
-    // Profil
-    Route::prefix('profil')->middleware(['auth'])->group(function () {
-        Route::get('/', [ProfilController::class, 'index'])->name('profil');
-        Route::get('/edit_ajax', [ProfilController::class, 'edit_ajax'])->name('profil.edit_ajax');
-        Route::put('/{id}/update_ajax', [ProfilController::class, 'update_ajax']);
-    });
-
     // Form & Riwayat Mahasiswa
     Route::prefix('form')->group(function () {
         Route::get('/', [FormPelaporanController::class, 'index'])->name('mahasiswa.form');
@@ -182,15 +182,22 @@ Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
     Route::get('/', [SarprasController::class, 'index'])->name('sarpras.dashboard');
     Route::get('/sop/download/{filename}', [SarprasController::class, 'SOPDownload'])->name('download.sop');
 
-    Route::prefix('penugasan')->group(function () {
-        Route::get('/', [SarprasPenugasanController::class, 'index'])->name('sarpras.penugasan');
+    // Route::prefix('form')->group(function () {
+    //     Route::get('/', [FormPelaporanController::class, 'index'])->name('mahasiswa.form');
+    //     Route::get('/create', [FormPelaporanController::class, 'create_ajax'])->name('mahasiswa.form.create_ajax');
+    //     Route::get('/get-lantai', [FormPelaporanController::class, 'getLantai'])->name('mahasiswa.form.get_lantai');
+    //     Route::get('/get-ruangan', [FormPelaporanController::class, 'getRuangan'])->name('mahasiswa.form.get_ruangan');
+    //     Route::get('/get-fasilitas', [FormPelaporanController::class, 'getFasilitas'])->name('mahasiswa.form.get_fasilitas');
+    //     Route::post('/store', [FormPelaporanController::class, 'store'])->name('mahasiswa.form.store_ajax');
+    //     Route::get('/{id}/show_ajax', [FormPelaporanController::class, 'show_ajax'])->name('mahasiswa.form.show_ajax');
+    //     Route::get('/{id}/edit_ajax', [FormPelaporanController::class, 'edit_ajax'])->name('mahasiswa.form.edit_ajax');
+    //     Route::post('/{id}/edit_ajax', [FormPelaporanController::class, 'update_ajax'])->name('mahasiswa.form.update_ajax');
+    // });
+});
 
-        Route::get('/calculate-promethee', [SarprasPenugasanController::class, 'calculatePromethee'])->name('coba-hitung');
-        // Route::get('/{id}/show_ajax', [SarprasPenugasanController::class, 'show_ajax'])->name('mahasiswa.riwayat.show_ajax');
-        // Route::get('/{id}/edit_ajax', [SarprasPenugasanController::class, 'edit_ajax'])->name('mahasiswa.riwayat.edit_ajax');
-    });
-
-    Route::prefix('bobot')->group(function () {
+Route::middleware(['authorize:SARPRAS'])->group(function () {
+    // Bobot
+    Route::prefix('/bobot')->group(function () {
         Route::get('/', [KriteriaController::class, 'index'])->name('sarpras.bobot');
         Route::get('/edit', [KriteriaController::class, 'edit'])->name('sarpras.bobot.edit');
         Route::put('/update', [KriteriaController::class, 'update'])->name('sarpras.bobot.update');
@@ -198,25 +205,34 @@ Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
         Route::get('/export_excel', [KriteriaController::class, 'export_excel'])->name('sarpras.bobot.export_excel');
     });
 
-    Route::prefix('kriteria')->group(function () {
-        Route::post('/list', [KriteriaController::class, 'list']);
+    // Pengaduan
+    Route::prefix('pengaduan')->group(function () {
+        Route::get('/', [PengaduanSarprasController::class, 'index'])->name('sarpras.pengaduan');
+        Route::get('/{id}/detail_pengaduan', [PengaduanSarprasController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
+        Route::get('/{id}/penugasan_teknisi', [PengaduanSarprasController::class, 'penugasan_teknisi'])->name('sarpras.pengaduan.edit');
+        Route::put('/{id}/confirm_penugasan', [PengaduanSarprasController::class, 'confirm_penugasan'])->name('sarpras.pengaduan.update');
+        Route::get('/export_excel', [PengaduanSarprasController::class, 'export_excel'])->name('sarpras.pengaduan.export_excel');
+        Route::get('/export_pdf', [PengaduanSarprasController::class, 'export_pdf'])->name('sarpras.pengaduan.export_pdf');
     });
 
+    // Penugasan
+    Route::prefix('/penugasan')->group(function () {
+        Route::get('/', [PenugasanSarprasController::class, 'index'])->name('sarpras.penugasan');
+        Route::get('/{inspeksi}/detail_inspeksi', [PenugasanSarprasController::class, 'show_penugasan'])->name('sarpras.penugasan.show');
+        Route::get('/{inspeksi}/penugasan_teknisi', [PenugasanSarprasController::class, 'penugasan_teknisi'])->name('sarpras.penugasan.confirm');
+        Route::post('/confirm_penugasan', [PenugasanSarprasController::class, 'store_penugasan'])->name('sarpras.penugasan.store');
+    });
+
+    // Perbaikan
     Route::prefix('perbaikan')->group(function () {
         Route::get('/', [PerbaikanSarprasController::class, 'index'])->name('sarpras.perbaikan');
-        Route::get('/{id}/show_ajax', [PerbaikanSarprasController::class, 'show_ajax'])->name('sarpras.perbaikan.show');
-        Route::get('/{id}/approve', [PerbaikanSarprasController::class, 'show_ajax'])->name('sarpras.perbaikan.approve');
+        Route::get('/{id}/show_perbaikan', [PerbaikanSarprasController::class, 'show_perbaikan'])->name('sarpras.perbaikan.show');
+        Route::get('/{id}/confirm_approval', [PerbaikanSarprasController::class, 'confirm_approval'])->name('sarpras.perbaikan.confirm_approval');
+        Route::get('/{id}/approve', [PerbaikanSarprasController::class, 'approve'])->name('sarpras.perbaikan.approve');
+        Route::get('/export_excel', [PerbaikanSarprasController::class, 'export_excel'])->name('sarpras.perbaikan.export_excel');
+        Route::get('/export_pdf', [PerbaikanSarprasController::class, 'export_pdf'])->name('sarpras.perbaikan.export_pdf');
     });
-});
 
-Route::middleware(['authorize:SARPRAS'])->group(function () {
-    Route::get('/pengaduan', [PengaduanSarprasController::class, 'index'])->name('sarpras.pengaduan');
-    Route::get('/pengaduan/{id}/detail_pengaduan', [PengaduanSarprasController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
-    Route::get('/pengaduan/{id}/penugasan_teknisi', [PengaduanSarprasController::class, 'penugasan_teknisi'])->name('sarpras.pengaduan.edit');
-    Route::put('/pengaduan/{id}/confirm_penugasan', [PengaduanSarprasController::class, 'confirm_penugasan'])->name('sarpras.pengaduan.update');
-    Route::get('/penugasan', [FasilitasController::class, 'penugasan']);
-    Route::get('/perbaikan', [PerbaikanSarprasController::class, 'perbaikan']);
-    Route::get('/perbaikan', [PerbaikanSarprasController::class, 'riwayat']);
 });
 
 // Teknisi

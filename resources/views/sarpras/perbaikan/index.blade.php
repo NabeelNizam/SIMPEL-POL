@@ -3,7 +3,7 @@
 @section('content')
     <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-600">
         <div class="flex items-center justify-between mb-4">
-            <span class="text-sm text-gray-700">Daftar Riwayat Perbaikan yang terdaftar dalam sistem</span>
+            <span class="text-sm text-gray-700">Daftar Proses Perbaikan Fasilitas</span>
         </div>
         <hr class="border-black opacity-30 mt-4">
 
@@ -15,7 +15,7 @@
                     <option value="">Semua Periode</option>
                     @foreach ($periode as $p)
                         <option value="{{ $p->id_periode }}" {{ request('id_periode') == $p->id_periode ? 'selected' : '' }}>
-                            {{ $p->nama_periode }}
+                            {{ $p->kode_periode }}
                         </option>
                     @endforeach
                 </select>
@@ -26,17 +26,37 @@
                 <label for="status" class="text-sm font-medium text-gray-700">Filter Status:</label>
                 <select id="status" name="status" class="w-48 border border-gray-300 rounded-md shadow-sm sm:text-sm">
                     <option value="">Semua Status</option>
-                    @foreach (\App\Http\Enums\Status::cases() as $status)
-                        <option value="{{ $status->value }}" {{ request('status') == $status->value ? 'selected' : '' }}>
-                            {{ $status->value }}
+                    @foreach ($status as $s)
+                        <option value="{{ $s->value }}" {{ request('status') == $s->value ? 'selected' : '' }}>
+                            {{ $s->value }}
                         </option>
                     @endforeach
                 </select>
             </div>
         </form>
 
+<div class="flex justify-between items-center mb-4">
+            <!-- Pagination -->
+            <div class="flex items-center gap-2">
+                <label for="per_page" class="text-sm font-medium text-gray-700">Show:</label>
+                <select id="per_page" name="per_page" class="border border-gray-300 rounded-md shadow-sm sm:text-sm">
+                    @foreach ([10, 25, 50, 100] as $length)
+                        <option value="{{ $length }}" {{ request('per_page', 10) == $length ? 'selected' : '' }}>{{ $length }}
+                        </option>
+                    @endforeach
+                </select>
+                <span class="text-sm text-gray-700">entries</span>
+            </div>
+            <!-- Pencarian -->
+            <div class="flex items-center gap-2">
+                <label for="search" class="text-sm font-medium text-gray-700">Pencarian: </label>
+                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari Fasilitas..."
+                    class="w-64 border border-gray-300 rounded-md shadow-sm sm:text-sm" />
+            </div>
+        </div>
+
         <div id="perbaikan-table-body">
-            @include('sarpras.perbaikan.perbaikan_table', ['aduan' => $aduan])
+            @include('sarpras.perbaikan.perbaikan_table', ['perbaikan' => $perbaikan])
         </div>
     </div>
 

@@ -53,5 +53,12 @@ class Inspeksi extends Model
         });
         return $aduan->first()?->status;
     }
-
+    public function getUserCountAttribute()
+    {
+        return Aduan::where('id_fasilitas', $this->id_fasilitas)
+            ->whereHas('periode', function ($query) {
+                $query->where('tanggal_selesai', '<=', $this->periode->tanggal_selesai);
+            })
+            ->count();
+    }
 }
