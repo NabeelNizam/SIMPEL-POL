@@ -81,6 +81,9 @@ class SarprasController extends Controller
             ];
         });
 
+        $sedangLogin = Auth::user()->role->nama_role;
+        $sedangLogin = strtolower(Auth::user()->role->nama_role);
+
         return view('sarpras.dashboard', compact(
             'breadcrumb',
             'page',
@@ -94,7 +97,8 @@ class SarprasController extends Controller
             'statusPerbaikan',
             'kategoriKerusakan',
             'trenKerusakan',
-            'trenAnggaran'
+            'trenAnggaran',
+            'sedangLogin',
         ));
     }
     public function SOPDownload($filename)

@@ -47,10 +47,13 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/edit_ajax', [ProfilController::class, 'edit_ajax'])->name('profil.edit_ajax');
         Route::put('/{id}/update_ajax', [ProfilController::class, 'update_ajax']);
     });
+    Route::prefix('sop')->middleware(['auth'])->group(function () {
+        Route::get('/download/{role}/{filename}', [SOPController::class, 'SOPDownload'])->name('sopDownload');
+    });
 // Admin Routes
 Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::get('/sop/download/{filename}', [AdminController::class, 'SOPDownload'])->name('sopDownload');
+    
 
     // Pengguna
     Route::prefix('pengguna')->group(function () {
@@ -202,8 +205,6 @@ Route::prefix('pelapor')->middleware(['authorize:MAHASISWA|DOSEN|TENDIK'])->grou
 Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
 
     Route::get('/', [SarprasController::class, 'index'])->name('sarpras.dashboard');
-    Route::get('/sop/download/{filename}', [SarprasController::class, 'SOPDownload'])->name('download.sop');
-
     Route::prefix('penugasan')->group(function () {
         Route::get('/', [SarprasPenugasanController::class, 'index'])->name('sarpras.penugasan');
 

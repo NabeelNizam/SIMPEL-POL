@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class TeknisiController extends Controller
@@ -19,9 +20,11 @@ class TeknisiController extends Controller
         ];
 
         $activeMenu = 'home';
+        
+        $sedangLogin = Auth::user()->role->nama_role;
+        $sedangLogin = strtolower(Auth::user()->role->nama_role);
 
-
-        return view('teknisi.dashboard', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
+        return view('teknisi.dashboard', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu, 'sedangLogin' => $sedangLogin]);
     }
 
     public function SOPDownload($filename)

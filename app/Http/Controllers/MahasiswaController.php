@@ -49,12 +49,15 @@ class MahasiswaController extends Controller
             $html = view('mahasiswa.dashboard_card', compact('aduan'))->render();
             return response()->json(['html' => $html]);
         }
+        $sedangLogin = Auth::user()->role->nama_role;
+        $sedangLogin = strtolower(Auth::user()->role->nama_role);
 
         return view('mahasiswa.dashboard', [
             'breadcrumb' => $breadcrumb, 
             'page' => $page, 
             'activeMenu' => $activeMenu,
-            'aduan'=> $aduan
+            'aduan'=> $aduan,
+            'sedangLogin' => $sedangLogin,
         ]);
     }
 

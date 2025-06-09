@@ -13,6 +13,7 @@ use App\Models\Role;
 use App\Models\UmpanBalik;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -92,6 +93,9 @@ class AdminController extends Controller
             ];
         });
 
+        $sedangLogin = Auth::user()->role->nama_role;
+        $sedangLogin = strtolower(Auth::user()->role->nama_role);
+
         return view('admin.dashboard', compact(
             'breadcrumb',
             'page',
@@ -105,33 +109,11 @@ class AdminController extends Controller
             'statusPerbaikan',
             'kategoriKerusakan',
             'trenKerusakan',
-            'trenAnggaran'
+            'trenAnggaran',
+            'sedangLogin'
         ));
     }
-    public function SOPDownload($filename)
-    {
-        $role = 'admin'; // Bisa juga ambil dari auth jika dinamis
-        $filePath = "documents/{$role}/{$filename}";
-
-        // Cek apakah file ada di storage
-        if (!Storage::disk('public')->exists($filePath)) {
-            abort(404, 'File SOP tidak ditemukan.');
-        }
-
-        // Cegah akses ke file berbahaya
-        if (
-            str_contains($filename, '..') ||
-            str_contains($filename, '/') ||
-            str_contains($filename, '\\')
-        ) {
-            abort(403, 'Akses tidak sah.');
-        }
-
-        // Jalankan download menggunakan response()->download()
-        return response()->download(storage_path("app/public/{$filePath}"));
-    }
-
-
+    
     public function pengguna(Request $request)
     {
         $breadcrumb = (object) [
@@ -144,6 +126,8 @@ class AdminController extends Controller
         ];
 
         $activeMenu = 'pengguna';
+
+        $sedangLogin = auth()->user()->nama_role;
 
         $role = Role::all();
         $query = User::with('role');
@@ -176,13 +160,14 @@ class AdminController extends Controller
             $html = view('admin.pengguna.user_table', compact('users'))->render();
             return response()->json(['html' => $html]);
         }
-
+        
         return view('admin.pengguna.user', [
             'breadcrumb' => $breadcrumb,
             'page' => $page,
             'activeMenu' => $activeMenu,
             'role' => $role,
             'users' => $users,
+            'sedangLogin' => $sedangLogin,
         ]);
     }
     public function create_ajax()
