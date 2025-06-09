@@ -47,11 +47,31 @@ class PerbaikanSarprasController extends Controller
             });
 
 
+
+        if ($request->search) {
+            $query->where('nama_fasilitas', 'like', "%{$request->search}%");
+        }
+
+        // Filter berdasarkan periode
+        if ($request->id_periode) {
+            $query->whereHas('aduan', function ($q) use ($request) {
+                $q->where('id_periode', $request->id_periode);
+            });
+        }
+        // Filter berdasarkan status
+        if ($request->status) {
+            $query->whereHas('aduan', function ($q) use ($request) {
+                $q->where('status', $request->status);
+            });
+        }
+
         $perPage = $request->input('per_page', 10);
         $perbaikan = $query->paginate($perPage);
 
         $periode = Periode::all();
-        $status = Status::cases();
+        $status  = array_filter(Status::cases(), function ($case) {
+            return in_array($case->value, ['SEDANG_DIPERBAIKI', 'SELESAI']);
+        });;
 
         if ($request->ajax()) {
             $html = view('sarpras.perbaikan.perbaikan_table', compact('perbaikan'))->render();
@@ -82,7 +102,8 @@ class PerbaikanSarprasController extends Controller
     public function approve($id)
     {
         try {
-            Aduan::where('id_fasilitas', $id)->update(['status' => 'SELESAI']);
+            Aduan::where('id_fasilitas', $id)->where('status', Status::SEDANG_DIPERBAIKI->value)
+                ->update(['status' => Status::SELESAI->value]);
             return redirect()->back()->with('success', 'Berhasil Perbaharui Status Aduan Fasilitas.');
         } catch (\Exception $e) {
             Log::error('Gagal Menandai sebagai Selesai: ' . $e->getMessage());
