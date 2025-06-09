@@ -154,7 +154,7 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
 Route::prefix('pelapor')->middleware(['authorize:MAHASISWA|DOSEN|TENDIK'])->group(function () {
     Route::get('/', [MahasiswaController::class, 'index'])->name('dashboard.mahasiswa');
 
-    
+
 
     // Form & Riwayat Mahasiswa
     Route::prefix('form')->group(function () {
@@ -229,7 +229,7 @@ Route::prefix('teknisi')->middleware(['authorize:TEKNISI'])->group(function () {
         Route::get('/', [TeknisiPenugasanController::class, 'index'])->name('teknisi.penugasan');
         Route::get('/{id}/show_ajax', [TeknisiPenugasanController::class, 'show_ajax'])->name('teknisi.penugasan.show_ajax');
         Route::get('/{id}/edit_ajax', [TeknisiPenugasanController::class, 'edit_ajax'])->name('teknisi.penugasan.edit_ajax');
-        Route::put('/{id}/update_ajax', [TeknisiPenugasanController::class, 'update_ajax'])->name('teknisi.penugasan.update_ajax');
+        Route::put('/{inspeksi}/update_ajax', [TeknisiPenugasanController::class, 'update_ajax'])->name('teknisi.penugasan.update_ajax');
     });
     Route::prefix('riwayat')->group(function () {
         Route::get('/', [RiwayatTeknisiController::class, 'index'])->name('teknisi.riwayat');
