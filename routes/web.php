@@ -198,13 +198,6 @@ Route::prefix('sarpras')->middleware(['authorize:SARPRAS'])->group(function () {
     Route::prefix('kriteria')->group(function () {
         Route::post('/list', [KriteriaController::class, 'list']);
     });
-
-    Route::prefix('perbaikan')->group(function () {
-        Route::get('/', [PerbaikanSarprasController::class, 'index'])->name('sarpras.perbaikan');
-        Route::get('/{id}/show_perbaikan', [PerbaikanSarprasController::class, 'show_perbaikan'])->name('sarpras.perbaikan.show');
-        Route::get('/{id}/confirm_approval', [PerbaikanSarprasController::class, 'confirm_approval'])->name('sarpras.perbaikan.confirm_approval');
-        Route::get('/{id}/approve', [PerbaikanSarprasController::class, 'approve'])->name('sarpras.perbaikan.approve');
-    });
 });
 
 Route::middleware(['authorize:SARPRAS'])->group(function () {
@@ -213,14 +206,20 @@ Route::middleware(['authorize:SARPRAS'])->group(function () {
         Route::get('/{id}/detail_pengaduan', [PengaduanSarprasController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
         Route::get('/{id}/penugasan_teknisi', [PengaduanSarprasController::class, 'penugasan_teknisi'])->name('sarpras.pengaduan.edit');
         Route::put('/{id}/confirm_penugasan', [PengaduanSarprasController::class, 'confirm_penugasan'])->name('sarpras.pengaduan.update');
+        Route::get('/export_excel', [PengaduanSarprasController::class, 'export_excel'])->name('sarpras.pengaduan.export_excel');
+        Route::get('/export_pdf', [PengaduanSarprasController::class, 'export_pdf'])->name('sarpras.pengaduan.export_pdf');
     });
     Route::get('/penugasan', [FasilitasController::class, 'penugasan']);
-
+    
     Route::prefix('perbaikan')->group(function () {
         Route::get('/', [PerbaikanSarprasController::class, 'index'])->name('sarpras.perbaikan');
         Route::get('/{id}/show_perbaikan', [PerbaikanSarprasController::class, 'show_perbaikan'])->name('sarpras.perbaikan.show');
+        Route::get('/{id}/confirm_approval', [PerbaikanSarprasController::class, 'confirm_approval'])->name('sarpras.perbaikan.confirm_approval');
         Route::get('/{id}/approve', [PerbaikanSarprasController::class, 'approve'])->name('sarpras.perbaikan.approve');
+        Route::get('/export_excel', [PerbaikanSarprasController::class, 'export_excel'])->name('sarpras.perbaikan.export_excel');
+        Route::get('/export_pdf', [PerbaikanSarprasController::class, 'export_pdf'])->name('sarpras.perbaikan.export_pdf');
     });
+
 });
 
 // Teknisi
