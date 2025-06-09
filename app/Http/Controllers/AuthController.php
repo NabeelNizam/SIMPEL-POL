@@ -14,7 +14,7 @@ class AuthController extends Controller
 {
     public function login()
     {
-        if (Auth::check()) { 
+        if (Auth::check()) {
             return redirect('/');
         }
         return view('auth.login');
@@ -57,7 +57,7 @@ public function postMasuk(Request $request)
             }  elseif($role == 'TEKNISI'){
                 $redirectUrl = url('/teknisi');
             } elseif (in_array($role, ['MAHASISWA', 'DOSEN', 'TENDIK'])) {
-                $redirectUrl = url('/user');
+                $redirectUrl = url('/pelapor');
             }elseif ($role == 'TEKNISI') {
                 $redirectUrl = url('/teknisi');
             }elseif ($role == 'SARPRAS') {

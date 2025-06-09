@@ -26,35 +26,42 @@ class PengaduanSarprasController extends Controller
         ];
 
         $activeMenu = 'pengaduan';
+        $pelapor = '';
 
         // Query untuk Pengaduan
         $query = Fasilitas::with(['kategori', 'ruangan', 'aduan.pelapor.role', 'inspeksi'])
-        // ->whereDoesntHave('inspeksi')
-        ;
+            ->whereDoesntHave('inspeksi')
+            ;
 
-if ($request->has('filter_user') && $request->filter_user != 'all') {
-    $filterRole = $request->filter_user;
+        if ($request->has('filter_user') && $request->filter_user != 'all') {
+            $pelapor = match ($request->filter_user) {
+                '1' => ' Mahasiswa',
+                '5' => ' Dosen',
+                '6' => ' Tendik',
+                default => '' // Opsional: untuk menangani nilai yang tidak sesuai
+            };
 
-    // Filter dan count hanya aduan dari pelapor dengan role tertentu
-    $query->withCount([
-        'aduan as aduan_count' => function ($q) use ($filterRole) {
-            $q->whereHas('pelapor', function ($q2) use ($filterRole) {
-                $q2->where('id_role', $filterRole);
+            $filterRole = $request->filter_user;
+
+            // Filter dan count hanya aduan dari pelapor dengan role tertentu
+            $query->withCount([
+                'aduan as aduan_count' => function ($q) use ($filterRole) {
+                    $q->whereHas('pelapor', function ($q2) use ($filterRole) {
+                        $q2->where('id_role', $filterRole);
+                    });
+                }
+            ]);
+
+            // Filter hanya fasilitas yang punya aduan dari pelapor dengan role tersebut
+            $query->whereHas('aduan', function ($q) use ($filterRole) {
+                $q->whereHas('pelapor', function ($q2) use ($filterRole) {
+                    $q2->where('id_role', $filterRole);
+                });
             });
+        } else {
+            // Jika tidak difilter berdasarkan role
+            $query->withCount('aduan');
         }
-    ]);
-
-    // Filter hanya fasilitas yang punya aduan dari pelapor dengan role tersebut
-    $query->whereHas('aduan', function ($q) use ($filterRole) {
-        $q->whereHas('pelapor', function ($q2) use ($filterRole) {
-            $q2->where('id_role', $filterRole);
-        });
-    });
-
-} else {
-    // Jika tidak difilter berdasarkan role
-    $query->withCount('aduan');
-}
 
         // Filter berdasarkan pencarian
         if ($request->search) {
@@ -85,11 +92,11 @@ if ($request->has('filter_user') && $request->filter_user != 'all') {
         $kategori = Kategori::all();
 
         if ($request->ajax()) {
-            $html = view('sarpras.pengaduan.table', compact('pengaduan'))->render();
+            $html = view('sarpras.pengaduan.table', compact('pengaduan', 'pelapor'))->render();
             return response()->json(['html' => $html]);
         }
 
-        return view('sarpras.pengaduan.index', compact('breadcrumb', 'page', 'activeMenu', 'pengaduan', 'kategori'));
+        return view('sarpras.pengaduan.index', compact('breadcrumb', 'page', 'activeMenu', 'pengaduan', 'kategori', 'pelapor'));
     }
 
     // Detail Fasilitas & Laporan Pengaduan nya
@@ -109,23 +116,23 @@ if ($request->has('filter_user') && $request->filter_user != 'all') {
         $teknisi = User::where('id_role', 3)->get();
         return view('sarpras.pengaduan.edit', ['fasilitas' => $fasilitas, 'aduan' => $aduan, 'teknisi' => $teknisi]);
     }
-    
+
     public function confirm_penugasan(Request $request, $id)
     {
         $periodeSekarang = Periode::getPeriodeAktif();
-        
+
         try {
             Inspeksi::create([
-            'id_user_teknisi' => $request->id_teknisi,
-            'id_user_sarpras' => auth()->user()->id_user,
-            'id_fasilitas' => $id,
-            'id_periode' => $periodeSekarang->id_periode,
-            'tanggal_mulai' => now(),
-        ]);    
-        // dd($query->toSql(), $query->getBindings());
+                'id_user_teknisi' => $request->id_teknisi,
+                'id_user_sarpras' => auth()->user()->id_user,
+                'id_fasilitas' => $id,
+                'id_periode' => $periodeSekarang->id_periode,
+                'tanggal_mulai' => now(),
+            ]);
+            // dd($query->toSql(), $query->getBindings());
             return redirect()->back()->with('success', 'Berhasil menugaskan inspeksi.');
         } catch (\Exception $e) {
-            Log::error('Gagal menugaskan teknisi: '.$e->getMessage());
+            Log::error('Gagal menugaskan teknisi: ' . $e->getMessage());
             return redirect()->back()->withErrors(['general' => 'Gagal menugaskan teknisi.']);
         }
     }

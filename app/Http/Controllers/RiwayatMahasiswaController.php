@@ -24,7 +24,7 @@ class RiwayatMahasiswaController extends Controller
         $activeMenu = 'riwayat';
 
         // query untuk aduan
-        $query = Aduan::with(['pelapor', 'fasilitas.kategori', 'fasilitas.ruangan', 'umpan_balik', 'perbaikan'])
+        $query = Aduan::with(['pelapor', 'fasilitas.kategori', 'fasilitas.ruangan', 'umpan_balik'])
             ->where('id_user_pelapor', auth()->user()->id_user)
             ->where('status', '=', 'SELESAI'); // Hanya ambil aduan selesai
 
@@ -66,7 +66,7 @@ class RiwayatMahasiswaController extends Controller
 
     public function show_ajax($id)
     {
-        $aduan = Aduan::with(['pelapor', 'fasilitas.kategori', 'fasilitas.ruangan.lantai.gedung', 'umpan_balik', 'perbaikan'])
+        $aduan = Aduan::with(['pelapor', 'fasilitas.kategori', 'fasilitas.ruangan.lantai.gedung', 'umpan_balik', ])
             ->where('id_user_pelapor', auth()->user()->id_user)->findOrFail($id);
         $user = $aduan->pelapor; 
         return view('mahasiswa.riwayat.detail', compact('aduan', 'user'))->render();

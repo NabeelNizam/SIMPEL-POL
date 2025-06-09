@@ -38,51 +38,40 @@
             <!-- Detail Aduan -->
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-1">Lokasi</label>
+                    <label class="block text-sm leading-relaxed text-gray-600 mb-1">Lokasi</label>
                     @php
                         $ruangan = $aduan->fasilitas->ruangan;
                         $lantai = $ruangan->lantai;
                         $gedung = $lantai->gedung;
                     @endphp
-                    <p class="text-gray-800 font-semibold">
-                        {{ $gedung->nama_gedung ?? '-' }}{{ $lantai ? ', Lt. ' . $lantai->nama_lantai : '' }}{{ $ruangan ? ', ' . $ruangan->nama_ruangan : '' }}
+                    <p class="text-gray-700 text-sm font-semibold">
+                        {{ $gedung->nama_gedung ?? '-' }}{{ $lantai ? ', ' . $lantai->nama_lantai : '' }}{{ $ruangan ? ', ' . $ruangan->nama_ruangan : '' }}
                     </p>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-1">Deskripsi Kerusakan</label>
-                    <p class="text-gray-700 text-sm leading-relaxed">{{ $aduan->deskripsi ?? '-' }}</p>
+                    <label class="block text-sm leading-relaxed text-gray-600 mb-1">Deskripsi Kerusakan</label>
+                    <p class="text-gray-700 text-sm font-semibold">{{ $aduan->deskripsi ?? '-' }}</p>
                 </div>
 
                 <div class="flex items-center gap-16">
                     <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-1">Tanggal Lapor</label>
-                        <p class="text-gray-800 font-semibold">
+                        <label class="block text-sm leading-relaxed text-gray-600 mb-1">Tanggal Lapor</label>
+                        <p class="text-gray-700 text-sm font-semibold">
                             {{ $aduan->tanggal_aduan ? \Carbon\Carbon::parse($aduan->tanggal_aduan)->format('d/m/Y') : '-' }}
                         </p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-1">Tanggal Perbaikan</label>
-                        <p class="text-gray-800 font-semibold">
+                        <label class="block text-sm leading-relaxed text-gray-600 mb-1">Tanggal Perbaikan</label>
+                        <p class="text-gray-700 text-sm font-semibold">
                             {{ $aduan->tanggal_perbaikan ? \Carbon\Carbon::parse($aduan->tanggal_perbaikan)->format('d/m/Y') : '-' }}
                         </p>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-1">Status</label>
-                    <span class="px-3 py-1 rounded-full text-white text-sm
-                        @if($aduan->status === \App\Http\Enums\Status::SELESAI)
-                            bg-green-500
-                        @elseif($aduan->status === \App\Http\Enums\Status::MENUNGGU_DIPROSES)
-                            bg-blue-500
-                        @elseif($aduan->status === \App\Http\Enums\Status::SEDANG_INSPEKSI)
-                            bg-yellow-500
-                        @elseif($aduan->status === \App\Http\Enums\Status::SEDANG_DIPERBAIKI)
-                            bg-orange-500
-                        @else
-                            bg-gray-500
-                        @endif">
+                    <label class="block text-sm leading-relaxed text-gray-600 mb-1">Status</label>
+                    <span class="px-3 py-1 rounded text-white text-sm bg-green-500 w-32 text-center block">
                         {{ $aduan->status->value }}
                     </span>
                 </div>
@@ -102,7 +91,7 @@
 
         <div class="space-y-4">
             <div>
-                <label class="block text-sm font-medium text-gray-600 mb-2">Umpan Balik</label>
+                <label class="block text-sm leading-relaxed text-gray-600 mb-1">Umpan Balik</label>
                 @if($aduan->umpan_balik && $aduan->umpan_balik->rating)
                     <div class="flex items-center space-x-1 mb-2">
                         @for($i = 1; $i <= $aduan->umpan_balik->rating; $i++)
@@ -110,9 +99,9 @@
                         @endfor
                         <span class="pl-1 text-[13px] font-medium">{{ $aduan->umpan_balik->rating }}/5</span>
                     </div>
-                    <p class="text-gray-800 font-semibold">{{ $aduan->umpan_balik->komentar ?? '-' }}</p>
+                    <p class="text-gray-700 text-sm font-semibold">{{ $aduan->umpan_balik->komentar ?? '-' }}</p>
                 @else
-                    <span class="text-gray-500">Belum ada umpan balik.</span>
+                    <span class="text-gray-700 text-sm font-semibold">Belum ada umpan balik.</span>
                 @endif
             </div>
         </div>
