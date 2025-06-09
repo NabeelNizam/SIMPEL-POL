@@ -1,3 +1,5 @@
+{{ $form_autofill = env('FORM_AUTOFILL', false) }}
+
 <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative space-y-6 border-t-4 border-blue-600 max-h-screen overflow-y-auto">
     {{-- Tombol Close --}}
     <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl">
@@ -74,7 +76,7 @@
                 <div>
                     <p class="text-gray-500">Deskripsi Pekerjaan</p>
                     <textarea name="deskripsi_pekerjaan" id="deskripsi_pekerjaan" rows="4"
-                              class="w-full mt-2 p-2 border rounded">{{ $inspeksi->perbaikan->deskripsi ?? '' }}</textarea>
+                              class="w-full mt-2 p-2 border rounded">{{ $inspeksi->deskripsi ?? '' }}</textarea>
                 </div>
             </div>
         </div>
@@ -97,7 +99,7 @@
                         </tr>
                     </thead>
                     <tbody id="anggaran-body">
-                        @forelse ($biaya as $index => $item)
+                        @forelse ($inspeksi->biaya as $index => $item)
                             <tr>
                                 <td class="border p-2">{{ $index + 1 }}</td>
                                 <td class="border p-2">
@@ -127,9 +129,8 @@
                     </tfoot>
                 </table>
             </div>
-
             <div class="text-right mt-4 font-semibold text-blue-600">
-                Total: Rp <span id="total-anggaran">{{ number_format($biaya->sum('besaran'), 0, ',', '.') }}</span>
+                Total: Rp <span id="total-anggaran">{{ number_format($inspeksi->biaya->sum('besaran'), 0, ',', '.') }}</span>
             </div>
         </div>
 

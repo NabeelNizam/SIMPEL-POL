@@ -64,7 +64,7 @@
             </div>
             <div>
                 <p class="text-gray-500">Deskripsi Pekerjaan</p>
-                <p class="mt-2 font-semibold">{{ $inspeksi->perbaikan->deskripsi ?? '-' }}</p>
+                <p class="mt-2 font-semibold">{{ $inspeksi->deskripsi ?? '-' }}</p>
             </div>
         </div>
     </div>
@@ -85,7 +85,7 @@
                     </tr>
                 </thead>
                 <tbody class="text-gray-800">
-                    @forelse ($biaya as $index => $item)
+                    @forelse ($inspeksi->biaya as $index => $item)
                         <tr>
                             <td class="border p-2">{{ $index + 1 }}</td>
                             <td class="border p-2">{{ $item->keterangan }}</td>
@@ -97,7 +97,7 @@
                         </tr>
                     @endforelse
                 </tbody>
-                @if ($biaya->isNotEmpty())
+                @if ($inspeksi->biaya->isNotEmpty())
                     <tfoot>
                         <tr class="font-bold bg-gray-50">
                             <td colspan="2" class="border p-2 text-right">Total (Rp):</td>
