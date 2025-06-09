@@ -1,5 +1,5 @@
 <!-- Modal Konten Detail Fasilitas -->
-<div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative max-h-[70%] overflow-y-auto">
+<div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative max-h-[80%] overflow-y-auto">
 
     <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl cursor-pointer">
         <i class="fas fa-times"></i>
