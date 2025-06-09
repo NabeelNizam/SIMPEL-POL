@@ -1,17 +1,26 @@
 <!-- Sidebar - Left Side -->
 <div id="sidebar" class="sidebar w-64 bg-white shadow-lg z-40">
-    <!-- Logo at the top of sidebar -->
+    {{-- <!-- Logo at the top of sidebar -->
     <div class="flex items-center justify-center h-16 bg-white">
         <span class="text-lg font-bold text-black-800 flex items-center">
             <img src="{{ asset('img/logo primer.svg') }}" alt="SIMPEL-POL Logo" class="h-6 mr-2">
             SIMPEL-POL
         </span>
-    </div>
+    </div> --}}
 
     <!-- Sidebar Navigation -->
     @if (Auth::check())
         @if (Auth::user()->id_role == 2)
             {{-- Admin --}}
+            <!-- Logo at the top of sidebar -->
+            <div class="flex items-center justify-center h-16 bg-white">
+                <a href="{{ route('admin.dashboard') }}">
+                    <span class="text-lg font-bold text-black-800 flex items-center">
+                        <img src="{{ asset('img/logo primer.svg') }}" alt="SIMPEL-POL Logo" class="h-6 mr-2">
+                        SIMPEL-POL
+                    </span>
+                </a>
+            </div>
             <div class="h-full overflow-y-auto">
                 <nav class="p-4 space-y-4 text-sm text-gray-700">
                     <a href="{{ route('admin.dashboard') }}"
@@ -111,6 +120,15 @@
             </div>
         @elseif(in_array(Auth::user()->id_role, [1, 5, 6]))
             {{-- Mahasiswa|Dosen|Tendik --}}
+            <!-- Logo at the top of sidebar -->
+            <div class="flex items-center justify-center h-16 bg-white">
+                <a href="{{ route('dashboard.mahasiswa') }}">
+                    <span class="text-lg font-bold text-black-800 flex items-center">
+                        <img src="{{ asset('img/logo primer.svg') }}" alt="SIMPEL-POL Logo" class="h-6 mr-2">
+                        SIMPEL-POL
+                    </span>
+                </a>
+            </div>
             <div class="h-full overflow-y-auto">
                 <nav class="p-4 space-y-4 text-sm text-gray-700">
                     <a href="{{ route('dashboard.mahasiswa') }}"
@@ -142,6 +160,15 @@
             </div>
         @elseif(Auth::user()->id_role == 3)
             {{-- Teknisi --}}
+            <!-- Logo at the top of sidebar -->
+            <div class="flex items-center justify-center h-16 bg-white">
+                <a href="{{ route('teknisi.dashboard') }}">
+                    <span class="text-lg font-bold text-black-800 flex items-center">
+                        <img src="{{ asset('img/logo primer.svg') }}" alt="SIMPEL-POL Logo" class="h-6 mr-2">
+                        SIMPEL-POL
+                    </span>
+                </a>
+            </div>
             <div class="h-full overflow-y-auto">
                 <nav class="p-4 space-y-4 text-sm text-gray-700">
                     <a href="{{ route('teknisi.dashboard') }}"
@@ -180,6 +207,15 @@
             </div>
         @elseif(Auth::user()->id_role == 4)
             {{-- Sarpras --}}
+            <!-- Logo at the top of sidebar -->
+            <div class="flex items-center justify-center h-16 bg-white">
+                <a href="{{ route('sarpras.dashboard') }}">
+                    <span class="text-lg font-bold text-black-800 flex items-center">
+                        <img src="{{ asset('img/logo primer.svg') }}" alt="SIMPEL-POL Logo" class="h-6 mr-2">
+                        SIMPEL-POL
+                    </span>
+                </a>
+            </div>
             <div class="h-full overflow-y-auto">
                 <nav class="p-4 space-y-4 text-sm text-gray-700">
                     <a href="/sarpras"

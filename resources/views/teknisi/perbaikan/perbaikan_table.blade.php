@@ -21,8 +21,8 @@
                 <x-table.cell>{{ $a->tanggal_selesai ?? '-' }}</x-table.cell>
                 <x-table.cell>
                     <span
-                        class="px-2 py-1 rounded text-white {{ $a->status_aduan->value === 'SELESAI' ? 'bg-green-500' : 'bg-yellow-500' }}">
-                        {{ $a->status_aduan->value }}
+                        class="px-2 py-1 rounded text-white {{ $a->status === 'SELESAI' ? 'bg-green-500' : 'bg-yellow-500' }}">
+                        {{ $a->status }}
                     </span>
                 </x-table.cell>
                 <x-table.cell class="px-4 py-2">
