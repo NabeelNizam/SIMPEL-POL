@@ -40,20 +40,20 @@
                     </span>
                 </x-table.cell>
                 <x-table.cell>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 min-w-[80px]">
                         <button onclick="modalAction('{{ route('mahasiswa.form.show_ajax', $item->id_aduan) }}')"
-                            class="text-blue-600 hover:underline text-sm">
-                            <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
+                            class="text-blue-600 hover:underline text-sm cursor-pointer">
+                            <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 min-h-[28px] min-w-[28px] inline">
                         </button>
                         @if($item->status === \App\Http\Enums\Status::MENUNGGU_DIPROSES)
                             <button onclick="modalAction('{{ route('mahasiswa.form.edit', $item->id_aduan) }}')"
-                                class="text-blue-600 hover:underline text-sm ml-2">
-                                <img src="{{ asset('icons/solid/Edit.svg') }}" alt="" class="h-7 w-7 inline">
+                                class="text-blue-600 hover:underline text-sm ml-2 cursor-pointer">
+                                <img src="{{ asset('icons/solid/Edit.svg') }}" alt="" class="h-7 w-7 min-h-[28px] min-w-[28px] inline">
                             </button>
                         @else
                             <button disabled class="text-gray-400 cursor-not-allowed text-sm ml-2 opacity-60">
                                 <img src="{{ asset('icons/solid/Edit.svg') }}" alt=""
-                                    class="h-7 w-7 inline filter grayscale brightness-75">
+                                    class="h-7 w-7 min-h-[28px] min-w-[28px] inline filter grayscale brightness-75">
                             </button>
                         @endif
                     </div>

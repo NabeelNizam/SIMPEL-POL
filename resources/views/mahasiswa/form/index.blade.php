@@ -6,7 +6,7 @@
             <span class="text-sm text-gray-700">Daftar Laporan yang terdaftar dalam sistem</span>
             <div class="flex gap-2">
                 <button onclick="modalAction('{{ route('mahasiswa.form.create') }}')"
-                    class="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-green-700">
+                    class="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-green-700 cursor-pointer">
                     <i class="fas fa-plus"></i> Tambah
                 </button>
             </div>
@@ -45,7 +45,7 @@
             <!-- Tombol Submit -->
             <div class="flex items-center gap-2">
                 <button type="submit"
-                    class="bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-700">Terapkan Filter</button>
+                    class="bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-700 cursor-pointer">Terapkan Filter</button>
             </div>
         </form>
         <div class="flex justify-between items-center mb-4">
