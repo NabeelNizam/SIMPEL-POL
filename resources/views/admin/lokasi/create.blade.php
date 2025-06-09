@@ -40,3 +40,62 @@
     </form>
 </div>
 
+<script>
+    let lantaiCounter = 0;
+
+    function tambahLantai() {
+        const lantaiInput = document.getElementById('inputLantai');
+        const lantaiNama = lantaiInput.value.trim();
+        if (!lantaiNama) return alert('Nama lantai tidak boleh kosong.');
+
+        lantaiCounter++;
+        const lantaiId = `lantai-${lantaiCounter}`;
+        const container = document.getElementById('lantaiContainer');
+
+        const lantaiElement = document.createElement('div');
+        lantaiElement.className = "bg-blue-500";
+        lantaiElement.innerHTML = `
+            <div class="flex justify-between items-center px-4 py-2 cursor-pointer bg-blue-200">
+                <div class="font-medium">${lantaiNama}</div>
+                <input type="hidden" name="lantai[${lantaiCounter}][nama_lantai]" value="${lantaiNama}">
+                <div class="flex items-center gap-2">
+                    <button onclick="hapusLantai(event, '${lantaiId}')" class="text-red-500 hover:text-red-700" title="Hapus Lantai">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="px-4 py-3 space-y-3" id="${lantaiId}" style="background-color: #D9D9D9;">
+                <div class="border-l-4 border-orange-400 pl-3">
+                    <label class="text-sm font-medium">Nama Ruangan <span class="text-red-500">*</span></label>
+                    <input type="text" name="lantai[${lantaiCounter}][ruangan][]" placeholder="Contoh: LPR 1"
+                        class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400">
+                </div>
+                <button type="button" onclick="tambahRuangan(this, ${lantaiCounter})" class="text-blue-600 text-sm hover:underline">
+                    <i class="fa-solid fa-square-plus"></i> Tambah Ruangan
+                </button>
+            </div>
+        `;
+        container.appendChild(lantaiElement);
+        lantaiInput.value = '';
+    }
+
+    function hapusLantai(event, id) {
+        event.stopPropagation();
+        const container = document.getElementById(id).parentElement;
+        container.remove();
+    }
+
+    function tambahRuangan(button, lantaiId) {
+        const parent = button.parentElement;
+        const ruanganDiv = document.createElement('div');
+        ruanganDiv.className = "border-l-4 border-orange-400 pl-3";
+
+        ruanganDiv.innerHTML = `
+            <label class="text-sm font-medium">Nama Ruangan <span class="text-red-500">*</span></label>
+            <input type="text" name="lantai[${lantaiId}][ruangan][]" placeholder="Contoh: LPR 1"
+                class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400 mt-2">
+        `;
+
+        parent.insertBefore(ruanganDiv, button);
+    }
+</script>

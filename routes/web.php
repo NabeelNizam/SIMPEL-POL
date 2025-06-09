@@ -28,6 +28,7 @@ use App\Http\Controllers\{
     PeriodeController,
     PrometheeController,
     SarprasPenugasanController,
+    SOPController,
     TeknisiPenugasanController
 };
 
@@ -49,6 +50,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Admin Routes
 Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/sop/download/{filename}', [AdminController::class, 'SOPDownload'])->name('sopDownload');
 
     // Pengguna
     Route::prefix('pengguna')->group(function () {
@@ -162,6 +164,10 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         Route::put('/{periode}/edit_ajax', [PeriodeController::class, 'update_ajax'])->name('admin.periode.update_ajax');
         Route::get('/{periode}/confirm_ajax', [PeriodeController::class, 'confirm_ajax'])->name('admin.periode.confirm_ajax');
         Route::delete('/{periode}/remove_ajax', [PeriodeController::class, 'remove_ajax'])->name('admin.periode.delete_ajax');
+    });
+
+    Route::prefix('sop')->group(function () {
+        Route::get('/', [SOPController::class, 'index'])->name('admin.sop');
     });
 });
 

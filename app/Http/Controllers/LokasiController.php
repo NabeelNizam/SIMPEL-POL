@@ -90,6 +90,7 @@ class LokasiController extends Controller
 
     public function store(Request $request)
     {
+        dd($request->all());   
         $request->validate([
             'gedung' => 'required|integer|exists:gedung,id_gedung',
             'lantai' => 'required|integer|exists:lantai,id_lantai',

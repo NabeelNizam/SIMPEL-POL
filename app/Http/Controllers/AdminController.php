@@ -40,8 +40,10 @@ class AdminController extends Controller
         $periode = Periode::all();
 
         $totalLaporan = Aduan::count();
-        $tertunda = Aduan::where('status', 'tertunda')->count();
-        $dalamProses = Aduan::where('status', 'dalam_proses')->count();
+        $tertunda = Aduan::where('status', 'menunggu_diproses')->count();
+        $dalamProses = Aduan::where('status', 'sedang_inspeksi')
+        ->orWhere('status', 'sedang_diperbaiki')
+        ->count();
         $selesai = Aduan::where('status', 'selesai')->count();
 
         // Data untuk grafik
@@ -90,7 +92,7 @@ class AdminController extends Controller
             ];
         });
 
-        return view('sarpras.dashboard', compact(
+        return view('admin.dashboard', compact(
             'breadcrumb',
             'page',
             'activeMenu',
@@ -108,7 +110,7 @@ class AdminController extends Controller
     }
     public function SOPDownload($filename)
     {
-        $role = 'sarpras'; // Bisa juga ambil dari auth jika dinamis
+        $role = 'admin'; // Bisa juga ambil dari auth jika dinamis
         $filePath = "documents/{$role}/{$filename}";
 
         // Cek apakah file ada di storage
