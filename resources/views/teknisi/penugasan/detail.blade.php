@@ -1,5 +1,5 @@
-<div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative space-y-6 border-t-4 border-blue-600">
-    {{-- Tombol Close --}}
+<div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative space-y-6 border-t-4 border-blue-600 max-h-[90vh] overflow-y-auto">
+
     <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl">
         <i class="fas fa-times"></i>
     </button>
@@ -7,7 +7,6 @@
     <h2 class="text-xl font-semibold text-center">Detail Penugasan</h2>
     <div class="w-24 h-1 bg-yellow-400 mx-auto mb-6 rounded"></div>
 
-    {{-- 1. Detail Fasilitas --}}
     <div>
         <h2 class="font-semibold flex items-center space-x-2 mb-4 border-b pb-2">
             <i class="fa-solid fa-file" style="color: #0342b0;"></i>
@@ -49,7 +48,6 @@
         </div>
     </div>
 
-    {{-- 2. Hasil Inspeksi --}}
     <div class="border border-dashed rounded-md p-4">
         <h2 class="font-semibold flex items-center space-x-2 mb-4">
             <i class="fa-solid fa-address-card" style="color: #0342b0;"></i>
