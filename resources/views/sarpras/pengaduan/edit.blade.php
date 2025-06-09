@@ -1,9 +1,8 @@
 <!-- Modal Konten Penugasan Teknisi untuk Menginspeksi -->
 <div
-    class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative max-h-[80vh] overflow-y-auto border-t-4 border-blue-600">
+    class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 pt-0 relative max-h-[80vh] overflow-y-auto border-t-4 border-blue-600">
 
-    <div class="bg-white sticky mt-0">
-
+    <div class="bg-white sticky top-0 z-10 py-3 mb-3">
         <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl">
             <i class="fas fa-times"></i>
         </button>
