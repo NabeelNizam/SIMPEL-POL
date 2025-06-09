@@ -19,66 +19,115 @@
                     @endforeach
                 </select>
             </div>
-            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Filter</button>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer">Filter</button>
         </form>
 
-        <ul class="flex border-b-2 border-gray-300 mb-4 text-sm font-medium text-center" id="userTabs">
-            <li><button data-role="awal"
-                    class="tab-button active text-blue-600 border-b-3 border-yellow-400 px-4 py-2 cursor-pointer">DATA AWAL</button></li>
-            <li><button data-role="perbaikan" class="tab-button px-4 py-2 cursor-pointer">DATA SETELAH PERBAIKAN</button></li>
-        </ul>
-
-        <!-- Tabel Data Awal -->
-        <div id="aduan-table-body">
-            @include('sarpras.penugasan.penugasan_table', ['aduan' => $aduan])
+        <div class="flex justify-between items-center mb-4">
+            <!-- Pagination -->
+            <div class="flex items-center gap-2">
+                <label for="per_page" class="text-sm font-medium text-gray-700">Show:</label>
+                <select id="per_page" name="per_page" class="border border-gray-300 rounded-md shadow-sm sm:text-sm">
+                    @foreach ([10, 25, 50, 100] as $length)
+                        <option value="{{ $length }}" {{ request('per_page', 10) == $length ? 'selected' : '' }}>{{ $length }}
+                        </option>
+                    @endforeach
+                </select>
+                <span class="text-sm text-gray-700">entries</span>
+            </div>
+            <!-- Pencarian -->
+            <div class="flex items-center gap-2">
+                <label for="search" class="text-sm font-medium text-gray-700">Pencarian:</label>
+                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari fasilitas..."
+                    class="w-64 border border-gray-300 rounded-md shadow-sm sm:text-sm" />
+            </div>
         </div>
 
-        <!-- Tabel Data Setelah Perbaikan -->
-        <div id="promethee-table-body" class="hidden">
-            <div id="promethee-results" class="text-sm text-gray-700"></div>
+        <div id="inspeksi-table-body">
+            @include('sarpras.penugasan.penugasan_table', ['penugasan' => $penugasan])
         </div>
     </div>
 
     <div id="myModal" class="fixed inset-0 z-50 hidden items-center justify-center backdrop-blur-sm bg-white/30"></div>
+
+@if (session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil',
+        text: '{{ session('success') }}',
+    }).then(()=> {
+        location.reload();
+    });
+</script>
+@endif
+
+@if ($errors->any())
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal',
+        html: `{!! implode('<br>', $errors->all()) !!}`,
+    }).then(()=> {
+        location.reload();
+    });
+</script>
+@endif
 @endsection
 
 @push('js')
 <script>
-    $(document).ready(function() {
-        // Event untuk tab switching
-        $('.tab-button').on('click', function() {
-            // Hapus kelas aktif dari semua tab
-            $('.tab-button').removeClass('active text-blue-600 border-yellow-400');
-            
-            // Tambahkan kelas aktif ke tab yang diklik
-            $(this).addClass('active text-blue-600 border-yellow-400');
-            
-            // Dapatkan role dari tab yang diklik
-            const role = $(this).data('role');
-            
-            // Sembunyikan semua tabel
-            $('#aduan-table-body').addClass('hidden');
-            $('#promethee-table-body').addClass('hidden');
-            
-            // Tampilkan tabel sesuai role
-            if (role === 'awal') {
-                $('#aduan-table-body').removeClass('hidden');
-            } else if (role === 'perbaikan') {
-                $('#promethee-table-body').removeClass('hidden');
 
-                // Muat data JSON dari endpoint
-                $.ajax({
-                    url: '{{ route('coba-hitung') }}',
-                    method: 'GET',
-                    success: function(data) {
-                        let html = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
-                        $('#promethee-results').html(html);
-                    },
-                    error: function() {
-                        $('#promethee-results').html('<p class="text-red-500">Gagal memuat data.</p>');
-                    }
-                });
-            }
+    function modalAction(url = '') {
+        $.get(url, function(response) {
+            $('#myModal').html(response).removeClass('hidden').addClass('flex');
+        });
+    }
+
+    // Untuk menutup modal
+    $(document).on('click', '#modal-close', function () {
+        $('#myModal').addClass('hidden').removeClass('flex').html('');
+    });
+
+    function reloadData() {
+    $.ajax({
+        url: "{{ route('sarpras.penugasan') }}",
+        method: "GET",
+        data: {
+            search: $('#search').val(),
+            per_page: $('#per_page').val(),
+            id_kategori: $('#id_kategori').val(),
+            id_gedung: $('#id_gedung').val(),
+            kondisi: $('#kondisi').val(),
+            sort_column: $('#sort-column').val(),
+            sort_direction: $('#sort-direction').val()
+        },
+        success: function (response) {
+            $('#inspeksi-table-body').html(response.html);
+        },
+        error: function () {
+            Swal.fire('Error!', 'Gagal memuat data kategori.', 'error');
+        }
+    });
+}
+
+    $(document).ready(function () {
+        // Event untuk jumlah data per halaman
+        $('#per_page').on('change', function () {
+            reloadData();
+        });
+
+        // Event untuk pencarian (dengan debounce)
+        let debounceTimer;
+        $('#search').on('input', function () {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () {
+                reloadData();
+            }, 300);
+        });
+
+        // Event untuk sorting jika ada
+        $('#sort-column, #sort-direction').on('change', function () {
+            reloadData();
         });
     });
 </script>

@@ -27,40 +27,33 @@
                 </x-table.cell>
                 <x-table.cell>{{ $item->tanggal_aduan ? \Carbon\Carbon::parse($item->tanggal_aduan)->format('d/m/Y') : '-'}}</x-table.cell>
                 <x-table.cell>
-                    @if($item->status)
-                        <span class="px-3 py-1 rounded-full text-white text-sm
-                                            @if($item->status === \App\Http\Enums\Status::SELESAI)
-                                                bg-green-500
-                                            @elseif($item->status === \App\Http\Enums\Status::MENUNGGU_DIPROSES)
-                                                bg-blue-500
-                                            @elseif($item->status === \App\Http\Enums\Status::SEDANG_INSPEKSI)
-                                                bg-yellow-500
-                                            @elseif($item->status === \App\Http\Enums\Status::SEDANG_DIPERBAIKI)
-                                                bg-orange-500
-                                            @else
-                                                bg-gray-500
-                                            @endif
-                                        ">
-                            {{ $item->status->value }}
-                        </span>
-                    @else
-                        <span class="px-3 py-1 rounded-full bg-gray-500 text-white text-sm">-</span>
-                    @endif
+                    <span class="px-3 py-1 rounded text-white text-sm text-center w-42 block
+                                @if($item->status === \App\Http\Enums\Status::MENUNGGU_DIPROSES)
+                                    bg-blue-500
+                                @elseif($item->status === \App\Http\Enums\Status::SEDANG_INSPEKSI)
+                                    bg-yellow-500
+                                @else
+                                    bg-orange-500
+                                @endif
+                                    ">
+                        {{ $item->status->value }}
+                    </span>
                 </x-table.cell>
                 <x-table.cell>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 min-w-[80px]">
                         <button onclick="modalAction('{{ route('mahasiswa.form.show_ajax', $item->id_aduan) }}')"
-                            class="text-blue-600 hover:underline text-sm">
-                            <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline">
+                            class="text-blue-600 hover:underline text-sm cursor-pointer">
+                            <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 min-h-[28px] min-w-[28px] inline">
                         </button>
                         @if($item->status === \App\Http\Enums\Status::MENUNGGU_DIPROSES)
                             <button onclick="modalAction('{{ route('mahasiswa.form.edit', $item->id_aduan) }}')"
-                                class="text-blue-600 hover:underline text-sm ml-2">
-                                <img src="{{ asset('icons/solid/Edit.svg') }}" alt="" class="h-7 w-7 inline">
+                                class="text-blue-600 hover:underline text-sm ml-2 cursor-pointer">
+                                <img src="{{ asset('icons/solid/Edit.svg') }}" alt="" class="h-7 w-7 min-h-[28px] min-w-[28px] inline">
                             </button>
                         @else
                             <button disabled class="text-gray-400 cursor-not-allowed text-sm ml-2 opacity-60">
-                                <img src="{{ asset('icons/solid/Edit.svg') }}" alt="" class="h-7 w-7 inline filter grayscale brightness-75">
+                                <img src="{{ asset('icons/solid/Edit.svg') }}" alt=""
+                                    class="h-7 w-7 min-h-[28px] min-w-[28px] inline filter grayscale brightness-75">
                             </button>
                         @endif
                     </div>

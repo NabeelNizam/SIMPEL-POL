@@ -8,7 +8,7 @@
     </button>
 
     <h2 class="text-xl font-semibold mb-2 text-center">Buat Aduan</h2>
-    <div class="w-[205px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
+    <div class="w-[120px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
     <form id="form-buat-aduan" action="{{ route('mahasiswa.form.store') }}" method="POST"
         class="grid grid-cols-1 md:grid-cols-2 gap-4" enctype="multipart/form-data">

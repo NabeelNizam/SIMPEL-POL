@@ -1,50 +1,79 @@
 <x-table>
     <x-slot name="head">
         <tr>
-            <th class="px-4 py-2 text-left">ID Aduan</th>
-            <th class="px-4 py-2 text-left">Nama Fasilitas</th>
-            <th class="px-4 py-2 text-left">Kategori</th>
-            <th class="px-4 py-2 text-left">Lokasi</th>
-            <th class="px-4 py-2 text-left">Nama Teknisi</th>
-            <th class="px-4 py-2 text-left">Tanggal Mulai</th>
-            <th class="px-4 py-2 text-left">Tanggal Selesai</th>
-            <th class="px-4 py-2 text-left">Status</th>
-            <th class="px-4 py-2 text-left">Aksi</th>
+            <x-table.heading>No</x-table.heading>
+            <x-table.heading>Nama Fasilitas</x-table.heading>
+            <x-table.heading>Kategori</x-table.heading>
+            <x-table.heading>Lokasi</x-table.heading>
+            <x-table.heading>Nama Teknisi</x-table.heading>
+            <x-table.heading>Tanggal Mulai</x-table.heading>
+            <x-table.heading>Tanggal Selesai</x-table.heading>
+            <x-table.heading>Status Perbaikan</x-table.heading>
+            <x-table.heading>Aksi</x-table.heading>
         </tr>
     </x-slot>
 
     <x-slot name="body">
-        @forelse ($aduan as $index => $a)
-            <tr>
-                <td class="px-4 py-2">{{ $a->id_aduan }}</td>
-                <td class="px-4 py-2">{{ $a->fasilitas->nama_fasilitas ?? '-' }}</td>
-                <td class="px-4 py-2">{{ $a->fasilitas->kategori->nama_kategori ?? '-' }}</td>
-                <td class="px-4 py-2">{{ $a->fasilitas->lokasi ?? '-' }}</td>
-                <td class="px-4 py-2">{{ $a->perbaikan->teknisi->nama ?? '-' }}</td>
-                <td class="px-4 py-2">{{ $a->perbaikan->tanggal_mulai ?? '-' }}</td>
-                <td class="px-4 py-2">{{ $a->perbaikan->tanggal_selesai ?? '-' }}</td>
-                <td class="px-4 py-2">
-                    <span class="px-2 py-1 rounded text-white {{ $a->status->value === 'SELESAI' ? 'bg-green-500' : 'bg-yellow-500' }}">
-                        {{ $a->status->value }}
-                    </span>
-                </td>
-                <td class="px-4 py-2">
-                    {{-- <button onclick="modalAction('{{ route('sarpras.perbaikan.show', $a->id_aduan) }}')" class="text-blue-600 hover:underline">
-                        <img src="{{ asset('icons/solid/Document.svg') }}" alt="Detail" class="h-7 w-7 inline">
-                    </button>
-                    <button onclick="modalAction('{{ route('sarpras.perbaikan.approve', $a->id_aduan) }}')" class="text-green-600 hover:underline ml-2">
-                        <img src="{{ asset('icons/solid/Acc.svg') }}" alt="Approve" class="h-7 w-7 inline">
-                    </button> --}}
-                </td>
-            </tr>
+        @forelse ($perbaikan as $index => $p)
+            <x-table.row>
+                <x-table.cell>{{ $perbaikan->firstItem() + $index }}</x-table.cell>
+                <x-table.cell>{{ $p->nama_fasilitas ?? '-' }}</x-table.cell>
+                <x-table.cell>{{ ucfirst($p->kategori->nama_kategori) ?? '-' }}</x-table.cell>
+                @php
+                    $ruangan = $p->ruangan;
+                    $lantai = $ruangan->lantai;
+                    $gedung = $lantai->gedung;
+                @endphp
+                <x-table.cell>
+                    {{ $gedung->nama_gedung ?? '-' }}
+                    {{ $lantai ? ', ' . $lantai->nama_lantai : '' }}
+                    {{ $ruangan ? ', ' . $ruangan->kode_ruangan : '' }}
+                </x-table.cell>
+                <x-table.cell>{{ $p->inspeksi->first()->teknisi->nama ?? '-' }}</x-table.cell>
+                <x-table.cell>
+                    <div class="flex flex-col items-center">
+                        {{ $p->inspeksi->first()->perbaikan->tanggal_mulai ?? '-' }}
+                    </div>
+                </x-table.cell>
+                <x-table.cell>
+                    <div class="flex flex-col items-center">
+                        {{ $p->inspeksi->first()->perbaikan->tanggal_selesai ?? '-' }}
+                    </div>
+
+                </x-table.cell>
+                @php
+                    $isCompleted = !empty($p->inspeksi->first()->perbaikan->tanggal_selesai);
+                @endphp
+                <x-table.cell class="text-center">
+                    <div class="flex text-center space-x-2 min-w-[130px]">
+                        <span
+                            class="py-1 rounded-lg text-white text-sm font-semibold {{ $isCompleted ? 'bg-green-500 px-11' : 'bg-yellow-500 px-3' }}">
+                            {{ $isCompleted ? 'Selesai' : 'Dalam Perbaikan' }}
+                        </span>
+                    </div>
+                </x-table.cell>
+                <x-table.cell>
+                    <div class="flex items-center space-x-2 min-w-[80px]">
+                        <button onclick="modalAction('{{ route('sarpras.perbaikan.show', $p->id_fasilitas) }}')"
+                            class="text-blue-600 hover:underline cursor-pointer">
+                            <img src="{{ asset('icons/solid/Detail.svg') }}" alt="Detail" class="h-7 w-7 inline">
+                        </button>
+                        <button onclick="modalAction('{{ route('sarpras.perbaikan.confirm_approval', $p->id_fasilitas) }}')"
+                            class="text-gray-600 hover:underline {{ $isCompleted ? 'cursor-pointer' : 'cursor-not-allowed' }}" {{$isCompleted ? '' : 'disabled'}}>
+                            <img src="{{ asset($isCompleted ? 'icons/solid/Acc.svg' : 'icons/light/Acc.svg') }}"
+                                alt="Approve" class="h-7 w-7 inline">
+                        </button>
+                    </div>
+                </x-table.cell>
+            </x-table.row>
         @empty
             <tr class="border-1">
-                <td colspan="9" class="text-center text-gray-500">Tidak ada data perbaikan.</td>
+                <td colspan="9" class="text-center text-gray-500 py-4">Tidak ada Data Perbaikan yang Sedang Diperbaiki.</td>
             </tr>
         @endforelse
     </x-slot>
 </x-table>
 
 <div class="mt-4">
-    {{ $aduan->links() }}
+    {{ $perbaikan->links() }}
 </div>

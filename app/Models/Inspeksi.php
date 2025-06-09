@@ -17,6 +17,7 @@ class Inspeksi extends Model
     protected $casts =[
         'tingkat_kerusakan' => TingkatKerusakan::class,
     ];
+    protected $appends = ['status_aduan'];
 
     public function teknisi()
     {
@@ -42,13 +43,22 @@ class Inspeksi extends Model
     {
         return $this->hasOne(Perbaikan::class, 'id_inspeksi', 'id_inspeksi');
     }
-public function ruangan()
-{
-    return $this->belongsTo(Ruangan::class, 'id_ruangan', 'id_ruangan');
-}
-public function kategori()
-{
-    return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
-}
-
+    public function getStatusAduanAttribute()
+    {
+        // return $this->perbaikan?->status;
+        $aduan = Aduan::query()->whereHas('fasilitas', function ($q) {
+            $q->whereHas('inspeksi', function ($q) {
+                $q->where('id_inspeksi', $this->id_inspeksi);
+            });
+        });
+        return $aduan->first()?->status;
+    }
+    public function getUserCountAttribute()
+    {
+        return Aduan::where('id_fasilitas', $this->id_fasilitas)
+            ->whereHas('periode', function ($query) {
+                $query->where('tanggal_selesai', '<=', $this->periode->tanggal_selesai);
+            })
+            ->count();
+    }
 }

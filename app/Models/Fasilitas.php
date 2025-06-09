@@ -49,8 +49,8 @@ class Fasilitas extends Model
         }
         return 'Lokasi tidak diketahui';
     }
-    public function fasilitas()
-{
-    return $this->belongsTo(Fasilitas::class, 'id_fasilitas', 'id_fasilitas');
-}
+    public function getLokasiAttribute(): string
+    {
+        return $this->getLokasiString();
+    }
 }

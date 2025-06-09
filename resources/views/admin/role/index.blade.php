@@ -5,13 +5,13 @@
     <div class="flex items-center justify-between mb-4">
         <span class="text-sm text-gray-700">{{ $page->title }}</span>
         <div class="flex gap-2">
-            <a href="{{ url('/user/export_excel') }}" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
+            <a href="{{ route('admin.role.export_excel') }}" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
                 <i class="fas fa-file-excel"></i> Ekspor Excel
             </a>
-            <a href="{{ url('/user/export_pdf') }}" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
+            <a href="{{ route('admin.role.export_pdf') }}" class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
                 <i class="fas fa-file-pdf"></i> Ekspor PDF
             </a>
-            <button onclick="modalAction('{{ route('admin.role.create_ajax') }}')" class="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-green-700">
+            <button onclick="modalAction('{{ route('admin.role.create_ajax') }}')" class="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-green-700 cursor-pointer">
                 <i class="fas fa-plus"></i> Tambah
             </button>
         </div>
@@ -51,6 +51,25 @@
 
 
 @push('js')
+@if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: '{{ session('success') }}',
+            });
+        </script>
+    @endif
+
+    @if ($errors->any())
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Validasi Gagal',
+                html: `{!! implode('<br>', $errors->all()) !!}`,
+            });
+        </script>
+    @endif
 <script>
     function modalAction(url = '') {
         $.get(url, function(response) {
