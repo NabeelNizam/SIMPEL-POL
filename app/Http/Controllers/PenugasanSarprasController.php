@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Enums\Status;
 use App\Http\Helpers\PrometheeHelper;
+use App\Models\Aduan;
 use App\Models\Biaya;
 use App\Models\Fasilitas;
 use App\Models\Inspeksi;
@@ -173,6 +175,18 @@ class PenugasanSarprasController extends Controller
 
         if (!$periode) {
             return redirect()->back()->withErrors(['periode_id' => 'Periode tidak ditemukan.']);
+        }
+
+        try {
+            $inspeksi = Inspeksi::findOrFail($request->id_inspeksi);
+
+            // Ambil semua aduan dengan id_fasilitas yang sama dan status SEDANG_INSPEKSI
+            Aduan::where('id_fasilitas', $inspeksi->id_fasilitas)
+                ->where('status', Status::SEDANG_INSPEKSI->value)
+                ->update(['status' => Status::SEDANG_DIPERBAIKI->value]);
+        } catch (\Exception $e) {
+            Log::error('Gagal memperbarui status aduan: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['general' => 'Gagal memperbarui status aduan.']);
         }
 
         try {
