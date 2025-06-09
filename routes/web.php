@@ -148,6 +148,12 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
     });
     Route::prefix('sop')->group(function () {
         Route::get('/', [SOPController::class, 'index'])->name('admin.sop');
+        // Route untuk menampilkan halaman edit SOP
+        Route::get('/admin/sop/edit', [SOPController::class, 'edit'])->name('sop.edit');
+
+        // Route untuk memperbarui SOP
+        Route::put('/admin/sop/update', [SOPController::class, 'update'])->name('sop.update');
+        Route::delete('/admin/sop/delete/{role}', [SOPController::class, 'delete'])->name('sop.delete');
     }); 
     // Aduan
     Route::prefix('aduan')->group(function () {
