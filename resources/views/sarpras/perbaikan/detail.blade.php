@@ -187,7 +187,7 @@
                 {{-- deskripsi pekerjaan --}}
                 <div class="text">
                     <label class="block text-sm font-medium text-gray-500 mb-1">Deskripsi Pekerjaan</label>
-                    <p class="text-dark font-sm">{{ $inspeksi->deskripsi_perbaikan ?? '-' }}</p>
+                    <p class="text-dark font-sm">{{ $inspeksi->deskripsi ?? '-' }}</p>
                 </div>
             </div>
 

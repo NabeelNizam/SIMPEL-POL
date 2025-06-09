@@ -123,14 +123,6 @@ class PengaduanSarprasController extends Controller
     {
         $periodeSekarang = Periode::getPeriodeAktif();
 
-        $status = '';
-
-        if (Aduan::where('id_fasilitas', $id)->where('status', Status::SEDANG_DIPERBAIKI->value)) {
-            $status = Status::SEDANG_DIPERBAIKI->value;
-        } else if (Aduan::where('id_fasilitas', $id)->where('status', Status::SEDANG_INSPEKSI->value)) {
-            $status = Status::MENUNGGU_DIPROSES->value;
-        }
-
         try {
             Inspeksi::create([
                 'id_user_teknisi' => $request->id_teknisi,
@@ -139,25 +131,20 @@ class PengaduanSarprasController extends Controller
                 'id_periode' => $periodeSekarang->id_periode,
                 'tanggal_mulai' => now(),
             ]);
-            $aduan = Aduan::with('pelapor')->where('id_fasilitas', $id)->where('status', Status::MENUNGGU_DIPROSES->value);
+            $aduan = Aduan::with('pelapor')->where('id_fasilitas', $id)->where('status', Status::MENUNGGU_DIPROSES->value)->get();
             $fasilitas = Fasilitas::findOrFail($id);
-            $aduan->update(['status' => Status::SEDANG_INSPEKSI->value]);
+            // dd($aduan);
             foreach ($aduan as $a) {
-                try {
-                    if ($a->pelapor && $a->pelapor->id_user) {
-                        Notifikasi::create([
-                            'pesan' => 'Status Laporan Aduan Fasilitas ' . $fasilitas->nama_fasilitas . ' anda saat ini berubah ke SEDANG_INSPEKSI',
-                            'is_read' => false,
-                            'waktu_kirim' => now(),
-                            'id_user' => $a->pelapor->id_user,
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]);
-                    }
-                } catch (\Exception $ex) {
-                    Log::error('Gagal membuat notifikasi untuk aduan ID ' . $a->id_aduan . ': ' . $ex->getMessage());
-                    return redirect()->back()->withErrors(['general' => 'Gagal membuat notifikasi untuk aduan ID ' . $a->id_aduan.'.']);
-                }
+                $a->update(['status' => Status::SEDANG_INSPEKSI->value]);
+                
+                Notifikasi::create([
+                    'pesan' => 'Status Laporan Aduan Fasilitas ' . $fasilitas->nama_fasilitas . ' anda saat ini berubah ke SEDANG_INSPEKSI',
+                    'is_read' => false,
+                    'waktu_kirim' => now(),
+                    'id_user' => $a->pelapor->id_user,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
             }
 
             return redirect()->back()->with('success', 'Berhasil menugaskan inspeksi.');

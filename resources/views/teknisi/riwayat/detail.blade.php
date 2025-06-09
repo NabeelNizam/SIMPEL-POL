@@ -74,11 +74,11 @@
             <div>
                 <p class="text-gray-500">Tingkat Kerusakan</p>
                 <span
-                    class="inline-block mt-2 px-8 py-1 text-xs font-semibold text-white bg-red-600 rounded-lg">{{ $perbaikan->tingkat_kerusakan ?? '-'}}</span>
+                    class="inline-block mt-2 px-8 py-1 text-xs font-semibold text-white bg-red-600 rounded-lg">{{ $aduan->fasilitas->inspeksi->first()->tingkat_kerusakan ?? '-'}}</span>
             </div>
             <div>
                 <p class="text-gray-500">Deskripsi Pekerjaan</p>
-                <p class="mt-2 font-semibold">{{ $perbaikan->deskripsi_pekerjaan ?? '*Tidak diisi'}}</p>
+                <p class="mt-2 font-semibold">{{ $aduan->fasilitas->inspeksi->first()->deskripsi ?? '*Tidak diisi'}}</p>
             </div>
         </div>
     </div>
