@@ -96,6 +96,21 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         Route::get('/export_excel', [JurusanController::class, 'export_excel'])->name('admin.jurusan.export_excel');
     });
 
+        // Lokasi
+        Route::prefix('lokasi')->group(function () {
+            Route::get('/', [LokasiController::class, 'index'])->name('admin.lokasi');
+            Route::get('/create', [LokasiController::class, 'create'])->name('admin.lokasi.create');
+            Route::post('/store', [LokasiController::class, 'store'])->name('admin.lokasi.store');
+            Route::get('/{gedung}/confirm', [LokasiController::class, 'confirm'])->name('admin.lokasi.confirm');
+            Route::get('/{gedung}/show', [LokasiController::class, 'show'])->name('admin.lokasi.show');
+            Route::get('/{gedung}/edit', [LokasiController::class, 'edit'])->name('admin.lokasi.edit');
+            Route::put('/{gedung}/update', [LokasiController::class, 'update'])->name('admin.lokasi.update');
+            Route::delete('/{gedung}/destroy', [LokasiController::class, 'destroy'])->name('admin.lokasi.destroy');
+            Route::get('/export_pdf', [LokasiController::class, 'export_pdf'])->name('admin.lokasi.export_pdf');
+            Route::get('/export_excel', [LokasiController::class, 'export_excel'])->name('admin.lokasi.export_excel');
+        });
+
+
     // Fasilitas
     Route::prefix('fasilitas')->group(function () {
         Route::get('/', [FasilitasController::class, 'index'])->name('admin.fasilitas');

@@ -63,7 +63,7 @@
                                 alt="Kategori" class="mr-2 w-5">
                             Kategori Fasilitas
                         </a>
-                        <a href="lokasi"
+                        <a href="{{ route('admin.lokasi') }}"
                             class="flex items-center p-2 w-full {{ $activeMenu == 'lokasi' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                             style="{{ $activeMenu == 'lokasi' ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ $activeMenu == 'lokasi' ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}"

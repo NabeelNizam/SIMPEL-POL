@@ -167,23 +167,23 @@ class LokasiController extends Controller
         }
     }
 
-    public function show(gedung $gedung)
+ 
+    public function show(Gedung $gedung)
     {
-        $gedung = gedung::findOrFail($gedung->id_gedung);
-        return view('admin.lokasi.detail', ['gedung' => $gedung]);
+        // Ambil data gedung beserta lantai dan ruangan
+        $gedung = Gedung::with(['lantai.ruangan'])->findOrFail($gedung->id_gedung);
+
+        // Kirim data ke view
+        return view('admin.lokasi.detail', compact('gedung'));
     }
 
-
-    public function edit(gedung $gedung)
+    public function edit(Gedung $gedung)
     {
-        $gedung = gedung::findOrFail($gedung->id_gedung);
+        // Ambil data gedung beserta lantai dan ruangan
+        $gedung = Gedung::with(['lantai.ruangan'])->findOrFail($gedung->id_gedung);
 
-        $gedung = Gedung::all();
-        $jurusan = jurusan::all();
-        $lantai = Lantai::where('id_gedung', $gedung->id_gedung)->get();
-        $ruangan = Ruangan::where('id_lantai', $gedung->id_lantai)->get();
-
-        return view('admin.lokasi.edit', compact('gedung', 'gedung', 'jurusan', 'lantai', 'ruangan'));
+        // Kirim data ke view
+        return view('admin.lokasi.edit', compact('gedung'));
     }
 
     public function update(Request $request, gedung $gedung)
