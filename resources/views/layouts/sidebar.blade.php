@@ -122,7 +122,7 @@
             {{-- Mahasiswa|Dosen|Tendik --}}
             <!-- Logo at the top of sidebar -->
             <div class="flex items-center justify-center h-16 bg-white">
-                <a href="{{ route('mahasiswa.dashboard') }}">
+                <a href="{{ route('dashboard.mahasiswa') }}">
                     <span class="text-lg font-bold text-black-800 flex items-center">
                         <img src="{{ asset('img/logo primer.svg') }}" alt="SIMPEL-POL Logo" class="h-6 mr-2">
                         SIMPEL-POL
