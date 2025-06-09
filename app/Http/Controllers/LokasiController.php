@@ -10,6 +10,7 @@ use App\Models\Jurusan;
 use App\Models\Lantai;
 use App\Models\Periode;
 use App\Models\Ruangan;
+use Faker\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -20,6 +21,12 @@ use Illuminate\Support\Str;
 class LokasiController extends Controller
 {
     //
+    private $faker;
+
+    public function __construct()
+    {
+        $this->faker = Factory::create();
+    }
 
     public function index(Request $request)
     {
@@ -67,76 +74,43 @@ class LokasiController extends Controller
 
     public function create()
     {
-        $jurusan = jurusan::all();
-
-        return view('admin.lokasi.create', [
-            'jurusan' => $jurusan,
-        ]);
+        return view('admin.lokasi.create');
     }
-
-    // Ambil lantai berdasarkan gedung
-    // public function getLantai($id_gedung)
-    // {
-    //     $lantai = Lantai::where('id_gedung', $id_gedung)->get();
-    //     return response()->json($lantai);
-    // }
-
-    // Ambil ruangan berdasarkan lantai
-    // public function getRuangan($id_lantai)
-    // {
-    //     $ruangan = Ruangan::where('id_lantai', $id_lantai)->get();
-    //     return response()->json($ruangan);
-    // }
-
     public function store(Request $request)
     {
-        dd($request->all());   
-        $request->validate([
-            'gedung' => 'required|integer|exists:gedung,id_gedung',
-            'lantai' => 'required|integer|exists:lantai,id_lantai',
-            'ruangan' => 'required|integer|exists:ruangan,id_ruangan',
-            'nama_gedung' => 'required|string|min:2|max:35',
-            'jurusan' => 'required|integer|exists:jurusan,id_jurusan',
-            'kondisi' => 'required|string|in:LAYAK,RUSAK',
-            'deskripsi' => 'required|string|min:10|max:255',
-            'urgensi' => 'required|string|in:DARURAT,PENTING,BIASA',
-            'foto_gedung' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        $validation = Validator::make($request->all(), [
+            'nama_gedung' => ['required', 'string', 'max:30'],
+            'lantai.*.nama_lantai' => ['required', 'string', 'max:30'],
+            'lantai.*.ruangan.*' => ['required', 'string', 'max:30'],
         ]);
 
-        $periode = Periode::where('tanggal_mulai', '<=', now())
-            ->where('tanggal_selesai', '>=', now())
-            ->first();
-
-        if (!$periode) {
-            return redirect()->back()->withErrors(['periode_id' => 'Periode tidak ditemukan.']);
+        if ($validation->fails()) {
+            return redirect()->back()->withErrors($validation->errors())->withInput();
         }
-
-        $fileName = null;
-        if ($request->hasFile('foto_gedung')) {
-            try {
-                $file = $request->file('foto_gedung');
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->storeAs('uploads/img/foto_gedung', $fileName, 'public');
-            } catch (\Exception $e) {
-                return redirect()->back()->withErrors(['foto_gedung' => 'Gagal menyimpan foto gedung.']);
-            }
-        }
-
         try {
-            gedung::create([
-                'id_ruangan' => $request->ruangan,
+            $gedung = Gedung::create([
                 'nama_gedung' => $request->nama_gedung,
-                'id_jurusan' => $request->jurusan,
-                'kondisi' => $request->kondisi,
-                'kode_gedung' => 'F-' . $request->gedung . $request->lantai . $request->ruangan . '-' . fake()->unique()->numberBetween(0, 9999),
-                'deskripsi' => $request->deskripsi,
-                'urgensi' => $request->urgensi,
-                'id_periode' => $periode->id_periode,
-                'foto_gedung' => $fileName
+                'kode_gedung' => substr(md5($request->nama_gedung), 0, 2) . $this->faker->unique()->randomNumber(3),
             ]);
+
+            foreach ($request->lantai as $item) {
+                $lantai = Lantai::create([
+                    'id_gedung' => $gedung->id_gedung,
+                    'nama_lantai' => $item['nama_lantai'],
+                ]);
+                foreach ($item['ruangan'] as $jtem) {
+                    Ruangan::create([
+                        'id_lantai' => $lantai->id_lantai,
+                        'nama_ruangan' => $jtem,
+                        'kode_ruangan' => substr(md5($jtem), 0, 2) . $this->faker->unique()->randomNumber(3),
+                    ]);
+                }
+            }
+
             return redirect()->back()->with('success', 'Data gedung berhasil disimpan.');
         } catch (\Exception $e) {
-            Log::error('Gagal simpan gedung: ' . $e->getMessage());
+            // throw $e;
+            // Log::error('Gagal simpan gedung: ' . $e->getMessage());
             return redirect()->back()->withErrors(['general' => 'Gagal menyimpan data.']);
         }
     }
@@ -168,7 +142,7 @@ class LokasiController extends Controller
         }
     }
 
- 
+
     public function show(Gedung $gedung)
     {
         // Ambil data gedung beserta lantai dan ruangan
