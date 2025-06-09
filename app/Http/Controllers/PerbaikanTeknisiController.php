@@ -67,4 +67,29 @@ class PerbaikanTeknisiController extends Controller
 
         return view('teknisi.perbaikan.index', compact('breadcrumb', 'page', 'activeMenu', 'perbaikan', 'periode', 'status'));
     }
+    public function show($id)
+    {
+        try {
+            $perbaikan = Perbaikan::with(['inspeksi', 'inspeksi.fasilitas', 'inspeksi.fasilitas.aduan', 'inspeksi.periode', 'inspeksi.biaya'])->findOrFail($id);
+            $inspeksi = $perbaikan->inspeksi;
+            $fasilitas = $inspeksi->fasilitas;
+            // dd($inspeksi);
+            $statusAduan = $inspeksi->status_aduan->value ?? '-';
+            $biaya = $inspeksi->biaya;
+            return view('teknisi.perbaikan.detail', compact('perbaikan', 'inspeksi', 'fasilitas', 'statusAduan', 'biaya'));
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    public function cycle($id)
+    {
+        $perbaikan = Perbaikan::findOrFail($id);
+        if ($perbaikan->teknisi_selesai) {
+            $perbaikan->tanggal_selesai = null;
+        }else{
+            $perbaikan->tanggal_selesai = now();
+        }
+        $perbaikan->update();
+        return redirect()->back();
+    }
 }
