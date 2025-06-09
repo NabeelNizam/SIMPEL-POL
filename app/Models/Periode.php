@@ -18,7 +18,8 @@ class Periode extends Model
         'tanggal_mulai',
         'tanggal_selesai'
     ];
-    
+    protected $appends = ['periode_aktif'];
+
     public static function getPeriodeAktif()
     {
         $tanggalSekarang = Carbon::now();
