@@ -1,4 +1,3 @@
-<!-- Navbar - After Sidebar -->
 <header class="bg-white shadow-sm z-30 w-full">
     <div class="flex items-center justify-between h-16 px-4">
         <!-- Hamburger Toggle (Left Side) -->
@@ -9,22 +8,54 @@
             </svg>
         </button>
 
-        <!-- User Profile Dropdown (Right Side) -->
+        <!-- User Profile and Notification Dropdowns (Right Side) -->
         <div class="flex items-center mr-6">
-            <button type="button" class="mr-4 cursor-pointer">
-                <img src="{{ asset('icons/light/Bell.svg') }}" alt="notification-icon">
-            </button>
+            <!-- Notification Dropdown -->
             <div class="relative">
+                <button type="button" class="p-2 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer relative"
+                        id="notifikasi-dropdown-button">
+                    <img src="{{ asset('icons/light/Bell.svg') }}" alt="notification-icon" class="w-6 h-6">
+                    @if($unreadCount > 0)
+                        <div class="absolute -top-1 -right-1 w-5 h-5 text-xs text-white bg-red-500 rounded-full flex items-center justify-center font-bold">
+                            {{ $unreadCount }}
+                        </div>
+                    @endif
+                </button>
+
+                <!-- Notification Dropdown Menu -->
+                <div id="notifikasi-dropdown" class="z-50 hidden absolute right-0 mt-2 w-48 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow">
+                    <div class="px-4 py-3">
+                        <span class="block text-sm text-gray-900 font-medium">Notifikasi</span>
+                    </div>
+                    <div class="w-40 h-1 bg-orange-400 mx-4 rounded"></div>
+                    <ul class="py-2" aria-labelledby="notifikasi-dropdown-button">
+                        <li>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Test Notification 1</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Test Notification 2</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Test Notification 3</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Test Notification 4</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- User Profile Dropdown -->
+            <div class="relative ml-4">
                 <button type="button"
                     class="flex items-center space-x-3 hover:bg-gray-400 p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none cursor-pointer"
-                    id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
-                    data-dropdown-placement="bottom">   
+                    id="user-menu-button">   
                     <img class="w-8 h-8 rounded-full border border-gray-300"
                         src="{{ asset( (auth()->user()->foto_profil ? auth()->user()->foto_profil : 'img/profiles.svg')) }}" alt="user photo">
                     <span class="hidden md:block text-sm font-medium">{{ auth()->user()->nama }}</span>
                 </button>
 
-                <!-- Dropdown menu -->
+                <!-- User Dropdown Menu -->
                 <div class="z-50 hidden absolute right-0 mt-2 w-48 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow"
                     id="user-dropdown">
                     <div class="px-4 py-3">
@@ -52,17 +83,51 @@
                         <li>
                             <form method="POST" action="{{ route('logout') }}" id="logout-form">
                                 @csrf
-                                @method('POST')
+                                @method('POSTTim')
                                 <button type="submit"
                                     class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 cursor-pointer">
                                     <i class="fas fa-sign-out-alt mr-2"></i> Logout
                                 </button>
                             </form>
                         </li>
-
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 </header>
+
+<!-- Custom JavaScript for both dropdowns -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Notification Dropdown
+    const notifButton = document.getElementById('notifikasi-dropdown-button');
+    const notifDropdown = document.getElementById('notifikasi-dropdown');
+    
+    notifButton.addEventListener('click', function (event) {
+        event.stopPropagation();
+        notifDropdown.classList.toggle('hidden');
+    });
+
+    // User Dropdown
+    const userButton = document.getElementById('user-menu-button');
+    const userDropdown = document.getElementById('user-dropdown');
+    
+    userButton.addEventListener('click', function (event) {
+        event.stopPropagation();
+        userDropdown.classList.toggle('hidden');
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', closeDropdown(event));
+
+    function closeDropdown(event) {
+        if (!notifButton.contains(event.target) && !notifDropdown.contains(event.target)) {
+            notifDropdown.classList.add('hidden');
+        }
+        if (!userButton.contains(event.target) && !userDropdown.contains(event.target)) {
+            userDropdown.classList.add('hidden');
+        }
+    }
+});
+</script>

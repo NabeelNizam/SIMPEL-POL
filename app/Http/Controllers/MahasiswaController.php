@@ -52,7 +52,8 @@ class MahasiswaController extends Controller
             'breadcrumb' => $breadcrumb,
             'page' => $page,
             'activeMenu' => $activeMenu,
-            'aduan' => $aduan
+            'aduan' => $aduan,
+            'sedangLogin' => $sedangLogin
         ]);
     }
 
