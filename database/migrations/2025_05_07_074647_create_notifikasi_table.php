@@ -17,6 +17,7 @@ return new class extends Migration
 
             $table->string('pesan');
             $table->boolean('is_read')->default(0);
+            $table->boolean('is_deleted')->default(0);
             $table->timestamp('waktu_kirim');
             $table->enum('tipe_notifikasi', ['ALERT', 'WARNING', 'INFO']);
 
