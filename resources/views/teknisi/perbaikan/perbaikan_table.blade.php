@@ -28,11 +28,19 @@
                 <x-table.cell class="px-4 py-2 min-w-[120px]">
                     <button onclick="modalAction('{{ route('teknisi.perbaikan.show', $a->id_perbaikan) }}')"
                         class="text-blue-600 cursor-pointer hover:underline text-sm">
-                        <img src="{{ asset('icons/solid/Detail.svg') }}" alt="" class="h-7 w-7 inline min-w-[29px]"></button>
-                    <button onclick="modalAction('{{ route('teknisi.perbaikan.approve', $a->id_perbaikan) }}')"
-                        class="text-green-600 cursor-pointer hover:underline ml-2">
-                        <img src="{{ asset('icons/solid/Acc.svg') }}" alt="Approve" class="h-7 w-7 inline min-w-[29px]">
-                    </button>
+                        <img src="{{ asset('icons/solid/Detail.svg') }}" alt=""
+                            class="h-7 w-7 inline min-w-[29px]"></button>
+                    <a href="{{ route('teknisi.perbaikan.cycle', $a->id_perbaikan) }}">
+                        <button class="text-green-600 cursor-pointer hover:underline ml-2">
+                            @if ($a->teknisi_selesai)
+                                <img src="{{ asset('icons/solid/Reject.svg') }}" alt="Reject"
+                                    class="h-7 w-7 inline min-w-[29px]">
+                            @else
+                                <img src="{{ asset('icons/solid/Acc.svg') }}" alt="Approve"
+                                    class="h-7 w-7 inline min-w-[29px]">
+                            @endif
+                        </button>
+                    </a>
                 </x-table.cell>
             </x-table.row>
         @empty
