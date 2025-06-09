@@ -16,4 +16,8 @@ class Biaya extends Model
     {
         return $this->belongsTo(Inspeksi::class, 'id_inspeksi', 'id_inspeksi');
     }
+    public function perbaikan()
+    {
+        return $this->belongsTo(Perbaikan::class, 'id_perbaikan', 'id_perbaikan');
+    }
 }
