@@ -8,7 +8,7 @@
     </button>
 
     <h2 class="text-xl font-semibold mb-2 text-center">Edit Aduan</h2>
-    <div class="w-[205px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
+    <div class="w-[115px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
     <form id="form-edit-aduan" action="{{ route('mahasiswa.form.update', $aduan) }}" method="POST"
         class="grid grid-cols-1 md:grid-cols-2 gap-4" enctype="multipart/form-data">
@@ -21,7 +21,8 @@
                 class="cursor-pointer w-full border rounded-md px-3 py-2 text-sm">
                 <option value="">- Pilih Gedung -</option>
                 @foreach ($gedung as $g)
-                    <option value="{{ $g->id_gedung }}" @if ($g->id_gedung == $aduan->gedung_id) selected @endif>
+                    <option value="{{ $g->id_gedung }}"
+                        {{ $g->id_gedung == ($aduan->fasilitas->ruangan->lantai->gedung->id_gedung ?? '') ? 'selected' : '' }}>
                         {{ $g->nama_gedung }}
                     </option>
                 @endforeach
@@ -34,7 +35,6 @@
             <select required name="lantai" id="lantai"
                 class="w-full border rounded-md px-3 py-2 text-sm bg-gray-100 cursor-not-allowed" disabled>
                 <option value="">- Pilih Lantai -</option>
-                <!-- Lantai options will be populated via AJAX -->
             </select>
             <span id="lantai-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
@@ -44,7 +44,6 @@
             <select required name="ruangan" id="ruangan"
                 class="w-full border rounded-md px-3 py-2 text-sm bg-gray-100 cursor-not-allowed" disabled>
                 <option value="">- Pilih Ruangan -</option>
-                <!-- Ruangan options will be populated via AJAX -->
             </select>
             <span id="ruangan-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
@@ -54,7 +53,6 @@
             <select required name="fasilitas" id="fasilitas"
                 class="w-full border rounded-md px-3 py-2 text-sm bg-gray-100 cursor-not-allowed" disabled>
                 <option value="">- Pilih Fasilitas -</option>
-                <!-- Fasilitas options will be populated via AJAX -->
             </select>
             <span id="fasilitas-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
@@ -128,89 +126,83 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
 <script>
     $(document).ready(function() {
-        // Initialize aduan data
-        let aduan = {
-            gedung_id: {{ isset($aduan) && $aduan->gedung_id ? $aduan->gedung_id : 'null' }},
-            lantai_id: {{ isset($aduan) && $aduan->lantai_id ? $aduan->lantai_id : 'null' }},
-            ruangan_id: {{ isset($aduan) && $aduan->ruangan_id ? $aduan->ruangan_id : 'null' }},
-            fasilitas_id: {{ isset($aduan) && $aduan->fasilitas_id ? $aduan->fasilitas_id : 'null' }}
-        };
-
-        // Function to load lantai
-        function loadLantai(gedungID, selectedLantaiID) {
-            if (gedungID) {
-                $.get('/pelapor/form/get-lantai/' + gedungID, function(data) {
-                    $('#lantai').html('<option value="">- Pilih Lantai -</option>');
+        // Inisialisasi dropdown lantai, ruangan, dan fasilitas berdasarkan gedung yang sudah dipilih
+        let gedungID = $('#gedung').val();
+        if (gedungID) {
+            $.get('/pelapor/form/get-lantai/' + gedungID, function(data) {
+                // console.log('Data lantai:', data); // Debug
+                $('#lantai').html('<option value="">- Pilih Lantai -</option>');
+                if (data.length === 0) {
+                    $('#lantai').append('<option value="">Tidak ada lantai tersedia</option>');
+                } else {
                     $.each(data, function(key, val) {
                         $('#lantai').append(
-                            `<option value="${val.id_lantai}" ${val.id_lantai == selectedLantaiID ? 'selected' : ''}>${val.nama_lantai}</option>`
+                            `<option value="${val.id_lantai}" ${val.id_lantai == '{{ $aduan->fasilitas->ruangan->lantai->id_lantai ?? '' }}' ? 'selected' : ''}>${val.nama_lantai}</option>`
                         );
                     });
                     $('#lantai').prop('disabled', false)
                         .removeClass('cursor-not-allowed bg-gray-100')
                         .addClass('cursor-pointer');
+                }
 
-                    // Load ruangan if lantai_id exists
-                    if (selectedLantaiID) {
-                        loadRuangan(selectedLantaiID, aduan.ruangan_id);
-                    }
-                }).fail(function(jqXHR, textStatus, errorThrown) {
-                    console.error('Error loading lantai:', textStatus, errorThrown);
-                });
-            }
-        }
+                // Inisialisasi dropdown ruangan berdasarkan lantai yang sudah dipilih
+                let lantaiID = $('#lantai').val();
+                if (lantaiID) {
+                    $.get('/pelapor/form/get-ruangan/' + lantaiID, function(data) {
+                        // console.log('Data ruangan:', data); // Debug
+                        $('#ruangan').html('<option value="">- Pilih Ruangan -</option>');
+                        if (data.length === 0) {
+                            $('#ruangan').append('<option value="">Tidak ada ruangan tersedia</option>');
+                        } else {
+                            $.each(data, function(key, val) {
+                                $('#ruangan').append(
+                                    `<option value="${val.id_ruangan}" ${val.id_ruangan == '{{ $aduan->fasilitas->id_ruangan ?? '' }}' ? 'selected' : ''}>${val.nama_ruangan}</option>`
+                                );
+                            });
+                            $('#ruangan').prop('disabled', false)
+                                .removeClass('cursor-not-allowed bg-gray-100')
+                                .addClass('cursor-pointer');
+                        }
 
-        // Function to load ruangan
-        function loadRuangan(lantaiID, selectedRuanganID) {
-            if (lantaiID) {
-                $.get('/pelapor/form/get-ruangan/' + lantaiID, function(data) {
-                    $('#ruangan').html('<option value="">- Pilih Ruangan -</option>');
-                    $.each(data, function(key, val) {
-                        $('#ruangan').append(
-                            `<option value="${val.id_ruangan}" ${val.id_ruangan == selectedRuanganID ? 'selected' : ''}>${val.nama_ruangan}</option>`
-                        );
+                        // Inisialisasi dropdown fasilitas berdasarkan ruangan yang sudah dipilih
+                        let ruanganID = $('#ruangan').val();
+                        if (ruanganID) {
+                            $.get('/pelapor/form/get-fasilitas/' + ruanganID, function(data) {
+                                // console.log('Data fasilitas:', data); // Debug
+                                $('#fasilitas').html('<option value="">- Pilih Fasilitas -</option>');
+                                if (data.length === 0) {
+                                    $('#fasilitas').append('<option value="">Tidak ada fasilitas tersedia</option>');
+                                } else {
+                                    $.each(data, function(key, val) {
+                                        $('#fasilitas').append(
+                                            `<option value="${val.id_fasilitas}" ${val.id_fasilitas == '{{ $aduan->fasilitas->id_fasilitas ?? '' }}' ? 'selected' : ''}>${val.nama_fasilitas}</option>`
+                                        );
+                                    });
+                                    $('#fasilitas').prop('disabled', false)
+                                        .removeClass('cursor-not-allowed bg-gray-100')
+                                        .addClass('cursor-pointer');
+                                }
+                            }).fail(function(jqXHR, textStatus, errorThrown) {
+                                console.error('Error loading fasilitas:', textStatus, errorThrown);
+                                alert('Gagal memuat data fasilitas. Silakan coba lagi.');
+                            });
+                        }
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error loading ruangan:', textStatus, errorThrown);
+                        alert('Gagal memuat data ruangan. Silakan coba lagi.');
                     });
-                    $('#ruangan').prop('disabled', false)
-                        .removeClass('cursor-not-allowed bg-gray-100')
-                        .addClass('cursor-pointer');
-
-                    // Load fasilitas if ruangan_id exists
-                    if (selectedRuanganID) {
-                        loadFasilitas(selectedRuanganID, aduan.fasilitas_id);
-                    }
-                }).fail(function(jqXHR, textStatus, errorThrown) {
-                    console.error('Error loading ruangan:', textStatus, errorThrown);
-                });
-            }
+                }
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.error('Error loading lantai:', textStatus, errorThrown);
+                alert('Gagal memuat data lantai. Silakan coba lagi.');
+            });
         }
 
-        // Function to load fasilitas
-        function loadFasilitas(ruanganID, selectedFasilitasID) {
-            if (ruanganID) {
-                $.get('/pelapor/form/get-fasilitas/' + ruanganID, function(data) {
-                    $('#fasilitas').html('<option value="">- Pilih Fasilitas -</option>');
-                    $.each(data, function(key, val) {
-                        $('#fasilitas').append(
-                            `<option value="${val.id_fasilitas}" ${val.id_fasilitas == selectedFasilitasID ? 'selected' : ''}>${val.nama_fasilitas}</option>`
-                        );
-                    });
-                    $('#fasilitas').prop('disabled', false)
-                        .removeClass('cursor-not-allowed bg-gray-100')
-                        .addClass('cursor-pointer');
-                }).fail(function(jqXHR, textStatus, errorThrown) {
-                    console.error('Error loading fasilitas:', textStatus, errorThrown);
-                });
-            }
-        }
-
-        // Initialize dropdowns with existing data
-        if (aduan.gedung_id) {
-            loadLantai(aduan.gedung_id, aduan.lantai_id);
-        }
-
-        // Handle cascading changes
+        // Handle perubahan gedung
         $('#gedung').on('change', function() {
             let gedungID = $(this).val();
+
+            // Reset dan disable lantai, ruangan, dan fasilitas
             $('#lantai').html('<option value="">- Pilih Lantai -</option>')
                 .prop('disabled', true)
                 .removeClass('cursor-pointer')
@@ -224,11 +216,34 @@
                 .removeClass('cursor-pointer')
                 .addClass('cursor-not-allowed bg-gray-100');
 
-            loadLantai(gedungID, null);
+            if (gedungID) {
+                $.get('/pelapor/form/get-lantai/' + gedungID, function(data) {
+                    // console.log('Data lantai:', data); // Debug
+                    $('#lantai').html('<option value="">- Pilih Lantai -</option>');
+                    if (data.length === 0) {
+                        $('#lantai').append('<option value="">Tidak ada lantai tersedia</option>');
+                    } else {
+                        $.each(data, function(key, val) {
+                            $('#lantai').append(
+                                `<option value="${val.id_lantai}">${val.nama_lantai}</option>`
+                            );
+                        });
+                        $('#lantai').prop('disabled', false)
+                            .removeClass('cursor-not-allowed bg-gray-100')
+                            .addClass('cursor-pointer');
+                    }
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error loading lantai:', textStatus, errorThrown);
+                    alert('Gagal memuat data lantai. Silakan coba lagi.');
+                });
+            }
         });
 
+        // Handle perubahan lantai
         $('#lantai').on('change', function() {
             let lantaiID = $(this).val();
+
+            // Reset dan disable ruangan dan fasilitas
             $('#ruangan').html('<option value="">- Pilih Ruangan -</option>')
                 .prop('disabled', true)
                 .removeClass('cursor-pointer')
@@ -238,20 +253,63 @@
                 .removeClass('cursor-pointer')
                 .addClass('cursor-not-allowed bg-gray-100');
 
-            loadRuangan(lantaiID, null);
+            if (lantaiID) {
+                $.get('/pelapor/form/get-ruangan/' + lantaiID, function(data) {
+                    // console.log('Data ruangan:', data); // Debug
+                    $('#ruangan').html('<option value="">- Pilih Ruangan -</option>');
+                    if (data.length === 0) {
+                        $('#ruangan').append('<option value="">Tidak ada ruangan tersedia</option>');
+                    } else {
+                        $.each(data, function(key, val) {
+                            $('#ruangan').append(
+                                `<option value="${val.id_ruangan}">${val.nama_ruangan}</option>`
+                            );
+                        });
+                        $('#ruangan').prop('disabled', false)
+                            .removeClass('cursor-not-allowed bg-gray-100')
+                            .addClass('cursor-pointer');
+                    }
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error loading ruangan:', textStatus, errorThrown);
+                    alert('Gagal memuat data ruangan. Silakan coba lagi.');
+                });
+            }
         });
 
+        // Handle perubahan ruangan
         $('#ruangan').on('change', function() {
             let ruanganID = $(this).val();
+
+            // Reset dan disable fasilitas
             $('#fasilitas').html('<option value="">- Pilih Fasilitas -</option>')
                 .prop('disabled', true)
                 .removeClass('cursor-pointer')
                 .addClass('cursor-not-allowed bg-gray-100');
 
-            loadFasilitas(ruanganID, null);
+            if (ruanganID) {
+                $.get('/pelapor/form/get-fasilitas/' + ruanganID, function(data) {
+                    // console.log('Data fasilitas:', data); // Debug
+                    $('#fasilitas').html('<option value="">- Pilih Fasilitas -</option>');
+                    if (data.length === 0) {
+                        $('#fasilitas').append('<option value="">Tidak ada fasilitas tersedia</option>');
+                    } else {
+                        $.each(data, function(key, val) {
+                            $('#fasilitas').append(
+                                `<option value="${val.id_fasilitas}">${val.nama_fasilitas}</option>`
+                            );
+                        });
+                        $('#fasilitas').prop('disabled', false)
+                            .removeClass('cursor-not-allowed bg-gray-100')
+                            .addClass('cursor-pointer');
+                    }
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error loading fasilitas:', textStatus, errorThrown);
+                    alert('Gagal memuat data fasilitas. Silakan coba lagi.');
+                });
+            }
         });
 
-        // Form validation (same as before)
+        // Form validation
         $("#form-edit-aduan").validate({
             errorElement: 'span',
             errorClass: 'text-xs text-red-500 mt-1 error-text',

@@ -11,7 +11,7 @@ class Perbaikan extends Model
     protected $table = 'perbaikan';
     protected $guarded = ['id_perbaikan'];
     protected $primaryKey = 'id_perbaikan';
-    protected $appends = ['fasilitas', 'status_aduan'];
+    protected $appends = ['fasilitas', 'status_aduan', 'status'];
     public function inspeksi()
     {
         return $this->belongsTo(Inspeksi::class, 'id_inspeksi', 'id_inspeksi');
@@ -27,6 +27,14 @@ class Perbaikan extends Model
     public function getStatusAduanAttribute()
     {
         return $this->inspeksi?->status_aduan;
+    }
+    public function getStatusAttribute()
+    {
+        if($this->teknisi_selesai){
+            return 'SELESAI';
+        }else{
+            return 'PROSES';
+        }
     }
 
 }

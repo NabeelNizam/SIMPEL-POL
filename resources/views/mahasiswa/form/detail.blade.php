@@ -1,12 +1,12 @@
 <!-- Modal Konten Detail -->
 <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative max-h-[80vh] overflow-y-auto">
 
-    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl">
+    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl cursor-pointer">
         <i class="fas fa-times"></i>
     </button>
 
     <h2 class="text-xl font-semibold text-center">Detail Aduan</h2>
-    <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
+    <div class="w-[125px] h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
 
     <!-- Isi pengaduan -->
     <div class="mb-6">
@@ -16,7 +16,7 @@
             </div>
             <h3 class="text-lg font-semibold text-gray-800">Isi Pengaduan</h3>
         </div>
-        <div class="w-[150px] h-0.5 bg-orange-400 mb-4"></div>
+        <div class="w-[160px] h-0.5 bg-orange-400 mb-4"></div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Gambar -->

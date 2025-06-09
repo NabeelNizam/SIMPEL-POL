@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Enums\Status;
+use App\Http\Sheet\Sheet;
+use App\Models\Aduan;
 use App\Models\Fasilitas;
 use App\Models\Inspeksi;
 use App\Models\Kategori;
@@ -30,8 +33,9 @@ class PengaduanSarprasController extends Controller
 
         // Query untuk Pengaduan
         $query = Fasilitas::with(['kategori', 'ruangan', 'aduan.pelapor.role', 'inspeksi'])
-            ->whereDoesntHave('inspeksi')
-            ;
+            ->whereHas('aduan', function ($query) {
+                $query->where('status', Status::MENUNGGU_DIPROSES->value);
+            });
 
         if ($request->has('filter_user') && $request->filter_user != 'all') {
             $pelapor = match ($request->filter_user) {
@@ -65,21 +69,18 @@ class PengaduanSarprasController extends Controller
 
         // Filter berdasarkan pencarian
         if ($request->search) {
-            $query->whereHas('fasilitas', function ($q) use ($request) {
-                $q->where('nama_fasilitas', 'like', "%{$request->search}%");
-            });
+            $query->where('nama_fasilitas', 'like', "%{$request->search}%");
         }
 
-        // Filter berdasarkan kategori
-        if ($request->id_kategori) {
-            $query->whereHas('fasilitas', function ($q) use ($request) {
-                $q->where('id_kategori', $request->id_kategori);
+        $periodeSekarang = Periode::getPeriodeAktif();
+        // Filter berdasarkan periode
+        if ($request->id_periode) {
+            $query->whereHas('aduan', function ($q) use ($request) {
+                $q->where('id_periode', $request->id_periode);
             });
         }
 
         $query->orderBy('aduan_count', 'desc');
-
-        // dd($query->toSql(), $query->getBindings());
 
 
         // Pagination
@@ -89,14 +90,14 @@ class PengaduanSarprasController extends Controller
         $pengaduan->appends(request()->query());
 
         // ambil data kategori untuk filter
-        $kategori = Kategori::all();
+        $periode = Periode::all();
 
         if ($request->ajax()) {
             $html = view('sarpras.pengaduan.table', compact('pengaduan', 'pelapor'))->render();
             return response()->json(['html' => $html]);
         }
 
-        return view('sarpras.pengaduan.index', compact('breadcrumb', 'page', 'activeMenu', 'pengaduan', 'kategori', 'pelapor'));
+        return view('sarpras.pengaduan.index', compact('breadcrumb', 'page', 'activeMenu', 'pengaduan', 'periode', 'pelapor'));
     }
 
     // Detail Fasilitas & Laporan Pengaduan nya
@@ -129,11 +130,79 @@ class PengaduanSarprasController extends Controller
                 'id_periode' => $periodeSekarang->id_periode,
                 'tanggal_mulai' => now(),
             ]);
-            // dd($query->toSql(), $query->getBindings());
+            Aduan::where('id_fasilitas', $id)->where('status', Status::MENUNGGU_DIPROSES->value)
+                ->update(['status' => Status::SEDANG_INSPEKSI->value]);
             return redirect()->back()->with('success', 'Berhasil menugaskan inspeksi.');
         } catch (\Exception $e) {
             Log::error('Gagal menugaskan teknisi: ' . $e->getMessage());
             return redirect()->back()->withErrors(['general' => 'Gagal menugaskan teknisi.']);
         }
+    }
+
+    private function set_sheet($filter_user)
+    {
+        $query = Fasilitas::with(['kategori', 'ruangan', 'aduan.pelapor.role', 'inspeksi'])
+            ->whereHas('aduan', function ($query) {
+                $query->where('status', Status::MENUNGGU_DIPROSES->value);
+            });
+
+        if ($filter_user != 'all') {
+            $pelapor = match ($filter_user) {
+                '1' => ' dari Mahasiswa',
+                '5' => ' dari Dosen',
+                '6' => ' dari Tendik',
+                default => '' // Opsional: untuk menangani nilai yang tidak sesuai
+            };
+
+            // Filter dan count hanya aduan dari pelapor dengan role tertentu
+            $query->withCount([
+                'aduan as aduan_count' => function ($q) use ($filter_user) {
+                    $q->whereHas('pelapor', function ($q2) use ($filter_user) {
+                        $q2->where('id_role', $filter_user);
+                    });
+                }
+            ]);
+
+            // Filter hanya fasilitas yang punya aduan dari pelapor dengan role tersebut
+            $query->whereHas('aduan', function ($q) use ($filter_user) {
+                $q->whereHas('pelapor', function ($q2) use ($filter_user) {
+                    $q2->where('id_role', $filter_user);
+                });
+            });
+        } else {
+            // Jika tidak difilter berdasarkan role
+            $query->withCount('aduan');
+        }
+
+        $query->orderBy('aduan_count', 'desc')->get();
+
+        $filename = 'data_pengaduan_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+        $sheet = new Sheet(); // Pass the data and filename to the Sheet
+        $sheet->title = 'Data Proses Pengecekan Pengaduan';
+        $sheet->text = 'Berikut adalah Data Proses Pengecekan Pengaduan yang masuk' . $pelapor . '.';
+        $sheet->footer = 'Dibuat oleh Sistem';
+        $sheet->header = ['Kode Fasilitas', 'Nama Fasilitas', 'Kategori', 'Lokasi', 'Urgensi', 'Jumlah Aduan'];
+
+        $sheet->data = $query->map(function ($item) {
+            return [
+                'nama_fasilitas' => $item->fasilitas->nama_fasilitas,
+                'kategori' => $item->fasilitas->kategori->nama_kategori,
+                'tanggal_aduan' => $item->tanggal_aduan,
+                'tanggal_perbaikan' => $item->fasilitas->inspeksi->first()->perbaikan ? $item->fasilitas->inspeksi->first()->perbaikan->tanggal_selesai : 'Belum diperbaiki',
+            ];
+        })->toArray();
+        $sheet->filename = $filename;
+
+        return $sheet;
+    }
+    public function export_excel($filter_role)
+    {
+
+        return $this->set_sheet($filter_role)->toXls();
+    }
+
+    public function export_pdf()
+    {
+        // return $this->set_sheet()->toPdf();
     }
 }

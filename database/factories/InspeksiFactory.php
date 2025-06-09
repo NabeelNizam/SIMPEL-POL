@@ -59,11 +59,23 @@ class InspeksiFactory extends Factory
                     ->orderBy('id_periode')
                     ->first();
                 $tanggalMulai = fake()->dateTimeBetween($nextPeriode->tanggal_mulai, $nextPeriode->tanggal_selesai);
+                // kadang selesai, kadang belum
+                if (fake()->boolean()) {
+                    $tanggalSelesai = fake()->dateTimeBetween($tanggalMulai, $nextPeriode->tanggal_selesai);
+
+                    // kadang selesai, kadang belum
+                    $teknisiSelesai = fake()->boolean() ? true : false;
+                }else
+                {
+                    $tanggalSelesai = null;
+                    $teknisiSelesai = false;
+                }
                 Perbaikan::factory()->create([
                     'id_inspeksi' => $inspeksi->id_inspeksi,
                     'id_periode' => $inspeksi->id_periode + 1,
                     'tanggal_mulai' => $tanggalMulai,
-                    'tanggal_selesai' => fake()->dateTimeBetween($tanggalMulai, $nextPeriode->tanggal_selesai),
+                    'tanggal_selesai' => $tanggalSelesai,
+                    'teknisi_selesai' => $teknisiSelesai
                 ]);
 
                 Biaya::factory()->create([

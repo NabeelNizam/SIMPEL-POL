@@ -59,7 +59,7 @@
                             <img src="{{ asset('icons/solid/Detail.svg') }}" alt="Detail" class="h-7 w-7 inline">
                         </button>
                         <button onclick="modalAction('{{ route('sarpras.perbaikan.confirm_approval', $p->id_fasilitas) }}')"
-                            class="text-gray-600 hover:underline {{ $isCompleted ? 'cursor-pointer' : 'cursor-not-allowed' }}">
+                            class="text-gray-600 hover:underline {{ $isCompleted ? 'cursor-pointer' : 'cursor-not-allowed' }}" {{$isCompleted ? '' : 'disabled'}}>
                             <img src="{{ asset($isCompleted ? 'icons/solid/Acc.svg' : 'icons/light/Acc.svg') }}"
                                 alt="Approve" class="h-7 w-7 inline">
                         </button>
