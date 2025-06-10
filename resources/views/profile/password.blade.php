@@ -8,8 +8,7 @@
     <h2 class="text-xl font-semibold mb-4 text-center">Ubah Kata Sandi</h2>
     <div class="w-24 h-1 bg-yellow-400 mx-auto mt-1 mb-6 rounded"></div>
     <form action="{{ route('profil.password.update') }}" method="POST" id="form-edit-password"
-        class="m-5 flex flex-col gap-6"
-        enctype="multipart/form-data">
+        class="m-5 flex flex-col gap-6" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         {{-- konfirmasi password lama --}}
@@ -61,7 +60,7 @@
                 old_password: {
                     required: true,
                 },
-                new_password:{
+                new_password: {
                     required: true,
                     minlength: 6,
                     maxlength: 100
@@ -109,12 +108,28 @@
                         });
                     },
                     error: function(xhr) {
-                        let err = xhr.responseJSON;
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal',
-                            text: err.message
-                        });
+                        if (xhr.status === 422) {
+                            // Tampilkan pesan error validasi
+                            let errors = xhr.responseJSON.errors;
+                            let errorText = "";
+                            $.each(errors, function(key, value) {
+                                errorText += value[0] + "<br>";
+                            });
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validasi Gagal!',
+                                html: errorText
+                            });
+                        } else {
+                            // Error lain (server, dsb)
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi Kesalahan!',
+                                text: xhr.responseJSON.message ||
+                                    'Server error!'
+                            });
+                        }
                     }
                 });
                 return false;

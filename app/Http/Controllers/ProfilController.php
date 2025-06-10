@@ -152,14 +152,22 @@ class ProfilController extends Controller
 
             $user = User::findOrFail(auth()->user()->id_user);
             if (Hash::check($request->old_password, $user->password)) {
+                if ($request->new_password != $request->confirm_password) {
+                    // return response()->json([
+                    //     'status' => 'error',
+                    //     'message' => 'Konfirmasi password tidak sesuai.'
+                    // ], 422);
+                    return redirect()->back()->withErrors(['error'=> 'Konfirmasi password tidak sesuai.']);
+                }
                 $user->password = Hash::make($request->new_password);
                 $user->save();
                 return redirect()->back()->with('success', 'Password berhasil diperbarui.');
             } else {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Password lama tidak sesuai.'
-                ], 422);
+                // return response()->json([
+                //     'status' => 'success',
+                //     'message' => 'Password lama tidak sesuai.'
+                // ], 422);
+                return redirect()->back()->withErrors(['error'=> 'Password lama tidak sesuai.']);
             }
         } catch (\Throwable $th) {
             throw $th;
