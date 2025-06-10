@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Enums\Status;
 use App\Http\Enums\TingkatKerusakan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -56,9 +57,47 @@ class Inspeksi extends Model
     public function getUserCountAttribute()
     {
         return Aduan::where('id_fasilitas', $this->id_fasilitas)
+            ->where('status', Status::SEDANG_INSPEKSI->value)
             ->whereHas('periode', function ($query) {
                 $query->where('tanggal_selesai', '<=', $this->periode->tanggal_selesai);
             })
             ->count();
+    }
+    public function getSkorLaporanBerulangAttribute()
+    {
+        return 1;
+    }
+    public function getBobotPelaporAttribute()
+    {
+        $counts = Aduan::where('id_fasilitas', $this->id_fasilitas)
+            ->where('status', Status::SEDANG_INSPEKSI->value)
+            ->whereHas('periode', function ($query) {
+                $query->where('tanggal_selesai', '<=', $this->periode->tanggal_selesai);
+            })
+            ->join('users', 'aduan.id_user_pelapor', '=', 'users.id_user')
+            ->whereIn('users.id_role', [1, 5, 6])
+            ->groupBy('users.id_role')
+            ->selectRaw('users.id_role, COUNT(*) as total')
+            ->pluck('total', 'id_role')
+            ->toArray();
+
+        $count_mahasiswa = $counts[1] ?? 0; // id_role = 1
+        $count_dosen = $counts[5] ?? 0;     // id_role = 5
+        $count_tendik = $counts[6] ?? 0;    // id_role = 6
+        
+
+
+        $result = ($count_mahasiswa * 1) + ($count_dosen * 2) + ($count_tendik * 3);
+
+        // $tes_nilai = [
+        //     'mahasiswa' => $count_mahasiswa,
+        //     'tendik' => $count_tendik,
+        //     'dosen' => $count_dosen,
+        //     'result' => $result
+        // ];
+    
+        // dd($tes_nilai);
+
+        return $result;
     }
 }

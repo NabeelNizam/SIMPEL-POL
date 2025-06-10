@@ -63,7 +63,7 @@
                                     bg-gray-500
                                 @endif
                             ">
-                                {{ Str::ucfirst(Str::lower($inspeksi->fasilitas->urgensi->value)) }}
+                                {{ $inspeksi->fasilitas->urgensi->value }}
                             </span>
                         @else
                             <span class="px-3 py-1 rounded-full bg-gray-500 text-white text-sm">-</span>
@@ -73,7 +73,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-500 mb-1">Status</label>
                         <span class="inline-block px-4 py-1 rounded-full text-white text-sm font-medium bg-yellow-500">
-                            Sedang Inspeksi
+                            SEDANG INSPEKSI
                         </span>
                 </div>
                 <div>
@@ -156,7 +156,7 @@
                     <label class="block text-sm font-medium text-gray-600 mb-2">Tingkat Kerusakan</label>
                     <p class="text-gray-800 font-semibold">
                         @if($inspeksi->tingkat_kerusakan)
-                            <span class="px-4 py-2 rounded-full text-white text-sm
+                            <span class="px-4 py-1 rounded-full text-white text-sm
                                 @if($inspeksi->tingkat_kerusakan === \App\Http\Enums\TingkatKerusakan::PARAH)
                                     bg-red-500
                                 @elseif($inspeksi->tingkat_kerusakan === \App\Http\Enums\TingkatKerusakan::SEDANG)
@@ -167,7 +167,7 @@
                                     bg-gray-500
                                 @endif
                             ">
-                                {{ Str::ucfirst(Str::lower($inspeksi->tingkat_kerusakan->value)) ?? '-' }}
+                                {{ $inspeksi->tingkat_kerusakan->value ?? '-' }}
                             </span>
                         @else
                             <span class="px-3 py-1 rounded-full bg-gray-500 text-white text-sm">-</span>

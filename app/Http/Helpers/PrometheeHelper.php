@@ -18,39 +18,7 @@ class PrometheeHelper
             return [];
         }
 
-        $idInspeksiList = array_column($inspeksi, 'id_inspeksi');
-        Log::info('PrometheeHelper Langkah 1 - Data Awal', [
-            'jumlah_inspeksi' => count($inspeksi),
-            'id_inspeksi' => $idInspeksiList,
-        ]);
-
-        // Periksa duplikasi awal
-        $idCounts = array_count_values($idInspeksiList);
-        foreach ($idCounts as $id => $count) {
-            if ($count > 1) {
-                Log::warning("PrometheeHelper: Duplikasi id_inspeksi ditemukan di data awal: id_inspeksi $id muncul $count kali", $inspeksi);
-            }
-        }
-
-        // Langkah 2: Hapus duplikasi berdasarkan id_inspeksi
-        $uniqueInspeksi = [];
-        $seenIds = [];
-        foreach ($inspeksi as $item) {
-            if (!in_array($item['id_inspeksi'], $seenIds)) {
-                $uniqueInspeksi[] = $item;
-                $seenIds[] = $item['id_inspeksi'];
-            } else {
-                Log::warning("PrometheeHelper: Duplikasi id_inspeksi ditemukan saat deduplikasi: id_inspeksi {$item['id_inspeksi']}", $item);
-            }
-        }
-        $inspeksi = array_values($uniqueInspeksi);
-
-        Log::info('PrometheeHelper Langkah 2 - Setelah Deduplikasi', [
-            'jumlah_inspeksi' => count($inspeksi),
-            'id_inspeksi' => array_column($inspeksi, 'id_inspeksi'),
-        ]);
-
-        // Langkah 3: Konversi data ENUM dan ambil biaya
+        // Langkah 2: Konversi data ENUM dan ambil biaya
         foreach ($inspeksi as &$item) {
             // Konversi urgensi ke nilai numerik
             $urgensi = $item['fasilitas']['urgensi'] ?? 'BIASA';
@@ -69,66 +37,27 @@ class PrometheeHelper
             // Ambil biaya
             $item['biaya'] = Biaya::where('id_inspeksi', $item['id_inspeksi'])->sum('besaran') ?? 0;
 
-            // Konversi waktu_selesai ke timestamp
-            $item['waktu_selesai'] = strtotime($item['tanggal_selesai'] ?? now());
-
             // Validasi user_count
             if (!isset($item['user_count']) || !is_numeric($item['user_count'])) {
                 Log::warning("PrometheeHelper: user_count tidak valid untuk id_inspeksi {$item['id_inspeksi']}", $item);
                 $item['user_count'] = 0;
             }
+
+            // Validasi laporan_berulang
+            if (!isset($item['laporan_berulang']) || !is_numeric($item['laporan_berulang'])) {
+                Log::warning("PrometheeHelper: laporan_berulang tidak valid untuk id_inspeksi {$item['id_inspeksi']}", $item);
+                $item['laporan_berulang'] = 0;
+            }
+
+            // Validasi bobot_pelapor
+            if (!isset($item['bobot_pelapor']) || !is_numeric($item['bobot_pelapor'])) {
+                Log::warning("PrometheeHelper: bobot_pelapor tidak valid untuk id_inspeksi {$item['id_inspeksi']}", $item);
+                $item['bobot_pelapor'] = 0;
+            }
         }
         unset($item);
 
-        Log::info('PrometheeHelper Langkah 3 - Setelah Konversi Data', [
-            'jumlah_inspeksi' => count($inspeksi),
-            'id_inspeksi' => array_column($inspeksi, 'id_inspeksi'),
-            'data_kriteria' => array_map(function ($item) {
-                return [
-                    'id_inspeksi' => $item['id_inspeksi'],
-                    'user_count' => $item['user_count'],
-                    'urgensi_fasilitas' => $item['urgensi_fasilitas'],
-                    'biaya' => $item['biaya'],
-                    'tingkat_kerusakan' => $item['tingkat_kerusakan'],
-                    'tingkat_kerusakan_asli' => $item['tingkat_kerusakan_asli'],
-                    'waktu_selesai' => $item['waktu_selesai'],
-                ];
-            }, $inspeksi),
-        ]);
-
-        // Langkah 4: Hitung ranking untuk waktu_selesai
-        $waktuSelesai = array_column($inspeksi, 'waktu_selesai');
-        if (!empty($waktuSelesai)) {
-            arsort($waktuSelesai);
-            $waktuRanking = [];
-            $rank = 1;
-            foreach ($waktuSelesai as $index => $value) {
-                $waktuRanking[$index] = $rank++;
-            }
-
-            foreach ($inspeksi as $index => &$item) {
-                $item['waktu'] = $waktuRanking[$index] ?? 1;
-            }
-            unset($item);
-        } else {
-            foreach ($inspeksi as &$item) {
-                $item['waktu'] = 1;
-            }
-            unset($item);
-        }
-
-        Log::info('PrometheeHelper Langkah 4 - Setelah Ranking Waktu Selesai', [
-            'jumlah_inspeksi' => count($inspeksi),
-            'id_inspeksi' => array_column($inspeksi, 'id_inspeksi'),
-            'waktu_ranking' => array_map(function ($item) {
-                return [
-                    'id_inspeksi' => $item['id_inspeksi'],
-                    'waktu' => $item['waktu'],
-                ];
-            }, $inspeksi),
-        ]);
-
-        // Langkah 5: Normalisasi data
+        // Langkah 3: Normalisasi data
         $normalized = [];
         $inspeksi = array_values($inspeksi);
         foreach ($kriteria as $k => $krit) {
@@ -156,19 +85,7 @@ class PrometheeHelper
             }
         }
 
-        Log::info('PrometheeHelper Langkah 5 - Setelah Normalisasi', [
-            'jumlah_inspeksi' => count($inspeksi),
-            'id_inspeksi' => array_column($inspeksi, 'id_inspeksi'),
-            'normalized_data' => array_map(function ($i) use ($normalized, $kriteria, $inspeksi) {
-                $data = ['id_inspeksi' => $inspeksi[$i]['id_inspeksi']];
-                foreach ($kriteria as $k => $krit) {
-                    $data[$k] = $normalized[$i][$k] ?? 0;
-                }
-                return $data;
-            }, array_keys($inspeksi)),
-        ]);
-
-        // Langkah 6: Hitung preference function
+        // Langkah 4: Hitung preference function
         $preference = [];
         $n = count($inspeksi);
         for ($i = 0; $i < $n; $i++) {
@@ -184,20 +101,7 @@ class PrometheeHelper
             }
         }
 
-        $preferenceSample = [];
-        foreach (array_keys($inspeksi) as $i) {
-            $preferenceSample[] = [
-                'id_inspeksi' => $inspeksi[$i]['id_inspeksi'],
-                'preference' => $preference[$i] ?? [],
-            ];
-        }
-        Log::info('PrometheeHelper Langkah 6 - Setelah Preference Function', [
-            'jumlah_inspeksi' => count($inspeksi),
-            'id_inspeksi' => array_column($inspeksi, 'id_inspeksi'),
-            'preference_sample' => $preferenceSample,
-        ]);
-
-        // Langkah 7: Hitung leaving flow, entering flow, dan net flow
+        // Langkah 5: Hitung leaving flow, entering flow, dan net flow
         $leavingFlow = [];
         $enteringFlow = [];
         $netFlow = [];
@@ -212,78 +116,20 @@ class PrometheeHelper
             $netFlow[$i] = $leavingFlow[$i] - $enteringFlow[$i];
         }
 
-        Log::info('PrometheeHelper Langkah 7 - Setelah Flow Calculation', [
-            'jumlah_inspeksi' => count($inspeksi),
-            'id_inspeksi' => array_column($inspeksi, 'id_inspeksi'),
-            'flows' => array_map(function ($i) use ($leavingFlow, $enteringFlow, $netFlow, $inspeksi) {
-                return [
-                    'id_inspeksi' => $inspeksi[$i]['id_inspeksi'],
-                    'leaving_flow' => $leavingFlow[$i] ?? 0,
-                    'entering_flow' => $enteringFlow[$i] ?? 0,
-                    'net_flow' => $netFlow[$i] ?? 0,
-                ];
-            }, array_keys($inspeksi)),
-        ]);
-
-        // Langkah 8: Tambahkan leaving_flow, entering_flow, net_flow (skor), dan ranking
-        $seenIds = [];
+        // Langkah 6: Tambahkan leaving_flow, entering_flow, net_flow (skor), dan ranking
         arsort($netFlow);
         $rank = 1;
         foreach ($netFlow as $index => $score) {
-            if (!in_array($inspeksi[$index]['id_inspeksi'], $seenIds)) {
-                $inspeksi[$index]['leaving_flow'] = round($leavingFlow[$index], 4);
-                $inspeksi[$index]['entering_flow'] = round($enteringFlow[$index], 4);
-                $inspeksi[$index]['skor'] = round($score, 4);
-                $inspeksi[$index]['ranking'] = $rank++;
-                $seenIds[] = $inspeksi[$index]['id_inspeksi'];
-            } else {
-                Log::warning("PrometheeHelper: Duplikasi id_inspeksi saat penetapan ranking: id_inspeksi {$inspeksi[$index]['id_inspeksi']}", $inspeksi[$index]);
-            }
+            $inspeksi[$index]['leaving_flow'] = round($leavingFlow[$index], 4);
+            $inspeksi[$index]['entering_flow'] = round($enteringFlow[$index], 4);
+            $inspeksi[$index]['skor'] = round($score, 4);
+            $inspeksi[$index]['ranking'] = $rank++;
         }
 
-        Log::info('PrometheeHelper Langkah 8 - Setelah Penambahan Flow dan Ranking', [
-            'jumlah_inspeksi' => count($inspeksi),
-            'id_inspeksi' => array_column($inspeksi, 'id_inspeksi'),
-            'flow_ranking' => array_map(function ($item) {
-                return [
-                    'id_inspeksi' => $item['id_inspeksi'],
-                    'leaving_flow' => $item['leaving_flow'] ?? null,
-                    'entering_flow' => $item['entering_flow'] ?? null,
-                    'skor' => $item['skor'] ?? null,
-                    'ranking' => $item['ranking'] ?? null,
-                ];
-            }, $inspeksi),
-        ]);
-
-        // Langkah 9: Urutkan berdasarkan ranking
+        // Langkah 7: Urutkan berdasarkan ranking
         usort($inspeksi, function ($a, $b) {
             return ($a['ranking'] ?? PHP_INT_MAX) <=> ($b['ranking'] ?? PHP_INT_MAX);
         });
-
-        // Periksa duplikasi akhir
-        $idInspeksiList = array_column($inspeksi, 'id_inspeksi');
-        $idCounts = array_count_values($idInspeksiList);
-        foreach ($idCounts as $id => $count) {
-            if ($count > 1) {
-                Log::warning("PrometheeHelper: Duplikasi id_inspeksi ditemukan di hasil akhir: id_inspeksi $id muncul $count kali", $inspeksi);
-            }
-        }
-
-        Log::info('PrometheeHelper Langkah 9 - Hasil Akhir', [
-            'jumlah_inspeksi' => count($inspeksi),
-            'id_inspeksi' => $idInspeksiList,
-            'hasil' => array_map(function ($item) {
-                return [
-                    'id_inspeksi' => $item['id_inspeksi'],
-                    'leaving_flow' => $item['leaving_flow'] ?? null,
-                    'entering_flow' => $item['entering_flow'] ?? null,
-                    'skor' => $item['skor'] ?? null,
-                    'ranking' => $item['ranking'] ?? null,
-                    'waktu' => $item['waktu'] ?? null,
-                    'tingkat_kerusakan_asli' => $item['tingkat_kerusakan_asli'] ?? null,
-                ];
-            }, $inspeksi),
-        ]);
 
         return $inspeksi;
     }

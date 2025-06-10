@@ -7,7 +7,6 @@
         <x-table.heading>Urgensi</x-table.heading>
         <x-table.heading>Jumlah Pelapor</x-table.heading>
         <x-table.heading>Tingkat Kerusakan</x-table.heading>
-        <x-table.heading>Poin</x-table.heading>
         <x-table.heading>Aksi</x-table.heading>
     </x-slot>
 
@@ -65,7 +64,6 @@
                     @endif
                     </div>
                 </x-table.cell>
-                <x-table.cell>{{ $item['skor'] ?? '-' }}</x-table.cell>
                 <x-table.cell>
                     <div class="flex items-center space-x-2 min-w-[90px]">
                         <button onclick="modalAction('{{ route('sarpras.penugasan.show', $item['id_inspeksi']) }}')"

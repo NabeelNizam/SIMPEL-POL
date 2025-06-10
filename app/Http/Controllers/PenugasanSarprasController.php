@@ -39,7 +39,8 @@ class PenugasanSarprasController extends Controller
             'urgensi_fasilitas' => $kriteria['Urgensi'],
             'biaya' => $kriteria['Biaya Anggaran'],
             'tingkat_kerusakan' => $kriteria['Tingkat Kerusakan'],
-            'waktu_selesai' => $kriteria['Waktu'],
+            'laporan_berulang' => $kriteria['Laporan Berulang'],
+            'bobot_pelapor' => $kriteria['Bobot Pelapor'],
         ];
 
         // Query untuk Inspeksi
@@ -54,7 +55,6 @@ class PenugasanSarprasController extends Controller
         ->select('inspeksi.*')
         ->distinct()
         ->whereNotNull('tingkat_kerusakan')
-        ->whereNotNull('tanggal_selesai')
         ->whereDoesntHave('perbaikan');
 
         // Filter berdasarkan pencarian
@@ -74,30 +74,14 @@ class PenugasanSarprasController extends Controller
         // Ambil data inspeksi sebagai koleksi Eloquent
         $inspeksiCollection = $query->get();
 
-        // Konversi ke array dan tambahkan user_count
+        // Konversi ke array dan tambahkan user_count, laporan_berulang, dan bobot_pelapor
         $inspeksi = $inspeksiCollection->map(function ($item) {
             $data = $item->toArray();
             $data['user_count'] = $item->user_count; // Panggil accessor
+            $data['laporan_berulang'] = $item->skor_laporan_berulang; // Tambahkan skor_laporan_berulang
+            $data['bobot_pelapor'] = $item->bobot_pelapor; // Tambahkan bobot_pelapor
             return $data;
         })->toArray();
-
-        // Log untuk memastikan tidak ada duplikasi sebelum PrometheeHelper
-        $idInspeksiCounts = array_count_values(array_column($inspeksi, 'id_inspeksi'));
-        foreach ($idInspeksiCounts as $id => $count) {
-            if ($count > 1) {
-                Log::warning("SarprasController: Duplikasi id_inspeksi ditemukan sebelum PrometheeHelper: id_inspeksi $id muncul $count kali", $inspeksi);
-            }
-        }
-        Log::info('SarprasController: Data Inspeksi Sebelum PrometheeHelper', [
-            'jumlah_inspeksi' => count($inspeksi),
-            'id_inspeksi' => array_column($inspeksi, 'id_inspeksi'),
-            'user_count_values' => array_map(function ($item) {
-                return [
-                    'id_inspeksi' => $item['id_inspeksi'],
-                    'user_count' => $item['user_count'] ?? null,
-                ];
-            }, $inspeksi),
-        ]);
 
         // Proses PROMETHEE
         if (!empty($inspeksi)) {
@@ -116,28 +100,6 @@ class PenugasanSarprasController extends Controller
             $currentPage,
             ['path' => $request->url(), 'query' => $request->query()]
         );
-
-        // Log hasil penugasan
-        Log::info('SarprasController: Data Penugasan Setelah PrometheeHelper', [
-            'jumlah_penugasan' => count($penugasan),
-            'id_inspeksi' => array_column($penugasan->items(), 'id_inspeksi'),
-            'hasil' => array_map(function ($item) {
-                return [
-                    'id_inspeksi' => $item['id_inspeksi'],
-                    'skor' => $item['skor'] ?? null,
-                    'ranking' => $item['ranking'] ?? null,
-                    'waktu' => $item['waktu'] ?? null,
-                ];
-            }, $penugasan->items()),
-        ]);
-
-        // Periksa duplikasi di penugasan
-        $penugasanIds = array_count_values(array_column($penugasan->items(), 'id_inspeksi'));
-        foreach ($penugasanIds as $id => $count) {
-            if ($count > 1) {
-                Log::warning("SarprasController: Duplikasi id_inspeksi ditemukan di penugasan: id_inspeksi $id muncul $count kali", $penugasan->items());
-            }
-        }
 
         // Ambil data periode untuk filter
         $periode = Periode::all();
