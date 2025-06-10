@@ -290,3 +290,5 @@ Route::prefix('teknisi')->middleware(['authorize:TEKNISI'])->group(function () {
         Route::get('/export-pdf', [RiwayatTeknisiController::class, 'export_pdf'])->name('teknisi.perbaikan.export_pdf');
     });
 });
+
+//Route::get('/tes-spk', [PrometheeController::class, 'tesPerhitungan'])->name('tes-spk');

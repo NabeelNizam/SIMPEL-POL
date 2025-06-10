@@ -267,6 +267,14 @@
                                 alt="Form Pelaporan" class="mr-2 w-5">
                             Riwayat Laporan
                         </a>
+                        {{-- Tes SPK --}}
+                        {{-- <a href="/tes-spk"
+                            class="flex items-center p-2 w-full {{ $activeMenu == 'tesSPK' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                            style="{{ $activeMenu == 'tesSPK' ? 'border-color: #F99D1C;' : '' }}">
+                            <img src="{{ $activeMenu == 'tesSPK' ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}"
+                                alt="Form Pelaporan" class="mr-2 w-5">
+                            Tes SPK
+                        </a> --}}
                     </div>
                 </nav>
             </div>
