@@ -28,7 +28,7 @@
                 </div>
             </button>
         </div>
-    </form>
+    </form>ccccc
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -39,7 +39,7 @@ $(document).ready(function() {
     // Tambahkan metode custom untuk validasi total bobot
     $.validator.addMethod("totalBobotSatu", function(value, element) {
         let total = 0;
-        for (let i = 1; i <= 5; i++) {
+        for (let i = 1; i <= 6; i++) {
             let val = parseFloat($(`#bobot_${i}`).val());
             total += isNaN(val) ? 0 : val;
         }
@@ -47,7 +47,7 @@ $(document).ready(function() {
     }, "Jumlah total bobot harus sama dengan 1");
 
     let rules = {};
-    $.each([1, 2, 3, 4, 5], function(i, num) {
+    $.each([1, 2, 3, 4, 5, 6], function(i, num) {
         rules['bobot_' + num] = {
             required: true,
             number: true,
@@ -57,7 +57,7 @@ $(document).ready(function() {
     });
 
     let messages = {};
-    $.each([1, 2, 3, 4, 5], function(i, num) {
+    $.each([1, 2, 3, 4, 5, 6], function(i, num) {
         messages['bobot_' + num] = {
             required: "Bobot " + num + " harus diisi",
             number: "Bobot harus berupa angka desimal",
@@ -66,7 +66,7 @@ $(document).ready(function() {
         };
     });
 
-    rules['bobot_5'].totalBobotSatu = true;
+    rules['bobot_6'].totalBobotSatu = true;
 
     $("#form-edit-bobot").validate({
         errorElement: 'span',
