@@ -47,6 +47,8 @@ Route::prefix('profil')->middleware(['auth'])->group(function () {
     Route::get('/', [ProfilController::class, 'index'])->name('profil');
     Route::get('/edit_ajax', [ProfilController::class, 'edit_ajax'])->name('profil.edit_ajax');
     Route::put('/{id}/update_ajax', [ProfilController::class, 'update_ajax']);
+    Route::get('/password', [ProfilController::class, 'password'])->name('profil.password');
+    Route::put('/password', [ProfilController::class, 'update_password'])->name('profil.password.update');
 });
 Route::prefix('sop')->middleware(['auth'])->group(function () {
         Route::get('/download/{role}/{filename}', [SOPController::class, 'SOPDownload'])->name('sopDownload');
@@ -165,7 +167,6 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         // Route untuk memperbarui SOP
         Route::put('/admin/sop/update', [SOPController::class, 'update'])->name('sop.update');
         Route::delete('/admin/sop/delete/{role}', [SOPController::class, 'delete'])->name('sop.delete');
-    }); 
     });
     // Aduan
     Route::prefix('aduan')->group(function () {
