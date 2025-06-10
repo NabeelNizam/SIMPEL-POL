@@ -260,7 +260,7 @@
                                 alt="Form Pelaporan" class="mr-2 w-5">
                             Perbaikan
                         </a>
-                        <a href="/sarpras/riwayat"
+                        <a href="{{ route('sarpras.riwayat') }}"
                             class="flex items-center p-2 w-full {{ $activeMenu == 'riwayat' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                             style="{{ $activeMenu == 'riwayat' ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ $activeMenu == 'riwayat' ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}"

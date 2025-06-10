@@ -5,25 +5,24 @@ namespace App\Http\Controllers;
 use App\Http\Sheet\Sheet;
 use App\Models\Aduan;
 use App\Models\Fasilitas;
-use App\Models\Kategori;
 use App\Models\Periode;
 use App\Models\UmpanBalik;
 use Illuminate\Http\Request;
 
-class AduanController extends Controller
+class RiwayatSarprasController extends Controller
 {
     public function index(Request $request)
     {
         $breadcrumb = (object) [
-            'title' => 'Manajemen Aduan',
-            'list' => ['Home', 'Manajemen Aduan']
+            'title' => 'Manajemen Riwayat Perbaikan',
+            'list' => ['Home', 'Riwayat Perbaikan']
         ];
 
         $page = (object) [
             'title' => 'Daftar aduan yang terdaftar dalam sistem'
         ];
 
-        $activeMenu = 'aduan';
+        $activeMenu = 'riwayat';
 
         // Query untuk aduan dengan status selesai
         $query = Aduan::with(['fasilitas', 'fasilitas.inspeksi.perbaikan', 'fasilitas.ruangan'])->where('status', 'Selesai');
@@ -54,12 +53,12 @@ class AduanController extends Controller
         $periode = Periode::all();
 
         if ($request->ajax()) {
-            $html = view('admin.aduan.aduan_table', compact('aduan'))->render();
+            $html = view('sarpras.riwayat.riwayat_table', compact('aduan'))->render();
             return response()->json(['html' => $html]);
         }
 
 
-        return view('admin.aduan.index', compact('breadcrumb', 'page', 'activeMenu', 'aduan', 'periode'));
+        return view('sarpras.riwayat.index', compact('breadcrumb', 'page', 'activeMenu', 'aduan', 'periode'));
     }
 
     public function show_ajax($id_fasilitas)
@@ -88,7 +87,7 @@ class AduanController extends Controller
             $avgRating = $avgRating ? number_format($avgRating, 1) : null;
         }
 
-        return view('admin.aduan.detail', compact('aduan', 'biaya', 'perbaikan', 'fasilitas', 'avgRating', 'jumlahAduan'))->render();
+        return view('sarpras.riwayat.detail', compact('aduan', 'biaya', 'perbaikan', 'fasilitas', 'avgRating', 'jumlahAduan'))->render();
     }
 
     public function comment_ajax($id_fasilitas)
@@ -101,7 +100,7 @@ class AduanController extends Controller
         // Ambil semua umpan balik terkait aduan di fasilitas ini
         $umpanBalik = UmpanBalik::whereIn('id_aduan', $aduan->pluck('id_aduan'))->get();
 
-        return view('admin.aduan.comment', [
+        return view('sarpras.riwayat.comment', [
             'aduan' => $aduan,
             'umpan_balik' => $umpanBalik,
         ])->render();
