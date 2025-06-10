@@ -1,11 +1,11 @@
 <x-table>
     <x-slot name="head">
-        <x-table.heading>No</x-table.heading>
+        <x-table.heading class="text-center">Ranking</x-table.heading>
         <x-table.heading>Nama Fasilitas</x-table.heading>
         <x-table.heading>Kategori</x-table.heading>
         <x-table.heading>Lokasi</x-table.heading>
         <x-table.heading>Urgensi</x-table.heading>
-        <x-table.heading>Jumlah Pelapor</x-table.heading>
+        <x-table.heading>Bobot Pelapor</x-table.heading>
         <x-table.heading>Tingkat Kerusakan</x-table.heading>
         <x-table.heading>Aksi</x-table.heading>
     </x-slot>
@@ -13,7 +13,7 @@
     <x-slot name="body">
         @forelse ($penugasan as $index => $item)
             <x-table.row>
-                <x-table.cell>{{ $index + 1 }}</x-table.cell>
+                <x-table.cell class="text-center">{{ $item['ranking'] }}</x-table.cell>
                 <x-table.cell>{{ $item['fasilitas']['nama_fasilitas'] ?? '-' }}</x-table.cell>
                 <x-table.cell>{{ $item['fasilitas']['kategori']['nama_kategori'] ?? '-' }}</x-table.cell>
                 <x-table.cell>{{ $item['fasilitas']['ruangan']['lantai']['gedung']['nama_gedung'] . ', ' . $item['fasilitas']['ruangan']['lantai']['nama_lantai'] . ', ' . $item['fasilitas']['ruangan']['nama_ruangan'] ?? '-' }}</x-table.cell>
@@ -40,7 +40,7 @@
                 </x-table.cell>
                 <x-table.cell>
                     <div class="text-center">
-                        {{ $item['user_count'] ?? '-' }}
+                        {{ $item['bobot_pelapor'] ?? '-' }}
                     </div>
                 </x-table.cell>
                 <x-table.cell>
