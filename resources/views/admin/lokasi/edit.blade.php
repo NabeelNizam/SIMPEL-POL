@@ -38,6 +38,8 @@
                     <div class="flex justify-between items-center px-4 py-2 cursor-pointer bg-blue-200"
                         onclick="toggleLantai('lantai-{{ $lantai->id_lantai }}')">
                         <div class="font-medium">{{ $lantai->nama_lantai }}</div>
+                        <input hidden="hidden" name="lantai[{{ $lantai->id_lantai }}][nama_lantai]"
+                            value="{{ $lantai->nama_lantai }}">
                         <div class="flex items-center gap-2">
                             <svg id="icon-lantai-{{ $lantai->id_lantai }}"
                                 class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor"
@@ -58,7 +60,7 @@
                                 <div class="w-full">
                                     <label class="text-sm font-medium">Nama Ruangan <span
                                             class="text-red-500">*</span></label>
-                                    <input type="text" name="ruangan[{{ $lantai->id_lantai }}][]"
+                                    <input type="text" name="lantai[{{ $lantai->id_lantai }}][ruangan][{{$ruangan->id_ruangan}}][nama_ruangan]"
                                         value="{{ $ruangan->nama_ruangan }}" placeholder="Contoh: LPR 1"
                                         class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400">
                                 </div>
@@ -128,6 +130,13 @@
         container.appendChild(lantaiElement);
         lantaiInput.value = '';
     }
+
+    function hapusLantai(event, id) {
+        event.stopPropagation();
+        const container = document.getElementById(id).parentElement;
+        container.remove();
+    }
+
     function toggleLantai(lantaiId) {
         const content = document.getElementById(lantaiId);
         const icon = document.getElementById(`icon-${lantaiId}`);

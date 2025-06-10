@@ -11,6 +11,7 @@ use App\Models\Lantai;
 use App\Models\Periode;
 use App\Models\Ruangan;
 use Faker\Factory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -163,16 +164,92 @@ class LokasiController extends Controller
 
     public function update(Request $request, Gedung $gedung)
     {
-        dd($request->all());    
-            $validation = Validator::make($request->all(), [
-                'nama_gedung' => ['required', 'string', 'max:30'],
-                'lantai.*.nama_lantai' => ['required', 'string', 'max:30'],
-                'lantai.*.ruangan.*' => ['required', 'string', 'max:30'],
-            ]);
-            if ($validation->fails()) {
-                return redirect()->back()->withErrors($validation->errors())->withInput();
+        // dd($request->all());
+        $validation = Validator::make($request->all(), [
+            'nama_gedung' => ['required', 'string', 'max:30'],
+            'lantai.*.nama_lantai' => ['required', 'string', 'max:30'],
+            'lantai.*.ruangan.*.nama_ruangan' => ['required', 'string', 'max:30'],
+        ]);
+        // dd($validation->errors());
+        if ($validation->fails()) {
+            return redirect()->back()->withErrors($validation->errors())->withInput();
+        }
+        // update nama gedung
+        $gedung->update([
+            'nama_gedung' => $request->nama_gedung,
+        ]);
+
+        // mapping lantai dan ruangan
+        $lantais = new Collection();
+        $ruangans = new Collection();
+        if (isset($request->lantai) && is_array($request->lantai)) {
+            foreach ($request->lantai as $id_lantai => $item) {
+                // Ambil model lantai
+                $lantai = Lantai::findOrNew($id_lantai);
+
+                $lantai->nama_lantai = $item['nama_lantai'];
+                $lantais->add($lantai);
+
+                if (isset($item['ruangan']) && is_array($item['ruangan'])) {
+                    foreach ($item['ruangan'] as $id_ruangan => $data_ruangan) {
+                        // Ambil model ruangan
+                        $ruangan = Ruangan::findOrNew($id_ruangan);
+
+                        // Set nama ruangan baru
+                        if ($ruangan->nama_ruangan == $data_ruangan['nama_ruangan']) continue;
+                        $ruangan->nama_ruangan = $data_ruangan['nama_ruangan'];
+                        $ruangan->generateKode();
+                        $ruangans->add($ruangan);
+                    }
+                }
             }
         }
+
+        //deleting lantai
+        $current_lantais = Lantai::query()->where('id_gedung', $gedung->id_gedung)->with(['ruangan'])->get();
+        $lantais_to_delete = $this->getEloquentCollectionDifference($current_lantais, $lantais, 'id_lantai');
+        // dd($lantais, $current_lantais, $lantais_to_delete);
+        foreach ($lantais_to_delete as $item) {
+            try {
+                $item->ruangan()->delete();
+            } catch (\Exception $e) {
+                return redirect()->route('admin.lokasi')->withErrors(['general' => 'Tindakan terlarang: Ruangan memiliki fasilitas.']);
+            }
+        }
+
+        // adding lantai
+        $lantais_to_add = $this->getEloquentCollectionDifference($lantais, $current_lantais, 'id_lantai');
+        foreach ($lantais_to_add as $item) {
+            $item->save();
+        }
+
+        $current_ruangans = new Collection();
+        foreach ($current_lantais as $current_lantai) {
+            foreach ($current_lantai->ruangan as $current_ruangan) {
+                $current_ruangans->add($current_ruangan);
+            }
+        }
+
+        // dd($current_ruangans);
+
+        //deleting ruangan
+        $ruangans_to_delete = $this->getEloquentCollectionDifference($current_ruangans, $ruangans, 'id_ruangan');
+        foreach ($ruangans_to_delete as $item) {
+            try {
+                $item->delete();
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors(['Tindakan terlarang: ' => 'Ruangan memiliki fasilitas.']);
+            }
+        }
+
+        // adding ruangan
+        $ruangans_to_add = $this->getEloquentCollectionDifference($ruangans, $current_ruangans, 'id_ruangan');
+        foreach ($ruangans_to_add as $item) {
+            $item->save();
+        }
+
+        return redirect()->back()->with('success', 'Data gedung berhasil diupdate.');
+    }
 
     public function import()
     {
@@ -308,5 +385,14 @@ class LokasiController extends Controller
             ]
         );
         return $sheet->toXls();
+    }
+    private function getEloquentCollectionDifference(Collection $collection1, Collection $collection2, string $key = 'id', bool $isReversed = false): Collection
+    {
+        if ($isReversed) {
+            $collection1Keys = $collection1->pluck($key);
+            return $collection2->whereNotIn($key, $collection1Keys);
+        }
+        $collection2Keys = $collection2->pluck($key);
+        return $collection1->whereNotIn($key, $collection2Keys);
     }
 }
