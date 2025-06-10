@@ -86,7 +86,7 @@
                 <button type="button"
                     class="flex items-center space-x-3 hover:bg-gray-400 p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none cursor-pointer"
                     id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
-                    data-dropdown-placement="bottom">   
+                    data-dropdown-placement="bottom">
                     <img class="w-8 h-8 rounded-full border border-gray-300"
                         src="{{ asset( (auth()->user()->foto_profil ? auth()->user()->foto_profil : 'img/profiles.svg')) }}" alt="user photo">
                     <span class="hidden md:block text-sm font-medium">{{ auth()->user()->nama }}</span>
@@ -113,9 +113,11 @@
                             </button>
                         </li>
                         <li>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <button
+                                onclick="modalAction('{{ route('profil.password') }}')"
+                                class="block w-full max-w-xs text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
                                 <i class="fas fa-key mr-2"></i> Ubah Kata Sandi
-                            </a>
+                            </button>
                         </li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}" id="logout-form">
