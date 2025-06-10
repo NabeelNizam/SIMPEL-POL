@@ -125,5 +125,7 @@
                 reloadData();
             });
         });
+
+        
     </script>
 @endpush

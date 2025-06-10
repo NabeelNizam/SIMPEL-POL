@@ -52,11 +52,16 @@
                     <div class="px-4 py-3 space-y-3 hidden" id="lantai-{{ $lantai->id_lantai }}"
                         style="background-color: #D9D9D9;">
                         @foreach ($lantai->ruangan as $ruangan)
-                            <div class="border-l-4 border-orange-400 pl-3">
-                                <label class="text-sm font-medium">Nama Ruangan <span class="text-red-500">*</span></label>
-                                <input type="text" name="ruangan[{{ $lantai->id_lantai }}][]" value="{{ $ruangan->nama_ruangan }}"
-                                    placeholder="Contoh: LPR 1"
-                                    class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400">
+                            <div class="border-l-4 border-orange-400 pl-3 flex justify-between items-center">
+                                <div class="w-full">
+                                    <label class="text-sm font-medium">Nama Ruangan <span class="text-red-500">*</span></label>
+                                    <input type="text" name="ruangan[{{ $lantai->id_lantai }}][]" value="{{ $ruangan->nama_ruangan }}"
+                                        placeholder="Contoh: LPR 1"
+                                        class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400">
+                                </div>
+                                <button type="button" onclick="hapusRuangan(this)" class="text-red-500 hover:text-red-700 ml-3">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             </div>
                         @endforeach
                         <button type="button" onclick="tambahRuangan(this)" class="text-blue-600 text-sm hover:underline">
@@ -75,4 +80,21 @@
         </div>
     </form>
 </div>
+<script>
+    function toggleLantai(lantaiId) {
+    const content = document.getElementById(lantaiId);
+    const icon = document.getElementById(`icon-${lantaiId}`);
+
+    // Toggle visibility
+    if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.classList.add('rotate-180'); // Tambahkan rotasi pada ikon
+    } else {
+        content.classList.add('hidden');
+        icon.classList.remove('rotate-180'); // Hapus rotasi pada ikon
+    }
+}
+
+
+</script>
 
