@@ -30,6 +30,7 @@ use App\Http\Controllers\{
     WelcomeController,
     PeriodeController,
     PrometheeController,
+    RiwayatSarprasController,
     SarprasPenugasanController,
     SOPController,
     TeknisiPenugasanController,
@@ -46,6 +47,8 @@ Route::prefix('profil')->middleware(['auth'])->group(function () {
     Route::get('/', [ProfilController::class, 'index'])->name('profil');
     Route::get('/edit_ajax', [ProfilController::class, 'edit_ajax'])->name('profil.edit_ajax');
     Route::put('/{id}/update_ajax', [ProfilController::class, 'update_ajax']);
+    Route::get('/password', [ProfilController::class, 'password'])->name('profil.password');
+    Route::put('/password', [ProfilController::class, 'update_password'])->name('profil.password.update');
 });
 Route::prefix('sop')->middleware(['auth'])->group(function () {
         Route::get('/download/{role}/{filename}', [SOPController::class, 'SOPDownload'])->name('sopDownload');
@@ -164,15 +167,14 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         // Route untuk memperbarui SOP
         Route::put('/admin/sop/update', [SOPController::class, 'update'])->name('sop.update');
         Route::delete('/admin/sop/delete/{role}', [SOPController::class, 'delete'])->name('sop.delete');
-    }); 
     });
     // Aduan
     Route::prefix('aduan')->group(function () {
         Route::get('/', [AduanController::class, 'index'])->name('admin.aduan');
         Route::get('/{id}/show_ajax', [AduanController::class, 'show_ajax'])->name('admin.aduan.show_ajax');
         Route::get('/{id}/comment_ajax', [AduanController::class, 'comment_ajax'])->name('admin.aduan.comment_ajax');
-        Route::get('/ekspor_pdf', [AduanController::class, 'ekspor_pdf'])->name('admin.aduan.ekspor_pdf');
-        Route::get('/ekspor_excel', [AduanController::class, 'ekspor_excel'])->name('admin.aduan.ekspor_excel');
+        Route::get('/export-pdf', [AduanController::class, 'export_pdf'])->name('admin.aduan.export_pdf');
+        Route::get('/export-excel', [AduanController::class, 'export_excel'])->name('admin.aduan.export_excel');
     });
     Route::prefix('periode')->group(function () {
         Route::get('/', [PeriodeController::class, 'index'])->name('admin.periode');
@@ -267,6 +269,14 @@ Route::middleware(['authorize:SARPRAS'])->group(function () {
         Route::get('/{id}/approve', [PerbaikanSarprasController::class, 'approve'])->name('sarpras.perbaikan.approve');
         Route::get('/export_excel', [PerbaikanSarprasController::class, 'export_excel'])->name('sarpras.perbaikan.export_excel');
         Route::get('/export_pdf', [PerbaikanSarprasController::class, 'export_pdf'])->name('sarpras.perbaikan.export_pdf');
+    });
+    // Riwayat
+    Route::prefix('riwayat')->group(function () {
+        Route::get('/', [RiwayatSarprasController::class, 'index'])->name('sarpras.riwayat');
+        Route::get('/{id}/show_ajax', [RiwayatSarprasController::class, 'show_ajax'])->name('sarpras.riwayat.show_ajax');
+        Route::get('/{id}/comment_ajax', [RiwayatSarprasController::class, 'comment_ajax'])->name('sarpras.riwayat.comment_ajax');
+        Route::get('/export-pdf', [RiwayatSarprasController::class, 'export_pdf'])->name('sarpras.riwayat.export_pdf');
+        Route::get('/export-excel', [RiwayatSarprasController::class, 'export_excel'])->name('sarpras.riwayat.export_excel');
     });
 
 });

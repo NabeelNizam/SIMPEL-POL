@@ -46,12 +46,12 @@
                 </x-table.cell>
                 <x-table.cell>
                     <div class="flex gap-1">
-                        <button onclick="modalAction('{{ route('admin.aduan.show_ajax', $a->id_fasilitas) }}')"
+                        <button onclick="modalAction('{{ route('sarpras.riwayat.show_ajax', $a->id_fasilitas) }}')"
                             class="cursor-pointer text-blue-600 hover:underline text-sm">
                             <img src="{{ asset('icons/solid/Detail.svg') }}" alt="Detail"
                                 class="h-7 w-7 min-h-[27px] min-w-[27px]">
                         </button>
-                        <button onclick="modalAction('{{ route('admin.aduan.comment_ajax', $a->id_fasilitas) }}')"
+                        <button onclick="modalAction('{{ route('sarpras.riwayat.comment_ajax', $a->id_fasilitas) }}')"
                             class="text-blue-600 hover:underline text-sm">
                             <img src="{{ asset('icons/solid/message.svg') }}" alt="Comment"
                                 class="h-7 w-7 min-h-[20px] min-w-[20px]">
