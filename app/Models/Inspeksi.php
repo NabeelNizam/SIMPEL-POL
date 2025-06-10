@@ -59,20 +59,27 @@ class Inspeksi extends Model
         return Aduan::where('id_fasilitas', $this->id_fasilitas)
             ->where('status', Status::SEDANG_INSPEKSI->value)
             ->whereHas('periode', function ($query) {
-                $query->where('tanggal_selesai', '<=', $this->periode->tanggal_selesai);
+                $query->where('tanggal_selesai', '<', $this->periode->tanggal_selesai);
             })
             ->count();
     }
     public function getSkorLaporanBerulangAttribute()
     {
-        return 1;
+        $periodeUnik = Aduan::where('id_fasilitas', $this->id_fasilitas)
+            ->whereIn('status', [Status::MENUNGGU_DIPROSES->value, Status::SEDANG_INSPEKSI->value])
+            ->distinct('id_periode')
+            ->count('id_periode');
+
+        $result = $periodeUnik > 1 ? 2 : 1;
+
+        return $result;
     }
     public function getBobotPelaporAttribute()
     {
         $counts = Aduan::where('id_fasilitas', $this->id_fasilitas)
             ->where('status', Status::SEDANG_INSPEKSI->value)
             ->whereHas('periode', function ($query) {
-                $query->where('tanggal_selesai', '<=', $this->periode->tanggal_selesai);
+                $query->where('tanggal_selesai', '<', $this->periode->tanggal_selesai);
             })
             ->join('users', 'aduan.id_user_pelapor', '=', 'users.id_user')
             ->whereIn('users.id_role', [1, 5, 6])
