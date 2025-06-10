@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
             FasilitasSeeder::class,
             // InspeksiSeeder::class,
             AduanSeeder::class,
-            KriteriaSeeder::class
+            KriteriaSeeder::class,
+            NotifikasiSeeder::class
         ]);
     }
 }

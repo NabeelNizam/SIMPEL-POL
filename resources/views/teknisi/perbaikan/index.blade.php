@@ -91,7 +91,7 @@
             // Function to reload data based on filters and search
             function reloadData() {
                 $.ajax({
-                    url: {{ route('teknisi.perbaikan') }},
+                    url: "{{ route('teknisi.perbaikan') }}",
                     method: "GET",
                     data: {
                         search: $('#search').val(),

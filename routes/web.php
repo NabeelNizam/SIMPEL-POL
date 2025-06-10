@@ -14,6 +14,7 @@ use App\Http\Controllers\{
     KriteriaController,
     LokasiController,
     MahasiswaController,
+    NotifikasiController,
     PengaduanController,
     PengaduanSarprasController,
     PenugasanSarprasController,
@@ -39,6 +40,7 @@ Route::get('/', [WelcomeController::class, 'index']);
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'postMasuk']);
 Route::get('/register', [AuthController::class, 'register'])->name('register');
+
 // Profil
 Route::prefix('profil')->middleware(['auth'])->group(function () {
     Route::get('/', [ProfilController::class, 'index'])->name('profil');
@@ -50,6 +52,14 @@ Route::prefix('sop')->middleware(['auth'])->group(function () {
     });
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Notifikasi
+Route::prefix('notifikasi')->middleware(['auth'])->group(function () {
+    Route::post('/{notifikasi}/tandai_baca', [NotifikasiController::class, 'markRead'])->name('notifikasi.tandai-baca');
+    Route::post('/tandai_baca_semua', [NotifikasiController::class, 'markAllRead'])->name('notifikasi.tandai-baca-semua');
+    Route::post('/{notifikasi}/hapus', [NotifikasiController::class, 'updateDelete'])->name('notifikasi.hapus');
+    Route::get('/get', [NotifikasiController::class, 'getNotifications'])->name('notifikasi.get');
+});
 
 // Admin Routes
 Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
@@ -155,6 +165,7 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         Route::put('/admin/sop/update', [SOPController::class, 'update'])->name('sop.update');
         Route::delete('/admin/sop/delete/{role}', [SOPController::class, 'delete'])->name('sop.delete');
     }); 
+    });
     // Aduan
     Route::prefix('aduan')->group(function () {
         Route::get('/', [AduanController::class, 'index'])->name('admin.aduan');
@@ -235,7 +246,7 @@ Route::middleware(['authorize:SARPRAS'])->group(function () {
         Route::get('/', [PengaduanSarprasController::class, 'index'])->name('sarpras.pengaduan');
         Route::get('/{id}/detail_pengaduan', [PengaduanSarprasController::class, 'show_pengaduan'])->name('sarpras.pengaduan.show');
         Route::get('/{id}/penugasan_teknisi', [PengaduanSarprasController::class, 'penugasan_teknisi'])->name('sarpras.pengaduan.edit');
-        Route::put('/{id}/confirm_penugasan', [PengaduanSarprasController::class, 'confirm_penugasan'])->name('sarpras.pengaduan.update');
+        Route::put('/{id}/confirmed_penugasan', [PengaduanSarprasController::class, 'confirmed_penugasan'])->name('sarpras.pengaduan.update');
         Route::get('/export_excel', [PengaduanSarprasController::class, 'export_excel'])->name('sarpras.pengaduan.export_excel');
         Route::get('/export_pdf', [PengaduanSarprasController::class, 'export_pdf'])->name('sarpras.pengaduan.export_pdf');
     });
@@ -266,6 +277,7 @@ Route::prefix('teknisi')->middleware(['authorize:TEKNISI'])->group(function () {
     Route::prefix('perbaikan')->group(function () {
         Route::get('/', [PerbaikanTeknisiController::class, 'index'])->name('teknisi.perbaikan');
         Route::get('/{id}/show', [PerbaikanTeknisiController::class, 'show'])->name('teknisi.perbaikan.show');
+        Route::get('/{id}/cycle', [PerbaikanTeknisiController::class, 'cycle'])->name('teknisi.perbaikan.cycle');
         // Route::get('/{id}/edit', [PerbaikanTeknisiController::class, 'edit'])->name('teknisi.perbaikan.edit');
         // Route::put('/{id}/update', [PerbaikanTeknisiController::class, 'update'])->name('teknisi.perbaikan.update');
         Route::get('/{id}/approve', [PerbaikanTeknisiController::class, 'approve'])->name('teknisi.perbaikan.approve');
@@ -285,12 +297,3 @@ Route::prefix('teknisi')->middleware(['authorize:TEKNISI'])->group(function () {
         Route::get('/export-pdf', [RiwayatTeknisiController::class, 'export_pdf'])->name('teknisi.perbaikan.export_pdf');
     });
 });
-
-use App\Http\Helpers\CopelandAggregator;
-use App\Http\Helpers\AlternativeDTO;
-
-Route::get('/test-gdss', [CopelandTestingController::class, 'copelandTest'])->name('test.gdss');
-Route::get('/hitung', [PrometheeController::class, 'calculatePromethee'])->name('sarpras.hitung'); // TES PROMETHEE
-Route::get('/tesMahasiswa', [PrometheeController::class, 'tesHitungMahasiswa'])->name('sarpras.tesMahasiswa');
-Route::get('/tesDosen', [PrometheeController::class, 'tesHitungDosen'])->name('sarpras.tesDosen');
-Route::get('/tesTendik', [PrometheeController::class, 'tesHitungTendik'])->name('sarpras.tesTendik');
