@@ -122,7 +122,7 @@ class LokasiController extends Controller
         ]);
     }
 
-    public function destroy(Request $request,Gedung $gedung)
+    public function destroy(Request $request, Gedung $gedung)
     {
         try {
             if ($gedung->foto_gedung) {
@@ -161,69 +161,18 @@ class LokasiController extends Controller
         return view('admin.lokasi.edit', compact('gedung'));
     }
 
-    public function update(Request $request, gedung $gedung)
+    public function update(Request $request, Gedung $gedung)
     {
-        if ($request->ajax() || $request->wantsJson()) {
-            $rules = [
-                'gedung' => 'required|integer|exists:gedung,id_gedung',
-                'lantai' => 'required|integer|exists:lantai,id_lantai',
-                'ruangan' => 'required|integer|exists:ruangan,id_ruangan',
-                'nama_gedung' => 'required|string|min:2|max:35',
-                'jurusan' => 'required|integer|exists:jurusan,id_jurusan',
-                'kondisi' => 'required|string|in:LAYAK,RUSAK',
-                'deskripsi' => 'required|string|min:10|max:255',
-                'urgensi' => 'required|string|in:DARURAT,PENTING,BIASA',
-                'foto_gedung' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            ];
-
-            $validator = Validator::make($request->all(), $rules);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Validasi Gagal',
-                    'msgField' => $validator->errors(),
-                ]);
-            }
-
-            $gedung = gedung::find($gedung->id_gedung);
-            if (!$gedung) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'gedung tidak ditemukan',
-                ]);
-            }
-
-            $fileName = $gedung->foto_gedung;
-            if ($request->hasFile('foto_gedung')) {
-                if ($fileName && Storage::disk('public')->exists('uploads/img/foto_gedung/' . $fileName)) {
-                    Storage::disk('public')->delete('uploads/img/foto_gedung/' . $fileName);
-                }
-                $file = $request->file('foto_gedung');
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->storeAs('uploads/img/foto_gedung', $fileName, 'public');
-            }
-
-            $gedung->update([
-                'id_ruangan' => $request->ruangan,
-                'nama_gedung' => $request->nama_gedung,
-                'id_jurusan' => $request->jurusan,
-                'kondisi' => $request->kondisi,
-                'deskripsi' => $request->deskripsi,
-                'urgensi' => $request->urgensi,
-                'foto_gedung' => $fileName
+        dd($request->all());    
+            $validation = Validator::make($request->all(), [
+                'nama_gedung' => ['required', 'string', 'max:30'],
+                'lantai.*.nama_lantai' => ['required', 'string', 'max:30'],
+                'lantai.*.ruangan.*' => ['required', 'string', 'max:30'],
             ]);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Data gedung berhasil diperbarui',
-            ]);
+            if ($validation->fails()) {
+                return redirect()->back()->withErrors($validation->errors())->withInput();
+            }
         }
-        return response()->json([
-            'status' => false,
-            'message' => 'Data gedung gagal diperbarui',
-        ]);
-    }
 
     public function import()
     {

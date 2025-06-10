@@ -164,7 +164,6 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         // Route untuk memperbarui SOP
         Route::put('/admin/sop/update', [SOPController::class, 'update'])->name('sop.update');
         Route::delete('/admin/sop/delete/{role}', [SOPController::class, 'delete'])->name('sop.delete');
-    }); 
     });
     // Aduan
     Route::prefix('aduan')->group(function () {
