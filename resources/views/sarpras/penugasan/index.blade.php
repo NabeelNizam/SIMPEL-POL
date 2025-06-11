@@ -8,7 +8,7 @@
         <hr class="border-black opacity-30 mt-4">
 
         <!-- Filter Form -->
-        <form id="filter-form" method="GET" class="flex flex-wrap gap-4 mb-4 mt-8">
+        <form id="filter-form" class="flex flex-wrap gap-4 mb-4 mt-8">
             <!-- Filter Periode -->
             <div class="flex items-center gap-2">
                 <label for="id_periode" class="text-sm font-medium text-gray-700">Filter Periode:</label>
@@ -19,7 +19,7 @@
                     @endforeach
                 </select>
             </div>
-            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer">Filter</button>
+            <button type="button" onclick="reloadData()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer">Filter</button>
         </form>
 
         <div class="flex justify-between items-center mb-4">
@@ -76,7 +76,6 @@
 
 @push('js')
 <script>
-
     function modalAction(url = '') {
         $.get(url, function(response) {
             $('#myModal').html(response).removeClass('hidden').addClass('flex');
@@ -89,30 +88,36 @@
     });
 
     function reloadData() {
-    $.ajax({
-        url: "{{ route('sarpras.penugasan') }}",
-        method: "GET",
-        data: {
-            search: $('#search').val(),
-            per_page: $('#per_page').val(),
-            id_kategori: $('#id_kategori').val(),
-            id_gedung: $('#id_gedung').val(),
-            kondisi: $('#kondisi').val(),
-            sort_column: $('#sort-column').val(),
-            sort_direction: $('#sort-direction').val()
-        },
-        success: function (response) {
-            $('#inspeksi-table-body').html(response.html);
-        },
-        error: function () {
-            Swal.fire('Error!', 'Gagal memuat data kategori.', 'error');
-        }
-    });
-}
+        $.ajax({
+            url: "{{ route('sarpras.penugasan') }}",
+            method: "GET",
+            data: {
+                search: $('#search').val(),
+                per_page: $('#per_page').val(),
+                id_periode: $('#id_periode').val(), // Tambahkan id_periode
+                id_kategori: $('#id_kategori').val(),
+                id_gedung: $('#id_gedung').val(),
+                kondisi: $('#kondisi').val(),
+                sort_column: $('#sort-column').val(),
+                sort_direction: $('#sort-direction').val()
+            },
+            success: function (response) {
+                $('#inspeksi-table-body').html(response.html);
+            },
+            error: function () {
+                Swal.fire('Error!', 'Gagal memuat data.', 'error');
+            }
+        });
+    }
 
     $(document).ready(function () {
         // Event untuk jumlah data per halaman
         $('#per_page').on('change', function () {
+            reloadData();
+        });
+
+        // Event untuk filter periode
+        $('#id_periode').on('change', function () {
             reloadData();
         });
 

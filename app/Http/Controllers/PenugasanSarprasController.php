@@ -43,7 +43,7 @@ class PenugasanSarprasController extends Controller
             'bobot_pelapor' => $kriteria['Bobot Pelapor'],
         ];
 
-        // Query untuk Inspeksi
+        // Query untuk Inspeksi (tanpa filter id_periode dan pencarian di sini)
         $query = Inspeksi::with([
             'fasilitas',
             'fasilitas.kategori',
@@ -55,21 +55,8 @@ class PenugasanSarprasController extends Controller
         ->select('inspeksi.*')
         ->distinct()
         ->whereNotNull('tingkat_kerusakan')
+        ->whereNotNull('tanggal_selesai')
         ->whereDoesntHave('perbaikan');
-
-        // Filter berdasarkan pencarian
-        if ($request->search) {
-            $query->whereHas('fasilitas', function ($q) use ($request) {
-                $q->where('nama_fasilitas', 'like', "%{$request->search}%");
-            });
-        }
-
-        // Filter berdasarkan periode
-        if ($request->id_periode) {
-            $query->whereHas('periode', function ($q) use ($request) {
-                $q->where('id_periode', $request->id_periode);
-            });
-        }
 
         // Ambil data inspeksi sebagai koleksi Eloquent
         $inspeksiCollection = $query->get();
@@ -77,15 +64,28 @@ class PenugasanSarprasController extends Controller
         // Konversi ke array dan tambahkan user_count, laporan_berulang, dan bobot_pelapor
         $inspeksi = $inspeksiCollection->map(function ($item) {
             $data = $item->toArray();
-            $data['user_count'] = $item->user_count; // Panggil accessor
-            $data['laporan_berulang'] = $item->skor_laporan_berulang; // Tambahkan skor_laporan_berulang
-            $data['bobot_pelapor'] = $item->bobot_pelapor; // Tambahkan bobot_pelapor
+            $data['user_count'] = $item->user_count; 
+            $data['laporan_berulang'] = $item->skor_laporan_berulang;
+            $data['bobot_pelapor'] = $item->bobot_pelapor;
             return $data;
         })->toArray();
 
-        // Proses PROMETHEE
+        // Proses PROMETHEE pada semua data
         if (!empty($inspeksi)) {
             $inspeksi = PrometheeHelper::processPromethee($inspeksi, $kriteriaList);
+        }
+
+        // Filter berdasarkan id_periode dan pencarian setelah PROMETHEE
+        if ($request->id_periode || $request->search) {
+            $inspeksi = array_filter($inspeksi, function ($item) use ($request) {
+                $periodeMatch = !$request->id_periode || $item['periode']['id_periode'] == $request->id_periode;
+                $searchMatch = !$request->search || 
+                            (isset($item['fasilitas']['nama_fasilitas']) && 
+                                stripos($item['fasilitas']['nama_fasilitas'], $request->search) !== false);
+                return $periodeMatch && $searchMatch;
+            });
+            // Reset array keys agar paginasi bekerja dengan benar
+            $inspeksi = array_values($inspeksi);
         }
 
         // Konversi ke paginator
@@ -108,8 +108,6 @@ class PenugasanSarprasController extends Controller
             $html = view('sarpras.penugasan.penugasan_table', compact('penugasan'))->render();
             return response()->json(['html' => $html]);
         }
-
-        // dd($penugasan);
 
         return view('sarpras.penugasan.index', compact('breadcrumb', 'page', 'activeMenu', 'penugasan', 'periode'));
     }
