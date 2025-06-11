@@ -151,28 +151,37 @@
         }
     }
 
-        let ruanganSekarang = 0; // Variabel global untuk menyimpan ID ruangan saat ini
-
-// Ambil ID ruangan terakhir dari backend saat halaman dimuat
-document.addEventListener('DOMContentLoaded', function () {
-    fetch('{{ route('ruangan.last-id') }}')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            ruanganSekarang = data.lastId || 0; // Simpan ID ruangan terakhir dari backend
-        })
-        .catch(error => console.error('Error fetching last ruangan ID:', error));
-});
+       let ruanganSekarang = null; // Variabel global untuk menyimpan ID ruangan saat ini
 
 function tambahRuangan(button, lantaiId) {
     const parent = button.parentElement;
     const ruanganDiv = document.createElement('div');
     ruanganDiv.className = "border-l-4 border-orange-400 pl-3 flex justify-between items-center";
 
+    // Jika ruanganSekarang belum diinisialisasi, ambil dari backend
+    if (ruanganSekarang === null) {
+        fetch('{{ route('ruangan.last-id') }}')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                ruanganSekarang = data.lastId || 0; // Simpan ID ruangan terakhir dari backend
+                console.log('ID ruangan terakhir:', ruanganSekarang); // Debug untuk memastikan nilai awal
+
+                // Tambahkan ruangan setelah fetch selesai
+                tambahRuanganSetelahFetch(parent, lantaiId, ruanganDiv);
+            })
+            .catch(error => console.error('Error fetching last ruangan ID:', error));
+    } else {
+        // Jika ruanganSekarang sudah diinisialisasi, langsung tambahkan ruangan
+        tambahRuanganSetelahFetch(parent, lantaiId, ruanganDiv);
+    }
+}
+
+function tambahRuanganSetelahFetch(parent, lantaiId, ruanganDiv) {
     // Increment ID ruangan secara global
     ruanganSekarang++;
 
@@ -189,7 +198,9 @@ function tambahRuangan(button, lantaiId) {
     `;
 
     // Tambahkan elemen ruangan baru ke DOM
-    parent.insertBefore(ruanganDiv, button);
+    parent.insertBefore(ruanganDiv, parent.lastElementChild);
+
+    console.log('Ruangan baru ditambahkan dengan ID:', ruanganSekarang); // Debug untuk memastikan ID increment
 }
 
 function hapusRuangan(button) {
