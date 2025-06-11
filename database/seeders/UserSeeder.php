@@ -90,7 +90,7 @@ class UserSeeder extends Seeder
         ]);
         Mahasiswa
             ::create([
-                'id_user' => 3,
+                'id_user' => 4,
                 'nim' => '9093909390',
             ]);
 

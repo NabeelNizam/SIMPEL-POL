@@ -47,6 +47,8 @@ Route::prefix('profil')->middleware(['auth'])->group(function () {
     Route::get('/', [ProfilController::class, 'index'])->name('profil');
     Route::get('/edit_ajax', [ProfilController::class, 'edit_ajax'])->name('profil.edit_ajax');
     Route::put('/{id}/update_ajax', [ProfilController::class, 'update_ajax']);
+    Route::get('/password', [ProfilController::class, 'password'])->name('profil.password');
+    Route::put('/password', [ProfilController::class, 'update_password'])->name('profil.password.update');
 });
 Route::prefix('sop')->middleware(['auth'])->group(function () {
         Route::get('/download/{role}/{filename}', [SOPController::class, 'SOPDownload'])->name('sopDownload');
@@ -136,6 +138,7 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
             Route::post('/store', [LokasiController::class, 'store'])->name('admin.lokasi.store');
             Route::get('/{gedung}/confirm', [LokasiController::class, 'confirm'])->name('admin.lokasi.confirm');
             Route::get('/{gedung}/show', [LokasiController::class, 'show'])->name('admin.lokasi.show');
+            Route::get('/ruangan/last-id', [LokasiController::class, 'getLastRuanganId'])->name('ruangan.last-id');
             Route::get('/{gedung}/edit', [LokasiController::class, 'edit'])->name('admin.lokasi.edit');
             Route::put('/{gedung}/update', [LokasiController::class, 'update'])->name('admin.lokasi.update');
             Route::delete('/{gedung}/destroy', [LokasiController::class, 'destroy'])->name('admin.lokasi.destroy');
@@ -165,8 +168,7 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         // Route untuk memperbarui SOP
         Route::put('/admin/sop/update', [SOPController::class, 'update'])->name('sop.update');
         Route::delete('/admin/sop/delete/{role}', [SOPController::class, 'delete'])->name('sop.delete');
-    }); 
-    
+    });
     // Aduan
     Route::prefix('aduan')->group(function () {
         Route::get('/', [AduanController::class, 'index'])->name('admin.aduan');
