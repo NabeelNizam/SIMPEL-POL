@@ -17,7 +17,7 @@
         </div>
         <hr class="border-black opacity-30 mt-4">
 
-        <form id="filter-form" method="GET" class="flex flex-wrap gap-4 mb-4 mt-8">
+        {{-- <form id="filter-form" method="GET" class="flex flex-wrap gap-4 mb-4 mt-8">
             <!-- Filter Periode -->
             <div class="flex items-center gap-2">
                 <label for="id_periode" class="text-sm font-medium text-gray-700">Filter Periode:</label>
@@ -31,22 +31,11 @@
                     @endforeach
                 </select>
             </div>
-        </form>
+        </form> --}}
 
         <div class="flex justify-between items-center mb-4">
-            <!-- Pagination -->
-            <div class="flex items-center gap-2">
-                <label for="per_page" class="text-sm font-medium text-gray-700">Show:</label>
-                <select id="per_page" name="per_page" class="border border-gray-300 rounded-md shadow-sm sm:text-sm">
-                    @foreach ([10, 25, 50, 100] as $length)
-                        <option value="{{ $length }}" {{ request('per_page', 10) == $length ? 'selected' : '' }}>{{ $length }}
-                        </option>
-                    @endforeach
-                </select>
-                <span class="text-sm text-gray-700">entries</span>
-            </div>
             <!-- Pencarian -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 mt-4">
                 <label for="search" class="text-sm font-medium text-gray-700">Pencarian: {{$pelapor}}</label>
                 <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari Fasilitas..."
                     class="w-64 border border-gray-300 rounded-md shadow-sm sm:text-sm" />
