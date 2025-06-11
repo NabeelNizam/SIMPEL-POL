@@ -161,7 +161,7 @@ class LokasiController extends Controller
         // Kirim data ke view
         return view('admin.lokasi.edit', compact('gedung'));
     }
-        public function getLastRuanganId()
+    public function getLastRuanganId()
     {
         // Ambil ID ruangan terakhir dari database
         $lastId = Ruangan::max('id_ruangan') ?? 0; // Jika tidak ada ruangan, mulai dari 0
@@ -170,7 +170,7 @@ class LokasiController extends Controller
 
     public function update(Request $request, Gedung $gedung)
     {
-        dd($request->all());
+        // dd($request->all());
         $validation = Validator::make($request->all(), [
             'nama_gedung' => ['required', 'string', 'max:30'],
             'lantai.*.nama_lantai' => ['required', 'string', 'max:30'],
@@ -193,31 +193,40 @@ class LokasiController extends Controller
                 // Ambil model lantai
                 $lantai = Lantai::findOrNew($id_lantai);
 
-                $lantai->nama_lantai = $item['nama_lantai'];
+                if (isset($item['nama_lantai']) && $lantai->nama_lantai != $item['nama_lantai']) {
+                    $lantai->nama_lantai = $item['nama_lantai'];
+                }
+                // set id_gedung
+                $lantai->id_gedung = $gedung->id_gedung;
                 $lantais->add($lantai);
 
                 if (isset($item['ruangan']) && is_array($item['ruangan'])) {
                     foreach ($item['ruangan'] as $id_ruangan => $data_ruangan) {
                         // Ambil model ruangan
                         $ruangan = Ruangan::findOrNew($id_ruangan);
-
                         // Set nama ruangan baru
-                        if ($ruangan->nama_ruangan == $data_ruangan['nama_ruangan']) continue;
-                        $ruangan->nama_ruangan = $data_ruangan['nama_ruangan'];
-                        $ruangan->generateKode();
+                        if (isset($data_ruangan['nama_ruangan']) && $ruangan->nama_ruangan != $data_ruangan['nama_ruangan']) {
+                            $ruangan->nama_ruangan = $data_ruangan['nama_ruangan'];
+                            $ruangan->generateKode();
+                        }
+                        // set id lantai
+                        if (!isset($ruangan->id_lantai)) {
+                            $ruangan->id_lantai = $lantai->id_lantai;
+                        }
                         $ruangans->add($ruangan);
                     }
                 }
             }
         }
+        $current_lantais = Lantai::query()->where('id_gedung', $gedung->id_gedung)->get();
 
         //deleting lantai
-        $current_lantais = Lantai::query()->where('id_gedung', $gedung->id_gedung)->with(['ruangan'])->get();
         $lantais_to_delete = $this->getEloquentCollectionDifference($current_lantais, $lantais, 'id_lantai');
         // dd($lantais, $current_lantais, $lantais_to_delete);
         foreach ($lantais_to_delete as $item) {
             try {
                 $item->ruangan()->delete();
+                $item->delete();
             } catch (\Exception $e) {
                 return redirect()->route('admin.lokasi')->withErrors(['general' => 'Tindakan terlarang: Ruangan memiliki fasilitas.']);
             }
@@ -225,8 +234,13 @@ class LokasiController extends Controller
 
         // adding lantai
         $lantais_to_add = $this->getEloquentCollectionDifference($lantais, $current_lantais, 'id_lantai');
+        // dd($lantais_to_add);
         foreach ($lantais_to_add as $item) {
-            $item->save();
+            try {
+                $item->save();
+            } catch (\Exception $e) {
+                throw $e;
+            }
         }
 
         $current_ruangans = new Collection();
