@@ -135,6 +135,7 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
             Route::post('/store', [LokasiController::class, 'store'])->name('admin.lokasi.store');
             Route::get('/{gedung}/confirm', [LokasiController::class, 'confirm'])->name('admin.lokasi.confirm');
             Route::get('/{gedung}/show', [LokasiController::class, 'show'])->name('admin.lokasi.show');
+            Route::get('/ruangan/last-id', [LokasiController::class, 'getLastRuanganId'])->name('ruangan.last-id');
             Route::get('/{gedung}/edit', [LokasiController::class, 'edit'])->name('admin.lokasi.edit');
             Route::put('/{gedung}/update', [LokasiController::class, 'update'])->name('admin.lokasi.update');
             Route::delete('/{gedung}/destroy', [LokasiController::class, 'destroy'])->name('admin.lokasi.destroy');

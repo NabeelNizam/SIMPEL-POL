@@ -161,10 +161,16 @@ class LokasiController extends Controller
         // Kirim data ke view
         return view('admin.lokasi.edit', compact('gedung'));
     }
+        public function getLastRuanganId()
+    {
+        // Ambil ID ruangan terakhir dari database
+        $lastId = Ruangan::max('id_ruangan') ?? 0; // Jika tidak ada ruangan, mulai dari 0
+        return response()->json(['lastId' => $lastId]);
+    }
 
     public function update(Request $request, Gedung $gedung)
     {
-        // dd($request->all());
+        dd($request->all());
         $validation = Validator::make($request->all(), [
             'nama_gedung' => ['required', 'string', 'max:30'],
             'lantai.*.nama_lantai' => ['required', 'string', 'max:30'],

@@ -11,7 +11,6 @@
         @method('PUT')
 
         <div class="space-y-4 mt-4 text-sm text-gray-700">
-            <!-- Nama Gedung -->
             <div>
                 <label class="font-medium">Nama Gedung <span class="text-red-500">*</span></label>
                 <input type="text" name="nama_gedung" value="{{ $gedung->nama_gedung }}"
@@ -19,7 +18,6 @@
                     class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400">
             </div>
 
-            <!-- Lantai dan Ruangan -->
             <div>
                 <label class="font-medium">Lantai dan Ruangan <span class="text-red-500">*</span></label>
                 <input id="inputLantai" type="text" placeholder="Input nomor lantai manual"
@@ -31,7 +29,6 @@
             </div>
         </div>
 
-        <!-- Container Lantai & Ruangan -->
         <div id="lantaiContainer" class="mt-5 space-y-3">
             @foreach ($gedung->lantai as $lantai)
                 <div class="bg-blue-500">
@@ -58,19 +55,22 @@
                         @foreach ($lantai->ruangan as $ruangan)
                             <div class="border-l-4 border-orange-400 pl-3 flex justify-between items-center">
                                 <div class="w-full">
-                                    <label class="text-sm font-medium">Nama Ruangan <span
-                                            class="text-red-500">*</span></label>
-                                    <input type="text" name="lantai[{{ $lantai->id_lantai }}][ruangan][{{$ruangan->id_ruangan}}][nama_ruangan]"
-                                        value="{{ $ruangan->nama_ruangan }}" placeholder="Contoh: LPR 1"
+                                    <label class="text-sm font-medium">Nama Ruangan <span class="text-red-500">*</span></label>
+                                    <input type="text" name="lantai[{{ $lantai->id_lantai }}][ruangan][{{ $ruangan->id_ruangan }}][nama_ruangan]"
+                                        value="{{ $ruangan->nama_ruangan }}" placeholder="Contoh: Ruang Teori 01"
                                         class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400">
                                 </div>
-                                <button type="button" onclick="hapusRuangan(this)"
-                                    class="text-red-500 hover:text-red-700 ml-3">
+                                <button type="button" onclick="hapusRuangan(this)" class="text-red-500 hover:text-red-700 ml-3">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
+                            <script>
+                                if ({{ $ruangan->id_ruangan }} > lastRuanganId) {
+                                    lastRuanganId = {{ $ruangan->id_ruangan }};
+                                }
+                            </script>
                         @endforeach
-                        <button type="button" onclick="tambahRuangan(this)"
+                        <button type="button" onclick="tambahRuangan(this, {{ $lantai->id_lantai }})"
                             class="text-blue-600 text-sm hover:underline">
                             <i class="fa-solid fa-square-plus"></i> Tambah Ruangan
                         </button>
@@ -96,7 +96,7 @@
         if (!lantaiNama) return alert('Nama lantai tidak boleh kosong.');
 
         lantaiCounter++;
-        const lantaiId = `lantai-${lantaiCounter}`;
+        const lantaiId = lantaiCounter; // Gunakan lantaiCounter sebagai ID lantai
         const container = document.getElementById('lantaiContainer');
 
         const lantaiElement = document.createElement('div');
@@ -104,25 +104,25 @@
         lantaiElement.innerHTML = `
             <div class="flex justify-between items-center px-4 py-2 cursor-pointer bg-blue-200">
                 <div class="font-medium">${lantaiNama}</div>
-                <input type="hidden" name="lantai[${lantaiCounter}][nama_lantai]" value="${lantaiNama}">
+                <input type="hidden" name="lantai[${lantaiId}][nama_lantai]" value="${lantaiNama}">
                 <div class="flex items-center gap-2">
-                    <button onclick="hapusLantai(event, '${lantaiId}')" class="text-red-500 hover:text-red-700" title="Hapus Lantai">
+                    <button onclick="hapusLantai(event, 'lantai-${lantaiId}')" class="text-red-500 hover:text-red-700" title="Hapus Lantai">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
             </div>
-            <div class="px-4 py-3 space-y-3" id="${lantaiId}" style="background-color: #D9D9D9;">
+            <div class="px-4 py-3 space-y-3" id="lantai-${lantaiId}" style="background-color: #D9D9D9;">
                 <div class="border-l-4 border-orange-400 pl-3 flex justify-between items-center">
-                      <div class="w-full">
-                          <label class="text-sm font-medium">Nama Ruangan <span class="text-red-500">*</span></label>
-                          <input type="text" name="lantai[${lantaiCounter}][ruangan][]" placeholder="Contoh: LPR 1"
-                              class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400">
-                      </div>
-                      <button type="button" onclick="hapusRuangan(this)" class="text-red-500 hover:text-red-700 ml-3">
-                          <i class="fa-solid fa-trash"></i>
-                      </button>
-                  </div>
-                <button type="button" onclick="tambahRuangan(this, ${lantaiCounter})" class="text-blue-600 text-sm hover:underline">
+                    <div class="w-full">
+                        <label class="text-sm font-medium">Nama Ruangan <span class="text-red-500">*</span></label>
+                        <input type="text" name="lantai[${lantaiId}][ruangan][1][nama_ruangan]" placeholder="Contoh: LPR 1"
+                            class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400">
+                    </div>
+                    <button type="button" onclick="hapusRuangan(this)" class="text-red-500 hover:text-red-700 ml-3">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+                <button type="button" onclick="tambahRuangan(this, ${lantaiId})" class="text-blue-600 text-sm hover:underline">
                     <i class="fa-solid fa-square-plus"></i> Tambah Ruangan
                 </button>
             </div>
@@ -151,9 +151,50 @@
         }
     }
 
-    function hapusRuangan(button) {
-        // Hapus elemen ruangan
-        const ruanganElement = button.closest('.border-l-4');
-        ruanganElement.remove();
-    }
+        let ruanganSekarang = 0; // Variabel global untuk menyimpan ID ruangan saat ini
+
+// Ambil ID ruangan terakhir dari backend saat halaman dimuat
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('{{ route('ruangan.last-id') }}')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            ruanganSekarang = data.lastId || 0; // Simpan ID ruangan terakhir dari backend
+        })
+        .catch(error => console.error('Error fetching last ruangan ID:', error));
+});
+
+function tambahRuangan(button, lantaiId) {
+    const parent = button.parentElement;
+    const ruanganDiv = document.createElement('div');
+    ruanganDiv.className = "border-l-4 border-orange-400 pl-3 flex justify-between items-center";
+
+    // Increment ID ruangan secara global
+    ruanganSekarang++;
+
+    // Buat elemen ruangan baru
+    ruanganDiv.innerHTML = `
+        <div class="w-full">
+            <label class="text-sm font-medium">Nama Ruangan <span class="text-red-500">*</span></label>
+            <input type="text" name="lantai[${lantaiId}][ruangan][${ruanganSekarang}][nama_ruangan]" placeholder="Contoh: Ruang Teori 01"
+                class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400">
+        </div>
+        <button type="button" onclick="hapusRuangan(this)" class="text-red-500 hover:text-red-700 ml-3">
+            <i class="fa-solid fa-trash"></i>
+        </button>
+    `;
+
+    // Tambahkan elemen ruangan baru ke DOM
+    parent.insertBefore(ruanganDiv, button);
+}
+
+function hapusRuangan(button) {
+    // Hapus elemen ruangan
+    const ruanganElement = button.closest('.border-l-4');
+    ruanganElement.remove();
+}
 </script>
