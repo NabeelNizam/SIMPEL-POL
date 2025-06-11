@@ -166,7 +166,7 @@ Route::prefix('admin')->middleware(['authorize:ADMIN'])->group(function () {
         Route::put('/admin/sop/update', [SOPController::class, 'update'])->name('sop.update');
         Route::delete('/admin/sop/delete/{role}', [SOPController::class, 'delete'])->name('sop.delete');
     }); 
-    });
+    
     // Aduan
     Route::prefix('aduan')->group(function () {
         Route::get('/', [AduanController::class, 'index'])->name('admin.aduan');

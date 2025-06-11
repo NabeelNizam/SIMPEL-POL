@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
         ]);
         Pegawai::create([
             'id_user' => 1,
-            'nip' => '9091',
+            'nip' => '9091909190',
         ]);
 
         // make teknisi
@@ -53,7 +53,7 @@ class UserSeeder extends Seeder
         ]);
         Pegawai::create([
             'id_user' => 2,
-            'nip' => '9095',
+            'nip' => '9095909590',
         ]);
 
         // make sarpras
@@ -72,7 +72,7 @@ class UserSeeder extends Seeder
         ]);
         Pegawai::create([
             'id_user' => 3,
-            'nip' => '9094',
+            'nip' => '9094909490',
         ]);
 
         User::create([
@@ -91,7 +91,7 @@ class UserSeeder extends Seeder
         Mahasiswa
             ::create([
                 'id_user' => 3,
-                'nim' => '9093',
+                'nim' => '9093909390',
             ]);
 
 
