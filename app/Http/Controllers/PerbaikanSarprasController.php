@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Enums\Status;
 use App\Models\Aduan;
 use App\Models\Fasilitas;
+use App\Models\Notifikasi;
 use App\Models\Perbaikan;
 use App\Models\Periode;
 use Illuminate\Http\Request;
@@ -102,8 +103,21 @@ class PerbaikanSarprasController extends Controller
     public function approve($id)
     {
         try {
-            Aduan::where('id_fasilitas', $id)->where('status', Status::SEDANG_DIPERBAIKI->value)
-                ->update(['status' => Status::SELESAI->value]);
+            $aduan = Aduan::where('id_fasilitas', $id)->where('status', Status::SEDANG_DIPERBAIKI->value)->get();
+            $fasilitas = Fasilitas::where('id_fasilitas', $id)->value('nama_fasilitas');
+            foreach ($aduan as $a) {
+                $a->update(['status' => Status::SELESAI->value]);
+
+                // Notifikasi ke pelapor (versi panjang)
+                Notifikasi::create([
+                    'pesan' => 'Fasilitas <b class="text-blue-500">' . $fasilitas . '</b> yang Anda laporkan telah selesai diperbaiki. Terima kasih atas partisipasinya.',
+                    'waktu_kirim' => now(),
+                    'id_user' => $a->pelapor->id_user,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
             return redirect()->back()->with('success', 'Berhasil Perbaharui Status Aduan Fasilitas.');
         } catch (\Exception $e) {
             Log::error('Gagal Menandai sebagai Selesai: ' . $e->getMessage());

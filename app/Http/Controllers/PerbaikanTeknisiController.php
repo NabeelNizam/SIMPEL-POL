@@ -52,8 +52,6 @@ class PerbaikanTeknisiController extends Controller
             });
         }
 
-
-
         $perPage = $request->input('per_page', 10);
         $perbaikan = $query->paginate($perPage);
 
@@ -86,10 +84,20 @@ class PerbaikanTeknisiController extends Controller
         $perbaikan = Perbaikan::findOrFail($id);
         if ($perbaikan->teknisi_selesai) {
             $perbaikan->tanggal_selesai = null;
-        }else{
+        } else {
             $perbaikan->tanggal_selesai = now();
         }
         $perbaikan->update();
+        // $fasilitas = Fasilitas::where('id_fasilitas', $inspeksi->id_fasilitas)->value('nama_fasilitas');
+
+        // // Notifikasi ke sarpras
+        // Notifikasi::create([
+        //     'pesan' => 'Teknisi telah menyelesaikan inspeksi untuk fasilitas <b class="text-blue-500">' . $fasilitas . '</b>. Silakan tinjau hasilnya.',
+        //     'waktu_kirim' => now(),
+        //     'id_user' => $inspeksi->id_user_teknisi,
+        //     'created_at' => now(),
+        //     'updated_at' => now(),
+        // ]);
         return redirect()->back();
     }
 }
