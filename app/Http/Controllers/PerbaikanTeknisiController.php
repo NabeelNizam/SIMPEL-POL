@@ -27,7 +27,8 @@ class PerbaikanTeknisiController extends Controller
 
         // Query untuk mengambil data melalui tabel Aduan
         // $query = Fasilitas::query();
-        $query = Perbaikan::with(['inspeksi', 'inspeksi.fasilitas', 'inspeksi.periode']);
+        $query = Perbaikan::with(['inspeksi', 'inspeksi.fasilitas', 'inspeksi.periode', 'inspeksi.fasilitas.aduan']);
+
 
         // Filter periode
         // if ($request->id_periode) {
@@ -46,13 +47,34 @@ class PerbaikanTeknisiController extends Controller
                 $q->where('id_periode', $request->id_periode);
             });
         }
-
-        // Filter status
-        if ($request->filled('status')) {
+        // Filter berdasarkan pencarian
+        if ($request->search) {
             $query->whereHas('inspeksi', function ($q) use ($request) {
-                $q->where('status', $request->status);
+                $q->whereHas('fasilitas', function ($q) use ($request) {
+                    $q->where('nama_fasilitas', 'like', "%{$request->search}%");
+                });
             });
         }
+
+        // Filter status
+        // if ($request->filled('status')) {
+        //     $query->whereHas('inspeksi', function ($q) use ($request) {
+        //         $q->whereHas('fasilitas', function ($q) use ($request) {
+        //             $q->whereHas('aduan', function ($q) use ($request) {
+        //                 $q->where('status', $request->status);
+        //             });
+        //         });
+        //     });
+        // }
+
+        $query = $query->whereHas('inspeksi', function ($q) {
+            $q->whereHas('fasilitas', function ($q) {
+                $q->whereHas('aduan', function ($q) {
+                    $q->where('status', Status::SEDANG_DIPERBAIKI->value);
+                });
+            });
+        });
+
 
         $perPage = $request->input('per_page', 10);
         $perbaikan = $query->paginate($perPage);
