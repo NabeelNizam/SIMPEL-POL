@@ -57,7 +57,6 @@ class ProfilController extends Controller
             'telepon' => 'required|string|max:20',
             'email' => 'required|email',
             'username' => 'required|string|max:50|unique:users,username,' . $id . ',id_user',
-            'jurusan' => 'required|integer|exists:jurusan,id_jurusan',
             'fotoprofil' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
         ];
 
@@ -92,7 +91,6 @@ class ProfilController extends Controller
             $user->no_hp = $request->telepon;
             $user->email = $request->email;
             $user->username = $request->username;
-            $user->id_jurusan = $request->jurusan;
 
             // Proses upload gambar
             if ($request->hasFile('fotoprofil')) {

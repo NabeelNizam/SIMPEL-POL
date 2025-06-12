@@ -179,6 +179,7 @@
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Tren Anggaran</h3>
                     <canvas id="trenAnggaranChart"></canvas>
                 </div>
+                <div id="myModal" class="fixed inset-0 z-50 hidden items-center justify-center backdrop-blur-sm bg-white/30"></div>
             @endsection
 
             @push('js')

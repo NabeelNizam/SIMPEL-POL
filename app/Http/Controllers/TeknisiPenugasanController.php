@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Enums\Status;
+use App\Models\Aduan;
 use App\Models\Biaya;
 use App\Models\Fasilitas;
 use App\Models\Inspeksi;
+use App\Models\Notifikasi;
 use App\Models\Perbaikan;
 use App\Models\Periode;
 use Illuminate\Http\Request;
@@ -173,10 +176,21 @@ class TeknisiPenugasanController extends Controller
             }
             $inspeksi->update();
 
+            $fasilitas = Fasilitas::where('id_fasilitas', $inspeksi->id_fasilitas)->value('nama_fasilitas');
+
+            // Notifikasi ke sarpras
+            Notifikasi::create([
+                'pesan' => 'Teknisi telah menyelesaikan inspeksi untuk fasilitas <b class="text-red-500">' . $fasilitas . '</b>. Silakan tinjau hasilnya.',
+                'waktu_kirim' => now(),
+                'id_user' => $inspeksi->id_user_teknisi,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
             // Redirect atau response JSON
             return response()->json(['message' => 'Data berhasil diperbarui.']);
         } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors(), 'besaran' => (int) preg_replace('/[^0-9]/', '',$request->biaya[1]['besaran'])], 422);
+            return response()->json(['errors' => $e->errors(), 'besaran' => (int) preg_replace('/[^0-9]/', '', $request->biaya[1]['besaran'])], 422);
         }
     }
 }

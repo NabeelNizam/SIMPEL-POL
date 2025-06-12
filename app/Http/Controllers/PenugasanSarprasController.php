@@ -10,6 +10,7 @@ use App\Models\Fasilitas;
 use App\Models\Inspeksi;
 use App\Models\Kategori;
 use App\Models\Kriteria;
+use App\Models\Notifikasi;
 use App\Models\Perbaikan;
 use App\Models\Periode;
 use App\Models\User;
@@ -51,11 +52,11 @@ class PenugasanSarprasController extends Controller
             'fasilitas.ruangan.lantai.gedung',
             'periode',
         ])
-        ->select('inspeksi.*')
-        ->distinct()
-        ->whereNotNull('tingkat_kerusakan')
-        ->whereNotNull('tanggal_selesai')
-        ->whereDoesntHave('perbaikan');
+            ->select('inspeksi.*')
+            ->distinct()
+            ->whereNotNull('tingkat_kerusakan')
+            ->whereNotNull('tanggal_selesai')
+            ->whereDoesntHave('perbaikan');
 
         // Filter berdasarkan pencarian
         if ($request->search) {
@@ -164,13 +165,13 @@ class PenugasanSarprasController extends Controller
     {
         return view('sarpras.penugasan.confirm', ['inspeksi' => $inspeksi]);
     }
-    
+
     public function store_penugasan(Request $request)
     {
         $request->validate([
             'id_inspeksi' => 'required|integer|exists:inspeksi,id_inspeksi',
         ]);
-        
+
         $periode = Periode::getPeriodeAktif();
 
         if (!$periode) {
@@ -181,9 +182,30 @@ class PenugasanSarprasController extends Controller
             $inspeksi = Inspeksi::findOrFail($request->id_inspeksi);
 
             // Ambil semua aduan dengan id_fasilitas yang sama dan status SEDANG_INSPEKSI
-            Aduan::where('id_fasilitas', $inspeksi->id_fasilitas)
-                ->where('status', Status::SEDANG_INSPEKSI->value)
-                ->update(['status' => Status::SEDANG_DIPERBAIKI->value]);
+            $aduan = Aduan::where('id_fasilitas', $inspeksi->id_fasilitas)
+                ->where('status', Status::SEDANG_INSPEKSI->value)->get();
+            $fasilitas = Fasilitas::where('id_fasilitas', $inspeksi->id_fasilitas)->value('nama_fasilitas');
+            foreach ($aduan as $a) {
+                $a->update(['status' => Status::SEDANG_DIPERBAIKI->value]);
+
+                // Notifikasi ke pelapor 
+                Notifikasi::create([
+                    'pesan' => 'Fasilitas <b class="text-red-500">' . $fasilitas . '</b> yang Anda laporkan saat ini sedang dalam proses perbaikan oleh teknisi.',
+                    'waktu_kirim' => now(),
+                    'id_user' => $a->pelapor->id_user,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            // Notifikasi ke teknisi 
+            Notifikasi::create([
+                'pesan' => 'Anda ditugaskan untuk melakukan perbaikan fasilitas <b class="text-red-500">' . $fasilitas . '</b> berdasarkan hasil inspeksi sebelumnya.',
+                'waktu_kirim' => now(),
+                'id_user' => $inspeksi->id_user_teknisi,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         } catch (\Exception $e) {
             Log::error('Gagal memperbarui status aduan: ' . $e->getMessage());
             return redirect()->back()->withErrors(['general' => 'Gagal memperbarui status aduan.']);
@@ -197,7 +219,7 @@ class PenugasanSarprasController extends Controller
             ]);
             return redirect()->back()->with('success', 'Berhasil menugaskan teknisi.');
         } catch (\Exception $e) {
-            Log::error('Gagal menugaskan teknisi: '.$e->getMessage());
+            Log::error('Gagal menugaskan teknisi: ' . $e->getMessage());
             return redirect()->back()->withErrors(['general' => 'Gagal menugaskan teknisi.']);
         }
     }

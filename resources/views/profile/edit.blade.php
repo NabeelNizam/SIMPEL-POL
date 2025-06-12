@@ -1,7 +1,7 @@
 <!-- Modal Konten Edit -->
 <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative">
 
-    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 cursor-pointer">
         <i class="fas fa-times"></i>
     </button>
 
@@ -30,16 +30,16 @@
         <div>
             <label class="block text-sm font-medium mb-1">Email <span class="text-red-500">*</span></label>
             <input type="email" name="email" id="email" value="{{ $user->email }}"
-                class="w-full border rounded-md px-3 py-2 text-sm" placeholder="Email">
+                class="w-full border rounded-md px-3 py-2 text-sm cursor-not-allowed bg-gray-200" placeholder="Email" readonly>
             <span id="email-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
 
         <div>
-            <label class="block text-sm font-medium mb-1">{{ isset($user->pegawai->nip) ? "NIP" : 'NIM' }}<span
+            <label class="block text-sm font-medium mb-1">{{ isset($user->pegawai->nip) ? "NIP " : 'NIM ' }}<span
                     class="text-red-500">*</span></label>
             <input type="text" name="identifier" id="identifier" value="{{ $identifier }}"
-                class="w-full border rounded-md px-3 py-2 text-sm"
-                placeholder="{{ isset($user->pegawai->nip) ? "NIP" : 'NIM' }}">
+                class="w-full border rounded-md px-3 py-2 text-sm cursor-not-allowed bg-gray-200"
+                placeholder="{{ isset($user->pegawai->nip) ? "NIP" : 'NIM' }}" readonly>
             <span id="identifier-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
         <div>
@@ -51,7 +51,7 @@
 
         <div>
             <label class="block text-sm font-medium mb-1">Jurusan <span class="text-red-500">*</span></label>
-            <select name="jurusan" id="jurusan" class="w-full border rounded-md px-3 py-2 text-sm">
+            <select name="jurusan" id="jurusan" class="w-full border rounded-md px-3 py-2 text-sm cursor-not-allowed bg-gray-200" disabled>
                 <option value="">- Pilih Jurusan -</option>
                 @foreach($jurusan as $j)
                     <option value="{{ $j->id_jurusan }}" {{ $j->id_jurusan == $user->id_jurusan ? 'selected' : '' }}>
