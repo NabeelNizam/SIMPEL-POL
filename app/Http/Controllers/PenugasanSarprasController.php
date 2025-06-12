@@ -190,7 +190,7 @@ class PenugasanSarprasController extends Controller
 
                 // Notifikasi ke pelapor 
                 Notifikasi::create([
-                    'pesan' => 'Fasilitas <b class="text-blue-500">' . $fasilitas . '</b> yang Anda laporkan saat ini sedang dalam proses perbaikan oleh teknisi.',
+                    'pesan' => 'Fasilitas <b class="text-red-500">' . $fasilitas . '</b> yang Anda laporkan saat ini sedang dalam proses perbaikan oleh teknisi.',
                     'waktu_kirim' => now(),
                     'id_user' => $a->pelapor->id_user,
                     'created_at' => now(),
@@ -200,7 +200,7 @@ class PenugasanSarprasController extends Controller
 
             // Notifikasi ke teknisi 
             Notifikasi::create([
-                'pesan' => 'Anda ditugaskan untuk melakukan perbaikan fasilitas <b class="text-blue-500">' . $fasilitas . '</b> berdasarkan hasil inspeksi sebelumnya.',
+                'pesan' => 'Anda ditugaskan untuk melakukan perbaikan fasilitas <b class="text-red-500">' . $fasilitas . '</b> berdasarkan hasil inspeksi sebelumnya.',
                 'waktu_kirim' => now(),
                 'id_user' => $inspeksi->id_user_teknisi,
                 'created_at' => now(),

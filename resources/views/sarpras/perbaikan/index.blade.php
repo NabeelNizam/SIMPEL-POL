@@ -67,25 +67,6 @@
 
 
 @push('js')
-@if (session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil',
-            text: '{{ session('success') }}',
-        });
-    </script>
-@endif
-
-@if ($errors->any())
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Validasi Gagal',
-            html: `{!! implode('<br>', $errors->all()) !!}`,
-        });
-    </script>
-@endif
 <script>
     function modalAction(url = '') {
         $.get(url, function(response) {

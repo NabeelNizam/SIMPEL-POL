@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Enums\Status;
 use App\Models\Fasilitas;
+use App\Models\Notifikasi;
 use App\Models\Perbaikan;
 use App\Models\Periode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PerbaikanTeknisiController extends Controller
 {
@@ -81,23 +83,52 @@ class PerbaikanTeknisiController extends Controller
     }
     public function cycle($id)
     {
-        $perbaikan = Perbaikan::findOrFail($id);
-        if ($perbaikan->teknisi_selesai) {
-            $perbaikan->tanggal_selesai = null;
-        } else {
-            $perbaikan->tanggal_selesai = now();
-        }
-        $perbaikan->update();
-        // $fasilitas = Fasilitas::where('id_fasilitas', $inspeksi->id_fasilitas)->value('nama_fasilitas');
+        try {
+            // Kode Eril
+            $perbaikan = Perbaikan::findOrFail($id);
+            
+            // Bukan Kode Eril
+            $inspeksi = $perbaikan->inspeksi;
+            $fasilitas = Fasilitas::where('id_fasilitas', $inspeksi->id_fasilitas)->value('nama_fasilitas');
+            
+            // Kode Eril
+            if ($perbaikan->teknisi_selesai) {
+                $perbaikan->tanggal_selesai = null;
+                
+                // Bukan Kode Eril
+                // Notifikasi ke sarpras
+                Notifikasi::create([
+                    'pesan' => 'Teknisi membatalkan status selesai Perbaikan untuk fasilitas <b class="text-red-500">' . $fasilitas . '</b>.',
+                    'waktu_kirim' => now(),
+                    'id_user' => $inspeksi->id_user_sarpras,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                $pesan = 'Berhasil membatalkan menandai perbaikan sebagai selesai.';
 
-        // // Notifikasi ke sarpras
-        // Notifikasi::create([
-        //     'pesan' => 'Teknisi telah menyelesaikan inspeksi untuk fasilitas <b class="text-blue-500">' . $fasilitas . '</b>. Silakan tinjau hasilnya.',
-        //     'waktu_kirim' => now(),
-        //     'id_user' => $inspeksi->id_user_teknisi,
-        //     'created_at' => now(),
-        //     'updated_at' => now(),
-        // ]);
-        return redirect()->back();
+            // Kode Eril
+            } else {
+                $perbaikan->tanggal_selesai = now();
+                
+                // Bukan Kode Eril
+                // Notifikasi ke sarpras
+                Notifikasi::create([
+                    'pesan' => 'Teknisi telah menyelesaikan Perbaikan untuk fasilitas <b class="text-red-500">' . $fasilitas . '</b>. Silakan tinjau hasilnya.',
+                    'waktu_kirim' => now(),
+                    'id_user' => $inspeksi->id_user_sarpras,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                $pesan = 'Berhasil menandai perbaikan sebagai selesai';
+            }
+            $perbaikan->update();
+
+            
+            
+            return redirect()->back()->with('success', $pesan);
+        } catch (\Exception $e) {
+            Log::error('Gagal menyelesaikan tugas perbaikan. : ' . $e->getMessage());
+            return redirect()->back()->withErrors(['general' => 'Gagal menyelesaikan tugas perbaikan.']);
+        }
     }
 }

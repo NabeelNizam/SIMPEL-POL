@@ -25,9 +25,9 @@
                     class="w-48 border border-gray-300 rounded-md shadow-sm sm:text-sm">
                     <option value="">Semua Periode</option>
                     @foreach ($periode as $p)
-                        <option value="{{ $p->id_periode }}" {{ request('id_periode') == $p->id_periode ? 'selected' : '' }}>
-                            Periode {{ $p->kode_periode }}
-                        </option>
+                    <option value="{{ $p->id_periode }}" {{ request('id_periode')==$p->id_periode ? 'selected' : '' }}>
+                        Periode {{ $p->kode_periode }}
+                    </option>
                     @endforeach
                 </select>
             </div>
@@ -45,7 +45,8 @@
         <!-- Navigasi Tab -->
         <ul class="flex border-b-2 border-gray-300 mb-4 text-sm font-medium text-center" id="userTabs">
             <li><button data-role="all"
-                    class="tab-button active text-blue-600 border-b-3 border-yellow-400 px-4 py-2 cursor-pointer">Semua</button></li>
+                    class="tab-button active text-blue-600 border-b-3 border-yellow-400 px-4 py-2 cursor-pointer">Semua</button>
+            </li>
             <li><button data-role="1" class="tab-button px-4 py-2 cursor-pointer">Mahasiswa</button></li>
             <li><button data-role="5" class="tab-button px-4 py-2 cursor-pointer">Dosen</button></li>
             <li><button data-role="6" class="tab-button px-4 py-2 cursor-pointer">Tendik</button></li>
@@ -63,25 +64,6 @@
 @endsection
 
 @push('js')
-@if (session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil',
-            text: '{{ session('success') }}',
-        });
-    </script>
-@endif
-
-@if ($errors->any())
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Validasi Gagal',
-            html: `{!! implode('<br>', $errors->all()) !!}`,
-        });
-    </script>
-@endif
     <script>
         function modalAction(url = '') {
             $.get(url, function (response) {

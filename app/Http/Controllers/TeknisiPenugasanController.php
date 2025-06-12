@@ -180,7 +180,7 @@ class TeknisiPenugasanController extends Controller
 
             // Notifikasi ke sarpras
             Notifikasi::create([
-                'pesan' => 'Teknisi telah menyelesaikan inspeksi untuk fasilitas <b class="text-blue-500">' . $fasilitas . '</b>. Silakan tinjau hasilnya.',
+                'pesan' => 'Teknisi telah menyelesaikan inspeksi untuk fasilitas <b class="text-red-500">' . $fasilitas . '</b>. Silakan tinjau hasilnya.',
                 'waktu_kirim' => now(),
                 'id_user' => $inspeksi->id_user_teknisi,
                 'created_at' => now(),

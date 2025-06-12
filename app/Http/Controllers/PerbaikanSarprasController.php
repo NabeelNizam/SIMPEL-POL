@@ -110,7 +110,7 @@ class PerbaikanSarprasController extends Controller
 
                 // Notifikasi ke pelapor (versi panjang)
                 Notifikasi::create([
-                    'pesan' => 'Fasilitas <b class="text-blue-500">' . $fasilitas . '</b> yang Anda laporkan telah selesai diperbaiki. Terima kasih atas partisipasinya.',
+                    'pesan' => 'Fasilitas <b class="text-red-500">' . $fasilitas . '</b> yang Anda laporkan telah selesai diperbaiki. Terima kasih atas partisipasinya.',
                     'waktu_kirim' => now(),
                     'id_user' => $a->pelapor->id_user,
                     'created_at' => now(),
