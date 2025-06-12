@@ -64,6 +64,9 @@
 @endsection
 
 @push('js')
+
+
+@push('js')
 <script>
     function modalAction(url = '') {
         $.get(url, function(response) {

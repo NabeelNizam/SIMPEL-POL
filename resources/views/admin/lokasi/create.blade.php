@@ -65,11 +65,16 @@
                 </div>
             </div>
             <div class="px-4 py-3 space-y-3" id="${lantaiId}" style="background-color: #D9D9D9;">
-                <div class="border-l-4 border-orange-400 pl-3">
-                    <label class="text-sm font-medium">Nama Ruangan <span class="text-red-500">*</span></label>
-                    <input type="text" name="lantai[${lantaiCounter}][ruangan][]" placeholder="Contoh: LPR 1"
-                        class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400">
-                </div>
+                <div class="border-l-4 border-orange-400 pl-3 flex justify-between items-center">
+                      <div class="w-full">
+                          <label class="text-sm font-medium">Nama Ruangan <span class="text-red-500">*</span></label>
+                          <input type="text" name="lantai[${lantaiCounter}][ruangan][]" placeholder="Contoh: LPR 1"
+                              class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400">
+                      </div>
+                      <button type="button" onclick="hapusRuangan(this)" class="text-red-500 hover:text-red-700 ml-3">
+                          <i class="fa-solid fa-trash"></i>
+                      </button>
+                  </div>
                 <button type="button" onclick="tambahRuangan(this, ${lantaiCounter})" class="text-blue-600 text-sm hover:underline">
                     <i class="fa-solid fa-square-plus"></i> Tambah Ruangan
                 </button>
@@ -86,16 +91,27 @@
     }
 
     function tambahRuangan(button, lantaiId) {
-        const parent = button.parentElement;
-        const ruanganDiv = document.createElement('div');
-        ruanganDiv.className = "border-l-4 border-orange-400 pl-3";
+    const parent = button.parentElement;
+    const ruanganDiv = document.createElement('div');
+    ruanganDiv.className = "border-l-4 border-orange-400 pl-3 flex justify-between items-center";
 
-        ruanganDiv.innerHTML = `
+    ruanganDiv.innerHTML = `
+        <div class="w-full">
             <label class="text-sm font-medium">Nama Ruangan <span class="text-red-500">*</span></label>
             <input type="text" name="lantai[${lantaiId}][ruangan][]" placeholder="Contoh: LPR 1"
-                class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400 mt-2">
-        `;
+                class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400">
+        </div>
+        <button type="button" onclick="hapusRuangan(this)" class="text-red-500 hover:text-red-700 ml-3">
+            <i class="fa-solid fa-trash"></i>
+        </button>
+    `;
 
-        parent.insertBefore(ruanganDiv, button);
-    }
+    parent.insertBefore(ruanganDiv, button);
+}
+
+    function hapusRuangan(button) {
+    // Hapus elemen ruangan
+    const ruanganElement = button.closest('.border-l-4');
+    ruanganElement.remove();
+}
 </script>

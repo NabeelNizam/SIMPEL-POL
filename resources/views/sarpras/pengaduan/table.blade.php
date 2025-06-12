@@ -6,7 +6,7 @@
         <x-table.heading>Kategori</x-table.heading>
         <x-table.heading>Lokasi</x-table.heading>
         <x-table.heading>Urgensi</x-table.heading>
-        <x-table.heading>Jumlah Pelapor</x-table.heading>
+        <x-table.heading>Skor Bobot</x-table.heading>
         <x-table.heading>Aksi</x-table.heading>
     </x-slot>
 
@@ -41,14 +41,14 @@
                                                 px-3 bg-gray-500
                                             @endif
                                         ">
-                                {{ Str::ucfirst(Str::lower($p->urgensi->value)) }}
+                                {{ $p->urgensi->value ?? '-' }}
                             </span>
                         @else
                             <span class="px-3 py-1 rounded-full bg-gray-500 text-white text-sm">-</span>
                         @endif
                     </div>
                 </x-table.cell>
-                <x-table.cell>{{ $p->aduan_count ?? '-' }}</x-table.cell>
+                <x-table.cell>{{ $p->skor_bobot ?? '-' }}</x-table.cell>
                 <x-table.cell>
                     <div class="flex items-center space-x-2 min-w-[120px]">
                     <button onclick="modalAction('{{ route('sarpras.pengaduan.show', $p->id_fasilitas) }}')"

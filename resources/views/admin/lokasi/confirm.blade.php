@@ -14,7 +14,7 @@
         </svg>
         <h3 class="mb-5 text-lg font-semibold text-gray-700">Apakah Anda yakin ingin menghapus lokasi ini?</h3>
         <div class="flex justify-center items-center gap-4">
-            <form action="" method="POST">
+            <form action="{{route('admin.lokasi.destroy', $gedung->id_gedung)}}" method="POST">
                 @csrf
                 @method('DELETE')
                 <button id="confirm-delete"

@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Enums\Status;
 use App\Models\Fasilitas;
+use App\Models\Notifikasi;
 use App\Models\Perbaikan;
 use App\Models\Periode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PerbaikanTeknisiController extends Controller
 {
@@ -25,7 +27,8 @@ class PerbaikanTeknisiController extends Controller
 
         // Query untuk mengambil data melalui tabel Aduan
         // $query = Fasilitas::query();
-        $query = Perbaikan::with(['inspeksi', 'inspeksi.fasilitas', 'inspeksi.periode']);
+        $query = Perbaikan::with(['inspeksi', 'inspeksi.fasilitas', 'inspeksi.periode', 'inspeksi.fasilitas.aduan']);
+
 
         // Filter periode
         // if ($request->id_periode) {
@@ -44,14 +47,33 @@ class PerbaikanTeknisiController extends Controller
                 $q->where('id_periode', $request->id_periode);
             });
         }
-
-        // Filter status
-        if ($request->filled('status')) {
+        // Filter berdasarkan pencarian
+        if ($request->search) {
             $query->whereHas('inspeksi', function ($q) use ($request) {
-                $q->where('status', $request->status);
+                $q->whereHas('fasilitas', function ($q) use ($request) {
+                    $q->where('nama_fasilitas', 'like', "%{$request->search}%");
+                });
             });
         }
 
+        // Filter status
+        // if ($request->filled('status')) {
+        //     $query->whereHas('inspeksi', function ($q) use ($request) {
+        //         $q->whereHas('fasilitas', function ($q) use ($request) {
+        //             $q->whereHas('aduan', function ($q) use ($request) {
+        //                 $q->where('status', $request->status);
+        //             });
+        //         });
+        //     });
+        // }
+
+        $query = $query->whereHas('inspeksi', function ($q) {
+            $q->whereHas('fasilitas', function ($q) {
+                $q->whereHas('aduan', function ($q) {
+                    $q->where('status', Status::SEDANG_DIPERBAIKI->value);
+                });
+            });
+        });
 
 
         $perPage = $request->input('per_page', 10);
@@ -83,13 +105,52 @@ class PerbaikanTeknisiController extends Controller
     }
     public function cycle($id)
     {
-        $perbaikan = Perbaikan::findOrFail($id);
-        if ($perbaikan->teknisi_selesai) {
-            $perbaikan->tanggal_selesai = null;
-        }else{
-            $perbaikan->tanggal_selesai = now();
+        try {
+            // Kode Eril
+            $perbaikan = Perbaikan::findOrFail($id);
+            
+            // Bukan Kode Eril
+            $inspeksi = $perbaikan->inspeksi;
+            $fasilitas = Fasilitas::where('id_fasilitas', $inspeksi->id_fasilitas)->value('nama_fasilitas');
+            
+            // Kode Eril
+            if ($perbaikan->teknisi_selesai) {
+                $perbaikan->tanggal_selesai = null;
+                
+                // Bukan Kode Eril
+                // Notifikasi ke sarpras
+                Notifikasi::create([
+                    'pesan' => 'Teknisi membatalkan status selesai Perbaikan untuk fasilitas <b class="text-red-500">' . $fasilitas . '</b>.',
+                    'waktu_kirim' => now(),
+                    'id_user' => $inspeksi->id_user_sarpras,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                $pesan = 'Berhasil membatalkan menandai perbaikan sebagai selesai.';
+
+            // Kode Eril
+            } else {
+                $perbaikan->tanggal_selesai = now();
+                
+                // Bukan Kode Eril
+                // Notifikasi ke sarpras
+                Notifikasi::create([
+                    'pesan' => 'Teknisi telah menyelesaikan Perbaikan untuk fasilitas <b class="text-red-500">' . $fasilitas . '</b>. Silakan tinjau hasilnya.',
+                    'waktu_kirim' => now(),
+                    'id_user' => $inspeksi->id_user_sarpras,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                $pesan = 'Berhasil menandai perbaikan sebagai selesai';
+            }
+            $perbaikan->update();
+
+            
+            
+            return redirect()->back()->with('success', $pesan);
+        } catch (\Exception $e) {
+            Log::error('Gagal menyelesaikan tugas perbaikan. : ' . $e->getMessage());
+            return redirect()->back()->withErrors(['general' => 'Gagal menyelesaikan tugas perbaikan.']);
         }
-        $perbaikan->update();
-        return redirect()->back();
     }
 }

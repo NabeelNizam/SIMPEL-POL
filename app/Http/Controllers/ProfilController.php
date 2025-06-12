@@ -8,6 +8,7 @@ use App\Models\Pegawai;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class ProfilController extends Controller
@@ -56,7 +57,6 @@ class ProfilController extends Controller
             'telepon' => 'required|string|max:20',
             'email' => 'required|email',
             'username' => 'required|string|max:50|unique:users,username,' . $id . ',id_user',
-            'jurusan' => 'required|integer|exists:jurusan,id_jurusan',
             'fotoprofil' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
         ];
 
@@ -91,7 +91,6 @@ class ProfilController extends Controller
             $user->no_hp = $request->telepon;
             $user->email = $request->email;
             $user->username = $request->username;
-            $user->id_jurusan = $request->jurusan;
 
             // Proses upload gambar
             if ($request->hasFile('fotoprofil')) {
@@ -127,6 +126,49 @@ class ProfilController extends Controller
                 'success' => false,
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ], 500);
+        }
+    }
+    public function password()
+    {
+        return view('profile.password');
+    }
+    public function update_password(Request $request)
+    {
+        try {
+            $validation = Validator::make($request->all(), [
+                'old_password' => ['required'],
+                'confirm_password' => ['required'],
+                'new_password' => ['required', 'min:6'],
+            ]);
+
+            if ($validation->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Input Anda Gagal divalidasi.'
+                ], 422);
+            }
+
+            $user = User::findOrFail(auth()->user()->id_user);
+            if (Hash::check($request->old_password, $user->password)) {
+                if ($request->new_password != $request->confirm_password) {
+                    // return response()->json([
+                    //     'status' => 'error',
+                    //     'message' => 'Konfirmasi password tidak sesuai.'
+                    // ], 422);
+                    return redirect()->back()->withErrors(['error'=> 'Konfirmasi password tidak sesuai.']);
+                }
+                $user->password = Hash::make($request->new_password);
+                $user->save();
+                return redirect()->back()->with('success', 'Password berhasil diperbarui.');
+            } else {
+                // return response()->json([
+                //     'status' => 'success',
+                //     'message' => 'Password lama tidak sesuai.'
+                // ], 422);
+                return redirect()->back()->withErrors(['error'=> 'Password lama tidak sesuai.']);
+            }
+        } catch (\Throwable $th) {
+            throw $th;
         }
     }
 }

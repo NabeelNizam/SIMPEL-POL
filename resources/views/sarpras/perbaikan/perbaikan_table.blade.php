@@ -45,10 +45,10 @@
                     $isCompleted = !empty($p->inspeksi->first()->perbaikan->tanggal_selesai);
                 @endphp
                 <x-table.cell class="text-center">
-                    <div class="flex text-center space-x-2 min-w-[130px]">
+                    <div class="flex text-center space-x-2 min-w-[152px]">
                         <span
-                            class="py-1 rounded-lg text-white text-sm font-semibold {{ $isCompleted ? 'bg-green-500 px-11' : 'bg-yellow-500 px-3' }}">
-                            {{ $isCompleted ? 'Selesai' : 'Dalam Perbaikan' }}
+                            class="py-1 rounded-lg text-white text-sm font-semibold {{ $isCompleted ? 'bg-green-500 px-13' : 'bg-yellow-500 px-3' }}">
+                            {{ $isCompleted ? 'SELESAI' : 'DALAM PERBAIKAN' }}
                         </span>
                     </div>
                 </x-table.cell>
