@@ -32,17 +32,17 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="flex items-center gap-2">
-                    <label for="id_status" class="text-sm font-medium text-gray-700">Filter Status:</label>
-                    <select id="id_status" name="id_status"
+                {{-- <div class="flex items-center gap-2">
+                    <label for="status" class="text-sm font-medium text-gray-700">Filter Status:</label>
+                    <select id="status" name="status"
                         class="w-48 border border-gray-300 rounded-md shadow-sm sm:text-sm">
                         <option value="">Semua Status</option>
                         @foreach ($status as $item)
-                            <option value="{{ $item }}" {{ request('id_status') == $item ? 'selected' : '' }}>
+                            <option value="{{ $item }}" {{ request('status') == $item ? 'selected' : '' }}>
                                 {{ $item->label() }}</option>
                         @endforeach
                     </select>
-                </div>
+                </div> --}}
             </span>
             <span class="flex justify-between items-center flex-wrap">
                 <div>
@@ -58,77 +58,78 @@
                 <div class="flex items-center gap-2">
                     <label for="search" class="text-sm font-medium text-gray-700">Pencarian:</label>
                     <input type="text" name="search" id="search" value="{{ request('search') }}"
-                        placeholder="Cari pengguna..."
+                        placeholder="Cari fasilitas..."
                         class="w-64 border border-gray-300 rounded-md shadow-sm sm:text-sm" />
                 </div>
             </span>
         </form>
 
-    <div id="perbaikan-table-body">
-        @include('teknisi.perbaikan.perbaikan_table',compact('perbaikan'))
-    </div>
-</div>
-
-        <div id="myModal" class="fixed inset-0 z-50 hidden items-center justify-center backdrop-blur-sm bg-white/30">
+        <div id="perbaikan-table-body">
+            @include('teknisi.perbaikan.perbaikan_table', compact('perbaikan'))
         </div>
-    @endsection
+    </div>
+
+    <div id="myModal" class="fixed inset-0 z-50 hidden items-center justify-center backdrop-blur-sm bg-white/30">
+    </div>
+@endsection
 
 
-    @push('js')
-        <script>
-            // Function to open modal with content from URL
-            function modalAction(url = '') {
-                $.get(url, function(response) {
-                    $('#myModal').html(response).removeClass('hidden').addClass('flex');
-                });
-            }
+@push('js')
+    <script>
+        // Function to open modal with content from URL
+        function modalAction(url = '') {
+            $.get(url, function(response) {
+                $('#myModal').html(response).removeClass('hidden').addClass('flex');
+            });
+        }
 
-            // Event listener for modal close button
-            $(document).on('click', '#modal-close', function() {
-                $('#myModal').addClass('hidden').removeClass('flex').html('');
+        // Event listener for modal close button
+        $(document).on('click', '#modal-close', function() {
+            $('#myModal').addClass('hidden').removeClass('flex').html('');
+        });
+
+        // Function to reload data based on filters and search
+        function reloadData() {
+            $.ajax({
+                url: "{{ route('teknisi.perbaikan') }}",
+                method: "GET",
+                data: {
+                    search: $('#search').val(),
+                    id_periode: $('#id_periode').val(),
+                    // status: $('#status').val(),
+                    per_page: $('#per_page').val(),
+                    sort_column: $('#sort-column').val(),
+                    sort_direction: $('#sort-direction').val()
+                },
+                success: function(response) {
+                    $('#perbaikan-table-body').html(response.html);
+                },
+                error: function() {
+                    Swal.fire('Error!', 'Gagal memuat data.', 'error');
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            // Event untuk filter
+            $('#id_periode').on('change', function() {
+                reloadData();
             });
 
-            // Function to reload data based on filters and search
-            function reloadData() {
-                $.ajax({
-                    url: "{{ route('teknisi.perbaikan') }}",
-                    method: "GET",
-                    data: {
-                        search: $('#search').val(),
-                        id_periode: $('#id_periode').val(),
-                        per_page: $('#per_page').val(),
-                        sort_column: $('#sort-column').val(),
-                        sort_direction: $('#sort-direction').val()
-                    },
-                    success: function(response) {
-                        $('#aduan-table-body').html(response.html);
-                    },
-                    error: function() {
-                        Swal.fire('Error!', 'Gagal memuat data riwayat.', 'error');
-                    }
-                });
-            }
-
-            $(document).ready(function() {
-                // Event untuk filter
-                $('#id_kategori, #id_prioritas, #id_periode').on('change', function() {
-                    reloadData();
-                });
-
-                // Event untuk pencarian
-                $('#search').on('input', function() {
-                    reloadData();
-                });
-
-                // Event untuk jumlah data per halaman
-                $('#per_page').on('change', function() {
-                    reloadData();
-                });
-
-                // Event untuk sorting
-                $('#sort-column, #sort-direction').on('change', function() {
-                    reloadData();
-                });
+            // Event untuk pencarian
+            $('#search').on('input', function() {
+                reloadData();
             });
-        </script>
-    @endpush
+
+            // Event untuk jumlah data per halaman
+            $('#per_page').on('change', function() {
+                reloadData();
+            });
+
+            // Event untuk sorting
+            $('#sort-column, #sort-direction').on('change', function() {
+                reloadData();
+            });
+        });
+    </script>
+@endpush
