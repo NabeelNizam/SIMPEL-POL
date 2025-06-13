@@ -56,7 +56,7 @@
                         </button>
 
                         @if($a->umpan_balik && $a->umpan_balik->rating)
-                            <button disabled class="text-gray-400 cursor-not-allowed text-sm opacity-60 cursor-not-allowed">
+                            <button disabled class="text-gray-400 cursor-not-allowed text-sm opacity-60 cursor-not-allowed cursor-pointer">
                                 <img src="{{ asset('icons/solid/message.svg') }}" alt=""
                                     class="h-7 w-7 min-h-[23px] min-w-[23px] inline filter grayscale brightness-75">
                             </button>

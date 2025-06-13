@@ -51,7 +51,7 @@
                                 <img src="{{ asset('icons/solid/Edit.svg') }}" alt="" class="h-7 w-7 min-h-[28px] min-w-[28px] inline">
                             </button>
                         @else
-                            <button disabled class="text-gray-400 cursor-not-allowed text-sm ml-2 opacity-60">
+                            <button disabled class="text-gray-400 cursor-not-allowed text-sm ml-2 opacity-60 cursor-pointer">
                                 <img src="{{ asset('icons/solid/Edit.svg') }}" alt=""
                                     class="h-7 w-7 min-h-[28px] min-w-[28px] inline filter grayscale brightness-75">
                             </button>
