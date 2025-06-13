@@ -39,16 +39,6 @@
 
 @push('js')
 <script>
-    function modalAction(url = '') {
-        $.get(url, function(response) {
-            $('#myModal').html(response).removeClass('hidden').addClass('flex');
-        });
-    }
-
-    $(document).on('click', '#modal-close', function() {
-            $('#myModal').addClass('hidden').removeClass('flex').html('');
-        });
-
     function reloadData() {
         $.ajax({
             url: "{{ route('teknisi.riwayat') }}",
