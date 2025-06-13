@@ -2,7 +2,7 @@
 
 <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative space-y-6 border-t-4 border-blue-600 max-h-screen overflow-y-auto">
     {{-- Tombol Close --}}
-    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl">
+    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl cursor-pointer">
         <i class="fas fa-times"></i>
     </button>
 
@@ -111,7 +111,7 @@
                                            class="w-full px-3 py-2 border border-gray-300 rounded text-right focus:outline-none focus:ring-1 focus:ring-blue-500">
                                 </td>
                                 <td class="border p-2 text-center">
-                                    <button type="button" onclick="removeRow(this)" class="text-red-600 hover:underline">Hapus</button>
+                                    <button type="button" onclick="removeRow(this)" class="text-red-600 hover:underline cursor-pointer">Hapus</button>
                                 </td>
                             </tr>
                         @empty
@@ -123,7 +123,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="4" class="border p-2 text-center">
-                                <button type="button" onclick="addRow()" class="text-blue-600 hover:underline font-semibold">+ Tambah Baris</button>
+                                <button type="button" onclick="addRow()" class="text-blue-600 hover:underline font-semibold cursor-pointer">+ Tambah Baris</button>
                             </td>
                         </tr>
                     </tfoot>
@@ -136,7 +136,7 @@
 
         {{-- Tombol Simpan --}}
         <div class="text-right mt-6">
-            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Simpan</button>
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 cursor-pointer">Simpan</button>
         </div>
     </form>
 </div>
@@ -177,7 +177,7 @@
                 <input type="text" name="biaya[${index}][besaran]" class="biaya-input w-full px-3 py-2 border rounded text-right focus:outline-none focus:ring-1 focus:ring-blue-500" oninput="formatInputRupiah(this)">
             </td>
             <td class="border p-2 text-center">
-                <button type="button" onclick="removeRow(this)" class="text-red-600 hover:underline">Hapus</button>
+                <button type="button" onclick="removeRow(this)" class="text-red-600 hover:underline cursor-pointer">Hapus</button>
             </td>
         `;
         document.getElementById('empty-row')?.remove();

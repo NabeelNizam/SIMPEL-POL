@@ -4,7 +4,7 @@
     {{-- header modal --}}
     <div class="bg-white sticky top-0 z-10 py-3 mb-3">
         {{-- Tombol Close --}}
-        <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl">
+        <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl cursor-pointer">
             <i class="fas fa-times"></i>
         </button>
 
