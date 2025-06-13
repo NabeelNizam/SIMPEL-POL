@@ -110,6 +110,8 @@
                 icon: 'success',
                 title: 'Berhasil',
                 text: '{{ session('success') }}',
+            }).then(()=> {
+                location.reload();
             });
         </script>
     @endif
@@ -120,6 +122,8 @@
                 icon: 'error',
                 title: 'Validasi Gagal',
                 html: `{!! implode('<br>', $errors->all()) !!}`,
+            }).then(()=> {
+                location.reload();
             });
         </script>
     @endif
