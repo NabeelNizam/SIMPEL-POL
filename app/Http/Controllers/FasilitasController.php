@@ -174,20 +174,17 @@ class FasilitasController extends Controller
     public function destroy(Fasilitas $fasilitas)
     {
         try {
-            if ($fasilitas->foto_fasilitas) {
-                Storage::disk('public')->delete('uploads/img/foto_fasilitas/' . $fasilitas->foto_fasilitas);
-            }
+            $fileName = $fasilitas->foto_fasilitas ?? null;
 
             $fasilitas->delete();
-            return response()->json([
-                'status' => true,
-                'message' => 'Fasilitas berhasil dihapus.'
-            ]);
+
+            if($fileName) {
+                Storage::disk('public')->delete('uploads/img/foto_fasilitas/' . $fileName);
+            }
+
+            return redirect()->back()->with('success', 'Data fasilitas berhasil dihapus.');
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ], 500);
+            return redirect()->back()->withErrors(['general' => 'Gagal menghapus data fasilitas.']);
         }
     }
 
