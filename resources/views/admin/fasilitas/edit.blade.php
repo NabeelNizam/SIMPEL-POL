@@ -327,7 +327,6 @@
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            // dataFasilitas.ajax.reload();
                             reloadData();
                         } else {
                             $('.error-text').text('');
