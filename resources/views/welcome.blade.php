@@ -13,7 +13,7 @@
           <a href="{{ route('login') }}" class="text-[#1E3F8A] bg-white border border-[#1E3F8A] hover:bg-[#1E3F8A] hover:text-white focus:ring-4 focus:ring-blue-100 font-medium rounded-lg text-sm px-6 py-2.5 me-2 mb-2 focus:outline-none transition-colors duration-300 inline-block text-center">
               Masuk
           </a>
-            <button type="button" class="text-white border border-white hover:bg-white hover:text-[#132145] focus:ring-4 focus:ring-white font-medium rounded-lg text-sm px-6 py-2.5 mb-2 focus:outline-none">
+            <button type="button" class="text-white border border-white hover:bg-white hover:text-[#132145] focus:ring-4 focus:ring-white font-medium rounded-lg text-sm px-6 py-2.5 mb-2 focus:outline-none cursor-pointer">
                 Pelajari lebih lanjut
             </button>
         </div>

@@ -25,7 +25,7 @@
     <div class="mt-6 border-t pt-4">
       <div class="flex items-center justify-between text-left w-full">
         <a href="{{ route('login') }}" class="text-blue-600 hover:underline text-sm">Sudah punya akun?</a>
-        <button id="next-step" class="inline-flex items-center justify-center bg-blue-900 text-white rounded-full w-8 h-8 hover:bg-blue-800 transition-colors duration-200">
+        <button id="next-step" class="inline-flex items-center justify-center bg-blue-900 text-white rounded-full w-8 h-8 hover:bg-blue-800 transition-colors duration-200 cursor-pointer">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
           </svg>
@@ -134,12 +134,12 @@
 
       <div class="mt-6 border-t pt-4">
         <div class="flex items-center justify-between text-left w-full">
-          <button type="button" id="prev-step" class="inline-flex items-center justify-center bg-gray-300 text-gray-700 rounded-full w-8 h-8 hover:bg-gray-400 transition-colors duration-200">
+          <button type="button" id="prev-step" class="inline-flex items-center justify-center bg-gray-300 text-gray-700 rounded-full w-8 h-8 hover:bg-gray-400 transition-colors duration-200 cursor-pointer">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
             </svg>
           </button>
-          <button type="submit" class="inline-flex items-center justify-center bg-blue-900 text-white py-2 px-6 rounded-lg hover:bg-blue-800 transition-colors duration-200">
+          <button type="submit" class="inline-flex items-center justify-center bg-blue-900 text-white py-2 px-6 rounded-lg hover:bg-blue-800 transition-colors duration-200 cursor-pointer">
             Daftar
           </button>
         </div>

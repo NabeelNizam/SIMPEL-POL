@@ -1,6 +1,6 @@
 <div class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative border-t-4 border-blue-600">
 
-    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 cursor-pointer">
         <i class="fas fa-times"></i>
     </button>
 
@@ -35,7 +35,7 @@
             </div>
         @endforeach
 
-        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 cursor-pointer">
             Simpan Perubahan
         </button>
     </form>
