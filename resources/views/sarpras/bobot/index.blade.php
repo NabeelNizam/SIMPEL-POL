@@ -38,27 +38,6 @@
 
 <div id="myModal" class="fixed inset-0 z-50 hidden items-center justify-center backdrop-blur-sm bg-white/30"></div>
 
-@if (session('success'))
-<script>
-    Swal.fire({
-        icon: 'success',
-        title: 'Berhasil',
-        text: '{{ session('success') }}',
-    });
-</script>
-@endif
-
-@if ($errors->any())
-<script>
-    Swal.fire({
-        icon: 'error',
-        title: 'Validasi Gagal',
-        html: `{!! implode('<br>', $errors->all()) !!}`,
-    });
-</script>
-@endif
-
-
 @endsection
 
 @push('js')
