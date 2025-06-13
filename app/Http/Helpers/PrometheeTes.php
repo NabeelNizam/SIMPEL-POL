@@ -32,19 +32,28 @@ class PrometheeTes
         $normalized = [];
         $numCriteria = count($criteria);
 
-        // For each criterion
+        // Validasi: Pastikan setiap alternatif memiliki jumlah nilai yang sesuai
+        foreach ($alternatives as $i => $alt) {
+            if (count($alt['values']) !== $numCriteria) {
+                throw new \Exception("Alternatif '{$alt['id']}' memiliki jumlah nilai yang tidak sesuai. Diharapkan: $numCriteria, ditemukan: " . count($alt['values']));
+            }
+        }
+
+        // Untuk setiap kriteria
         for ($j = 0; $j < $numCriteria; $j++) {
-            $values = array_column($alternatives, 'values')[$j];
-            $min = min($values);
-            $max = max($values);
+            // Ambil nilai untuk kriteria ke-j dari semua alternatif
+            $values = array_column($alternatives, 'values');
+            $criterionValues = array_column($values, $j); // Ambil nilai untuk kriteria ke-j
+            $min = min($criterionValues);
+            $max = max($criterionValues);
 
             foreach ($alternatives as $i => $alt) {
                 $value = $alt['values'][$j];
                 if ($criteria[$j]['type'] === 'BENEFIT') {
-                    // Normalize for BENEFIT: (x - min) / (max - min)
+                    // Normalize untuk BENEFIT: (x - min) / (max - min)
                     $normalized[$i][$j] = ($max == $min) ? 0 : ($value - $min) / ($max - $min);
                 } else {
-                    // Normalize for COST: (max - x) / (max - min)
+                    // Normalize untuk COST: (max - x) / (max - min)
                     $normalized[$i][$j] = ($max == $min) ? 0 : ($max - $value) / ($max - $min);
                 }
             }
@@ -151,12 +160,17 @@ class PrometheeTes
         // Calculate net flow and prepare result
         for ($i = 0; $i < $numAlternatives; $i++) {
             $netFlow = $flows['leaving'][$i] - $flows['entering'][$i];
-            $result[] = [
-                'id' => $alternatives[$i]['id'],
-                'leaving_flow' => round($flows['leaving'][$i], 3),
-                'entering_flow' => round($flows['entering'][$i], 3),
-                'net_flow' => round($netFlow, 3)
-            ];
+            // Menyertakan semua field dari $alternatives, termasuk field tambahan
+            $result[] = array_merge(
+                [
+                    'id' => $alternatives[$i]['id'],
+                    'leaving_flow' => round($flows['leaving'][$i], 3),
+                    'entering_flow' => round($flows['entering'][$i], 3),
+                    'net_flow' => round($netFlow, 3),
+                ],
+                // Salin semua field lain dari alternatif
+                array_diff_key($alternatives[$i], ['id' => null, 'values' => null])
+            );
         }
 
         // Sort by net flow (descending) to determine ranking

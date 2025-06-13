@@ -3,10 +3,41 @@
 @section('content')
     <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-600">
         <div class="flex items-center justify-between mb-4">
-            <span class="text-sm text-gray-700">Tes Perhitungan SPK</span>
+            <span class="text-sm text-gray-700">Daftar Penugasan Perbaikan yang terdaftar dalam sistem</span>
         </div>
         <hr class="border-black opacity-30 mt-4">
 
+                <!-- Filter Form -->
+        <form id="filter-form" class="flex flex-wrap gap-4 mb-4 mt-8">
+            <!-- Filter Periode -->
+            <div class="flex items-center gap-2">
+                <label for="id_periode" class="text-sm font-medium text-gray-700">Filter Periode:</label>
+                <select id="id_periode" name="id_periode" class="w-48 border border-gray-300 rounded-md shadow-sm sm:text-sm">
+                    <option value="">Semua Periode</option>
+                </select>
+            </div>
+            <button type="button" onclick="reloadData()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer">Filter</button>
+        </form>
+
+        <div class="flex justify-between items-center mb-4">
+            <!-- Pagination -->
+            <div class="flex items-center gap-2">
+                <label for="per_page" class="text-sm font-medium text-gray-700">Show:</label>
+                <select id="per_page" name="per_page" class="border border-gray-300 rounded-md shadow-sm sm:text-sm">
+                    @foreach ([10, 25, 50, 100] as $length)
+                        <option value="{{ $length }}" {{ request('per_page', 10) == $length ? 'selected' : '' }}>{{ $length }}
+                        </option>
+                    @endforeach
+                </select>
+                <span class="text-sm text-gray-700">entries</span>
+            </div>
+            <!-- Pencarian -->
+            <div class="flex items-center gap-2">
+                <label for="search" class="text-sm font-medium text-gray-700">Pencarian:</label>
+                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari fasilitas..."
+                    class="w-64 border border-gray-300 rounded-md shadow-sm sm:text-sm" />
+            </div>
+        </div>
 
         <div id="inspeksi-table-body">
             @include('sarpras.tes.table', ['result' => $result])
