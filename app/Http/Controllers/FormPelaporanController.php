@@ -113,6 +113,22 @@ class FormPelaporanController extends Controller
                     ->withInput();
             }
 
+            $fasilitas = Fasilitas::findOrFail($request->fasilitas);
+            $aduan = Aduan::where('id_fasilitas', $request->fasilitas)->where('id_user_pelapor', auth()->user()->id_user)->get();
+            // $fasilitas->whereHas('aduan', function ($q) {
+            //     $q->where('id_user_pelapor', auth()->user()->id_user)->get();
+            // });
+            // dd($aduan);
+
+            // if ($aduan->count() == 0) {
+            //     return redirect()->back()->withErrors(['fasilitas' => 'Anda sudah membuat aduan untuk fasilitas ini.'])->withInput();
+            // }
+
+            $is_selesai = $aduan->where('status', '!=' , 'SELESAI')->count() > 0;
+
+            if ($aduan->count() > 0 && $is_selesai) {
+                return redirect()->back()->withErrors(['fasilitas' => 'Anda sudah membuat aduan untuk fasilitas ini.'])->withInput();
+            }
 
 
             $aduan = Aduan::create([
@@ -181,7 +197,7 @@ class FormPelaporanController extends Controller
         $fasilitas = Fasilitas::where('id_ruangan', $id_ruangan)->get();
         return response()->json($fasilitas);
     }
-    private function tentukanStatusFasilitas(int $id_fasilitas):Status
+    private function tentukanStatusFasilitas(int $id_fasilitas): Status
     {
         $periode_aktif = Periode::getPeriodeAktif();
 

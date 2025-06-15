@@ -11,6 +11,7 @@ use App\Models\Kategori;
 use App\Models\Notifikasi;
 use App\Models\Periode;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -21,6 +22,25 @@ class PengaduanSarprasController extends Controller
     // -User : Sarpras
     public function index(Request $request)
     {
+        $activeMenu = 'pengaduan';
+
+        $tanggalSekarang = Carbon::now()->day;
+
+        if($tanggalSekarang > 15) {
+            $breadcrumb = (object) [
+                'title' => '',
+                'list' => []
+            ];
+
+            $pesan = 'Maaf, Anda tidak dapat mengakses menu ini setelah tanggal 15. Silakan tunggu hingga periode berikutnya pada tanggal <span class="font-semibold">1–15</span>.';
+
+            return view ('access.denied', [
+                'activeMenu' => $activeMenu, 
+                'breadcrumb' => $breadcrumb,
+                'pesan' => $pesan,
+            ]);
+        }
+
         $breadcrumb = (object) [
             'title' => 'Laporan',
             'list' => ['Home', 'Laporan Pengaduan']
@@ -30,7 +50,6 @@ class PengaduanSarprasController extends Controller
             'title' => 'Daftar Pengaduan dari Semua Periode Sebelumnya untuk Penugasan Inspeksi'
         ];
 
-        $activeMenu = 'pengaduan';
         $pelapor = '';
 
         // Ambil periode aktif saat ini
