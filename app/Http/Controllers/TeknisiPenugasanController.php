@@ -26,20 +26,20 @@ class TeknisiPenugasanController extends Controller
 
         $tanggalSekarang = Carbon::now()->day;
 
-        if($tanggalSekarang > 15) {
-            $breadcrumb = (object) [
-                'title' => '',
-                'list' => []
-            ];
+        // if($tanggalSekarang > 15) {
+        //     $breadcrumb = (object) [
+        //         'title' => '',
+        //         'list' => []
+        //     ];
 
-            $pesan = 'Maaf, Anda tidak dapat mengakses menu ini setelah tanggal 15. Silakan tunggu hingga periode berikutnya pada tanggal <span class="font-semibold">1–15</span>.';
+        //     $pesan = 'Maaf, Anda tidak dapat mengakses menu ini setelah tanggal 15. Silakan tunggu hingga periode berikutnya pada tanggal <span class="font-semibold">1–15</span>.';
 
-            return view ('access.denied', [
-                'activeMenu' => $activeMenu,
-                'breadcrumb' => $breadcrumb,
-                'pesan' => $pesan,
-            ]);
-        }
+        //     return view ('access.denied', [
+        //         'activeMenu' => $activeMenu,
+        //         'breadcrumb' => $breadcrumb,
+        //         'pesan' => $pesan,
+        //     ]);
+        // }
 
         $breadcrumb = (object) [
             'title' => 'Dashboard Teknisi',
@@ -157,6 +157,7 @@ class TeknisiPenugasanController extends Controller
 
     public function update_ajax(Request $request, Inspeksi $inspeksi)
     {
+        // dd($request->biaya);
         try {
             // Validasi input
             $validation = Validator::make($request->all(), [
@@ -166,8 +167,9 @@ class TeknisiPenugasanController extends Controller
                 'biaya.*.besaran' => ['required'],
             ]);
             if ($validation->fails()) {
-                return response()->json(['errors' => $validation->errors()], 422);
+                // return response()->json(['errors' => $validation->errors()], 422);
                 // throw new ValidationException($validation);
+                return redirect()->back()->withErrors(['error' => 'Validasi Gagal.']);
             }
 
             // Update tingkat kerusakan
@@ -206,9 +208,12 @@ class TeknisiPenugasanController extends Controller
             ]);
 
             // Redirect atau response JSON
-            return response()->json(['message' => 'Data berhasil diperbarui.']);
+            // return response()->json(['message' => 'Data berhasil diperbarui.']);
+            return redirect()->back()->with('success', 'Data berhasil diperbarui.');
+
         } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors(), 'besaran' => (int) preg_replace('/[^0-9]/', '', $request->biaya[1]['besaran'])], 422);
+            // return response()->json(['errors' => $e->errors(), 'besaran' => (int) preg_replace('/[^0-9]/', '', $request->biaya[1]['besaran'])], 422);
+            return redirect()->back()->withErrors(['error' => 'Validasi Gagal.']);
         }
     }
 }

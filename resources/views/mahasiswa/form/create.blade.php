@@ -58,7 +58,7 @@
 
         <div class="col-span-2">
             <label for="bukti_foto" class="block text-sm font-medium mb-1">
-                Bukti Foto <span class="text-red-500">*</span>
+                Bukti Foto
             </label>
 
             <div class="flex items-center border border-gray-300 rounded-md bg-white overflow-hidden">
@@ -100,26 +100,6 @@
             </button>
         </div>
     </form>
-
-    @if (session('success'))
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil',
-                text: '{{ session('success') }}',
-            });
-        </script>
-    @endif
-
-    @if ($errors->any())
-        <script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Validasi Gagal',
-                html: `{!! implode('<br>', $errors->all()) !!}`,
-            });
-        </script>
-    @endif
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
