@@ -14,6 +14,10 @@
         </svg>
         <h3 class="mb-5 text-lg font-semibold text-gray-700">Apakah Anda yakin ingin menghapus lokasi ini?</h3>
         <div class="flex justify-center items-center gap-4">
+            {{-- ini nanti benerin biar modal nya bisa hilang/nutup --}}
+            <button type="button" id="modal-close"
+                class="py-2.5 px-5 ml-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-300 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Batal
+            </button>
             <form action="{{route('admin.lokasi.destroy', $gedung->id_gedung)}}" method="POST">
                 @csrf
                 @method('DELETE')
@@ -22,10 +26,6 @@
                     Ya, Hapus
                 </button>
             </form>
-
-            {{-- ini nanti benerin biar modal nya bisa hilang/nutup --}}
-            <button type="button"
-                class="py-2.5 px-5 ml-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-300 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Batal</button>
         </div>
     </div>
 </div>
