@@ -20,7 +20,7 @@
 
         <div class="flex flex-col lg:flex-row gap-6">
             <div class="lg:w-48">
-                <img src="{{ asset($aduan->fasilitas->gambar ?? 'img/no-image.svg') }}" alt="Gambar Fasilitas"
+                <img src="{{ asset($aduan->fasilitas->foto_fasilitas ?? 'img/no-image.svg') }}" alt="Gambar Fasilitas"
                     class="w-full h-32 object-cover rounded-lg border">
                 <div class="mt-2">
                     <p class="font-semibold text-black-700">{{ $aduan->fasilitas->nama_fasilitas ?? '-' }}</p>
