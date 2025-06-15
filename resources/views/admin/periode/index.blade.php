@@ -5,14 +5,14 @@
         <div class="flex items-center justify-between mb-4">
             <span class="text-sm text-gray-700">Daftar Periode yang terdaftar dalam sistem</span>
             <div class="flex gap-2">
-                <a href="{{ url('/periode/export_excel') }}"
+                {{-- <a href="{{ url('/periode/export_excel') }}"
                     class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
                     <i class="fas fa-file-excel"></i> Ekspor Excel
                 </a>
                 <a href="{{ url('/periode/export_pdf') }}"
                     class="bg-blue-800 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-blue-900">
                     <i class="fas fa-file-pdf"></i> Ekspor PDF
-                </a>
+                </a> --}}
                 <button onclick="modalAction('{{ route('admin.periode.create_ajax') }}')"
                     class="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2 text-sm hover:bg-green-700">
                     <i class="fas fa-plus"></i> Tambah
