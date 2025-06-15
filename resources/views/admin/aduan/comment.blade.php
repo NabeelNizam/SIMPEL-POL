@@ -41,9 +41,9 @@
 
                                 @if($item->bukti_foto)
                                     <div class="mb-2">
-                                        <img src="{{ asset('storage/' . $item->bukti_foto) }}" alt="Bukti Foto"
+                                        <img src="{{ asset( $item->bukti_foto) }}" alt="Bukti Foto"
                                             class="w-32 h-24 object-cover rounded shadow cursor-pointer hover:shadow-lg transition-shadow"
-                                            onclick="showImageModal('{{ asset('storage/' . $item->bukti_foto) }}')">
+                                            onclick="showImageModal('{{ asset( $item->bukti_foto) }}')">
                                     </div>
                                 @endif
 

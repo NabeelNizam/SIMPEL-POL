@@ -26,7 +26,7 @@
             <div class="flex-shrink-0">
                 <div class="bg-gray-100 rounded-lg shadow-sm p-4">
                     @if(!empty($fasilitas->foto_fasilitas) && file_exists(public_path($fasilitas->foto_fasilitas)))
-                        <img src="{{ asset('storage/' . $fasilitas->foto_fasilitas) }}" alt="Foto Aduan"
+                        <img src="{{ asset($fasilitas->foto_fasilitas) }}" alt="Foto Aduan"
                             class="w-64 h-48 object-cover rounded-lg shadow">
                     @else
                         <img src="{{ asset('img/no-image.svg') }}" alt="No Image"
