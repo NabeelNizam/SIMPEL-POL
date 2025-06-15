@@ -31,7 +31,6 @@ use App\Http\Controllers\{
     PeriodeController,
     PrometheeController,
     RiwayatSarprasController,
-    SarprasPenugasanController,
     SOPController,
     TeknisiPenugasanController,
 };

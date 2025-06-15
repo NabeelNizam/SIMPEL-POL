@@ -26,20 +26,20 @@ class TeknisiPenugasanController extends Controller
 
         $tanggalSekarang = Carbon::now()->day;
 
-        // if($tanggalSekarang > 15) {
-        //     $breadcrumb = (object) [
-        //         'title' => '',
-        //         'list' => []
-        //     ];
+        if($tanggalSekarang > 15) {
+            $breadcrumb = (object) [
+                'title' => '',
+                'list' => []
+            ];
 
-        //     $pesan = 'Maaf, Anda tidak dapat mengakses menu ini setelah tanggal 15. Silakan tunggu hingga periode berikutnya pada tanggal <span class="font-semibold">1–15</span>.';
+            $pesan = 'Maaf, Anda tidak dapat mengakses menu ini setelah tanggal 15. Silakan tunggu hingga periode berikutnya pada tanggal <span class="font-semibold">1–15</span>.';
 
-        //     return view ('access.denied', [
-        //         'activeMenu' => $activeMenu,
-        //         'breadcrumb' => $breadcrumb,
-        //         'pesan' => $pesan,
-        //     ]);
-        // }
+            return view ('access.denied', [
+                'activeMenu' => $activeMenu,
+                'breadcrumb' => $breadcrumb,
+                'pesan' => $pesan,
+            ]);
+        }
 
         $breadcrumb = (object) [
             'title' => 'Dashboard Teknisi',

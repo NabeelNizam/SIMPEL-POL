@@ -27,21 +27,20 @@ class PenugasanSarprasController extends Controller
 
         $tanggalSekarang = Carbon::now()->day;
 
-        // ini jangan dihapus
-        // if($tanggalSekarang <= 15) {
-        //     $breadcrumb = (object) [
-        //         'title' => '',
-        //         'list' => []
-        //     ];
+        if($tanggalSekarang <= 15) {
+            $breadcrumb = (object) [
+                'title' => '',
+                'list' => []
+            ];
 
-        //     $pesan = 'Maaf, Anda tidak dapat mengakses menu ini sebelum tanggal <span class="font-semibold">16</span>';
+            $pesan = 'Maaf, Anda tidak dapat mengakses menu ini sebelum tanggal <span class="font-semibold">16</span>';
 
-        //     return view ('access.denied', [
-        //         'activeMenu' => $activeMenu,
-        //         'breadcrumb' => $breadcrumb,
-        //         'pesan' => $pesan,
-        //     ]);
-        // }
+            return view ('access.denied', [
+                'activeMenu' => $activeMenu,
+                'breadcrumb' => $breadcrumb,
+                'pesan' => $pesan,
+            ]);
+        }
 
         $breadcrumb = (object) [
             'title' => 'Laporan Penugasan',
