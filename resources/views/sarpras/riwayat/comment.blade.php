@@ -45,6 +45,7 @@
                                             class="w-32 h-24 object-cover rounded shadow cursor-pointer hover:shadow-lg transition-shadow"
                                             onclick="showImageModal('{{ asset($item->bukti_foto) }}')">
                                     </div>
+
                                 @endif
 
                                 <div class="flex items-center justify-between text-xs text-gray-500">

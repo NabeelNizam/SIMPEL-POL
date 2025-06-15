@@ -63,7 +63,7 @@ class AduanSeeder extends Seeder
                         'status' => Status::MENUNGGU_DIPROSES,
                         'id_user_pelapor' => $userId,
                         'deskripsi' => fake()->paragraph(2),
-                        'bukti_foto' => fake()->imageUrl(640, 480, 'business', true, 'Aduan', true),
+                        'bukti_foto' => 'storage/uploads/img/foto_fasilitas/Fasilitas Rusak.jpg',
                     ]);
 
                     // Tandai ID user sebagai sudah digunakan
@@ -116,7 +116,7 @@ class AduanSeeder extends Seeder
                         'status' => $status,
                         'id_user_pelapor' => $userId,
                         'deskripsi' => fake()->paragraph(2),
-                        'bukti_foto' => fake()->imageUrl(640, 480, 'business', true, 'Aduan', true),
+                        'bukti_foto' => 'storage/uploads/img/foto_fasilitas/Fasilitas Rusak.jpg',
                     ]);
 
                     // Tandai ID user sebagai sudah digunakan

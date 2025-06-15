@@ -23,7 +23,7 @@
             <div class="flex justify-center">
                 <div class="bg-gray-100 p-4 rounded-lg shadow-sm">
                     @if(!empty($aduan->bukti_foto) && file_exists(public_path($aduan->bukti_foto)))
-                        <img src="{{ asset('storage/' . $aduan->bukti_foto) }}" alt="Foto Aduan"
+                        <img src="{{ asset( $aduan->bukti_foto) }}" alt="Foto Aduan"
                             class="w-48 h-32 object-cover rounded-lg shadow">
                     @else
                         <img src="{{ asset('img/no-image.svg') }}" alt="No Image"

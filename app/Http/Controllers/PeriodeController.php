@@ -65,10 +65,7 @@ class PeriodeController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422);
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         try {
@@ -78,15 +75,9 @@ class PeriodeController extends Controller
                 'tanggal_mulai' => $request->tanggal_mulai,
                 'tanggal_selesai' => $request->tanggal_selesai,
             ]);
-            return response()->json([
-                'status' => true,
-                'message' => 'Periode berhasil ditambahkan.'
-            ]);
+            return redirect()->route('periode.index')->with('success', 'Periode berhasil disimpan.');
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ], 500);
+            return redirect()->back()->with('error', 'Periode gagal disimpan.');
         }
     }
 
@@ -119,10 +110,7 @@ class PeriodeController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => 'weladalah ' . $validator->errors()
-                ]);
+                return redirect()->back()->withErrors($validator)->withInput();
             }
 
             $new_data = [
@@ -131,15 +119,9 @@ class PeriodeController extends Controller
                 'tanggal_selesai' => $request->tanggal_selesai,
             ];
             $periode->update($new_data);
-            return response()->json([
-                'status' => true,
-                'message' => 'Periode berhasil diperbarui.'
-            ]);
+            return redirect()->route('periode.index')->with('success', 'Periode berhasil diperbarui.');
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ]);
+            return redirect()->back()->withErrors('Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -166,12 +148,10 @@ class PeriodeController extends Controller
     {
         try {
             $periode->delete();
-            return redirect()->route('admin.periode')->with('success', 'Periode berhasil dihapus.');
+            return redirect()->back()->with('success', 'Periode berhasil dihapus.');
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ], 500);
+            // throw $e;
+            return redirect()->back()->withErrors( ['Tindakan terlarang:' , 'Ada data yang terhubung dengan periode ini.']);
         }
     }
 }

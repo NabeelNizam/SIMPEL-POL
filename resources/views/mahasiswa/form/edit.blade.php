@@ -74,7 +74,7 @@
             <p class="mt-1 text-xs text-gray-500">
                 Format yang didukung: JPG, PNG, JPEG. Ukuran maksimal: 2MB
                 @if ($aduan->bukti_foto)
-                    | File saat ini: <a href="{{ asset('storage/' . $aduan->bukti_foto) }}" target="_blank">Lihat</a>
+                    | File saat ini: <a href="{{ asset( $aduan->bukti_foto) }}" target="_blank">Lihat</a>
                 @endif
             </p>
             <span id="bukti_foto-error" class="text-xs text-red-500 mt-1 error-text"></span>

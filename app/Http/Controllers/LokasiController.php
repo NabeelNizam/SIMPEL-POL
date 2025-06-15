@@ -135,13 +135,13 @@ class LokasiController extends Controller
             //     'status' => true,
             //     'message' => 'gedung berhasil dihapus.'
             // ]);
-            return redirect()->route('admin.lokasi')->with('success', 'gedung berhasil dihapus.');
+            return redirect()->route('admin.lokasi')->with('success', 'Gedung berhasil dihapus.');
         } catch (\Exception $e) {
             // return response()->json([
             //     'status' => false,
             //     'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             // ], 500);
-            return redirect()->route('admin.lokasi')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return redirect()->route('admin.lokasi')->with('error', ['Tindakan terlarang:', 'Ada data yang terhubung dengan gedung ini.']);
         }
     }
 
