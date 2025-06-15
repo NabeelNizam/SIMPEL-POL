@@ -145,6 +145,8 @@ class FasilitasController extends Controller
             }
         }
 
+        $fileNameSaved = 'storage/uploads/img/foto_fasilitas/' . $fileName;
+
         try {
             Fasilitas::create([
                 'id_ruangan' => $request->ruangan,
@@ -155,11 +157,11 @@ class FasilitasController extends Controller
                 'deskripsi' => $request->deskripsi,
                 'urgensi' => $request->urgensi,
                 'id_periode' => $periode->id_periode,
-                'foto_fasilitas' => $fileName
+                'foto_fasilitas' => $fileNameSaved
             ]);
             return redirect()->back()->with('success', 'Data fasilitas berhasil disimpan.');
         } catch (\Exception $e) {
-            Log::error('Gagal simpan fasilitas: '.$e->getMessage());
+            Log::error('Gagal simpan fasilitas: ' . $e->getMessage());
             return redirect()->back()->withErrors(['general' => 'Gagal menyimpan data.']);
         }
     }
@@ -174,12 +176,13 @@ class FasilitasController extends Controller
     public function destroy(Fasilitas $fasilitas)
     {
         try {
-            $fileName = $fasilitas->foto_fasilitas ?? null;
+            $fileName = $fasilitas->foto_fasilitas ?? null; // isinya storage/uploads/img/foto_fasilitas/1750011803_684f...
 
             $fasilitas->delete();
 
-            if($fileName) {
-                Storage::disk('public')->delete('uploads/img/foto_fasilitas/' . $fileName);
+            $filePath = 'uploads/img/foto_fasilitas/' . basename($fileName);
+            if (Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
             }
 
             return redirect()->back()->with('success', 'Data fasilitas berhasil dihapus.');
@@ -242,13 +245,17 @@ class FasilitasController extends Controller
 
             $fileName = $fasilitas->foto_fasilitas;
             if ($request->hasFile('foto_fasilitas')) {
-                if ($fileName && Storage::disk('public')->exists('uploads/img/foto_fasilitas/' . $fileName)) {
-                    Storage::disk('public')->delete('uploads/img/foto_fasilitas/' . $fileName);
+                // if ($fileName && Storage::disk('public')->exists('uploads/img/foto_fasilitas/' . $fileName)) {
+                $filePath = 'uploads/img/foto_fasilitas/' . basename($fileName);
+                if ($fileName && Storage::disk('public')->exists($filePath)) {
+                    Storage::disk('public')->delete($filePath);
                 }
                 $file = $request->file('foto_fasilitas');
                 $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
                 $file->storeAs('uploads/img/foto_fasilitas', $fileName, 'public');
             }
+
+            $fileNameSaved = 'storage/uploads/img/foto_fasilitas/' . $fileName;
 
             $fasilitas->update([
                 'id_ruangan' => $request->ruangan,
@@ -257,7 +264,7 @@ class FasilitasController extends Controller
                 'kondisi' => $request->kondisi,
                 'deskripsi' => $request->deskripsi,
                 'urgensi' => $request->urgensi,
-                'foto_fasilitas' => $fileName
+                'foto_fasilitas' => $fileNameSaved
             ]);
 
             return response()->json([
@@ -301,9 +308,9 @@ class FasilitasController extends Controller
 
         $file = $request->file('file_input');
 
-        $reader = IOFactory::createReader('Xlsx'); 
-        $reader->setReadDataOnly(true); 
-        $spreadsheet = $reader->load($file->getRealPath()); 
+        $reader = IOFactory::createReader('Xlsx');
+        $reader->setReadDataOnly(true);
+        $spreadsheet = $reader->load($file->getRealPath());
         $sheet = $spreadsheet->getActiveSheet();
 
         $data = $sheet->toArray(null, false, true, true);
@@ -311,7 +318,7 @@ class FasilitasController extends Controller
         $insert = [];
         if (count($data) > 1) {
             foreach ($data as $baris => $value) {
-                if ($baris > 1) { 
+                if ($baris > 1) {
                     $insert[] = [
                         'kode_fasilitas' => $value['A'],
                         'nama_fasilitas' => $value['B'],
@@ -328,7 +335,7 @@ class FasilitasController extends Controller
                 }
             }
 
-            
+
 
             if (count($insert) > 0) {
                 Fasilitas::insertOrIgnore($insert);
@@ -361,7 +368,7 @@ class FasilitasController extends Controller
             ];
         })->toArray();
         $sheet = Sheet::make(
-        [
+            [
                 'title' => 'Data Fasilitas',
                 'text' => 'Berikut adalah daftar fasilitas yang terdaftar di sistem.',
                 'footer' => 'Dibuat oleh Nabeela',

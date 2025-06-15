@@ -106,14 +106,14 @@
                     class="text-red-500">*</span></label>
             <div class="flex items-center border border-gray-300 rounded-md bg-white overflow-hidden">
                 <input type="text" id="file-name-display"
-                    placeholder="{{ $fasilitas->foto_fasilitas ? $fasilitas->foto_fasilitas : 'Pilih File' }}"
+                    placeholder="{{ $fasilitas->foto_fasilitas ? basename($fasilitas->foto_fasilitas) : 'Pilih File' }}"
                     class="flex-grow px-3 py-2 text-sm {{ $fasilitas->foto_fasilitas ? 'text-black' : 'text-gray-500' }} bg-gray-50 border-none focus:ring-0 focus:outline-none"
                     readonly>
                 <label for="foto_fasilitas"
                     class="font-semibold px-4 py-2 text-sm text-black bg-gray-300 hover:bg-gray-400 cursor-pointer">Browse</label>
                 <input type="file" id="foto_fasilitas" name="foto_fasilitas" accept=".jpg,.jpeg,.png"
                     class="hidden"
-                    onchange="const input = document.getElementById('file-name-display'); input.value = this.files[0]?.name || '{{ $fasilitas->foto_fasilitas }}'; input.classList.remove('text-gray-500'); input.classList.add('text-black');">
+                    onchange="const input = document.getElementById('file-name-display'); input.value = this.files[0]?.name || '{{ $fasilitas->foto_fasilitas ? basename($fasilitas->foto_fasilitas) : 'Pilih File'}}'; input.classList.remove('text-gray-500'); input.classList.add('text-black');">
             </div>
             <p class="mt-1 text-xs text-gray-500">Format yang didukung: JPG, PNG, JPEG. Ukuran maksimal: 2MB</p>
             <span id="foto_fasilitas-error" class="text-xs text-red-500 mt-1 error-text"></span>
