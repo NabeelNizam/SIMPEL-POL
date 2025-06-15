@@ -30,7 +30,8 @@
         <div>
             <label class="block text-sm font-medium mb-1">Email <span class="text-red-500">*</span></label>
             <input type="email" name="email" id="email" value="{{ $user->email }}"
-                class="w-full border rounded-md px-3 py-2 text-sm cursor-not-allowed bg-gray-200" placeholder="Email" readonly>
+                class="w-full border rounded-md px-3 py-2 text-sm cursor-not-allowed bg-gray-200" placeholder="Email"
+                readonly>
             <span id="email-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
 
@@ -51,7 +52,8 @@
 
         <div>
             <label class="block text-sm font-medium mb-1">Jurusan <span class="text-red-500">*</span></label>
-            <select name="jurusan" id="jurusan" class="w-full border rounded-md px-3 py-2 text-sm cursor-not-allowed bg-gray-200" disabled>
+            <select name="jurusan" id="jurusan"
+                class="w-full border rounded-md px-3 py-2 text-sm cursor-not-allowed bg-gray-200" disabled>
                 <option value="">- Pilih Jurusan -</option>
                 @foreach($jurusan as $j)
                     <option value="{{ $j->id_jurusan }}" {{ $j->id_jurusan == $user->id_jurusan ? 'selected' : '' }}>
@@ -63,10 +65,23 @@
         </div>
 
         <div class="col-span-2">
-            <label class="block text-sm font-medium mb-1">Foto Profil <span class="text-red-500">*</span></label>
-            <span id="fotoprofil" class="text-xs text-gray-600">*abaikan jika tidak diganti</span>
-            <input type="file" name="fotoprofil" id="fotoprofil" class="w-full border rounded-md px-3 text-sm"
-                placeholder="Pilih Foto">
+            <label for="fotoprofil" class="block text-sm font-medium mb-1">
+                Foto Profil <span class="text-red-500">*</span>
+            </label>
+            <span id="fotoprofil" class="text-xs text-gray-600 mb-2">*abaikan jika tidak diganti</span>
+            <div class="flex items-center border border-gray-300 rounded-md bg-white overflow-hidden">
+                <input type="text" id="file-name-display" placeholder="Pilih File"
+                    class="flex-grow px-3 py-2 text-sm text-gray-500 bg-gray-50 border-none focus:ring-0 focus:outline-none"
+                    readonly>
+                <label for="fotoprofil"
+                    class="font-semibold px-4 py-2 text-sm text-black bg-gray-300 hover:bg-gray-400 cursor-pointer">
+                    Browse</label>
+                <input type="file" id="fotoprofil" name="fotoprofil" accept=".jpg,.jpeg,.png" class="hidden"
+                    onchange="const input = document.getElementById('file-name-display'); input.value = this.files[0]?.name; input.classList.remove('text-gray-500'); input.classList.add('text-black');">
+            </div>
+            <p class="mt-1 text-xs text-gray-500">
+                Format yang didukung: JPG, PNG, JPEG. Ukuran maksimal: 2MB
+            </p>
             <span id="fotoprofil-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
 
