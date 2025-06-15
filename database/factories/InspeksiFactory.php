@@ -31,7 +31,7 @@ class InspeksiFactory extends Factory
             })->inRandomOrder()->first();
 
         $fasilitas = Fasilitas::all()->random();
-        $periode = Periode::find(2);
+        $periode = Periode::find(3);
 
         $taggalMulai = fake()->dateTimeBetween($periode->tanggal_mulai, $periode->tanggal_selesai);
 
@@ -72,7 +72,7 @@ class InspeksiFactory extends Factory
                 }
                 Perbaikan::factory()->create([
                     'id_inspeksi' => $inspeksi->id_inspeksi,
-                    'id_periode' => $inspeksi->id_periode + 1,
+                    'id_periode' => $inspeksi->id_periode,
                     'tanggal_mulai' => $tanggalMulai,
                     'tanggal_selesai' => $tanggalSelesai,
                     // 'teknisi_selesai' => $teknisiSelesai

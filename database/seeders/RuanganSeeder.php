@@ -50,7 +50,7 @@ class RuanganSeeder extends Seeder
             ],
             [   
                 'kode_ruangan' => 'LSI_01',
-                'nama_ruangan' => 'Laboraterium Sistem Informasi 01',
+                'nama_ruangan' => 'Laboratorium Sistem Informasi 01',
                 'id_lantai' => 7
             ]
         );
@@ -60,7 +60,7 @@ class RuanganSeeder extends Seeder
             ],
             [   
                 'kode_ruangan' => 'LSI_02',
-                'nama_ruangan' => 'Laboraterium Sistem Informasi 02',
+                'nama_ruangan' => 'Laboratorium Sistem Informasi 02',
                 'id_lantai' => 7
             ]
         );

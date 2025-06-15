@@ -14,16 +14,20 @@ class KategoriSeeder extends Seeder
     public function run(): void
     {
         Kategori::create([
-            'nama_kategori' => 'elektronik',
+            'nama_kategori' => 'Elektronik',
             'kode_kategori' => 'ELK'
         ]);
         Kategori::create([
-            'nama_kategori' => 'furniture',
-            'kode_kategori' => 'FRN'
+            'nama_kategori' => 'Furniture',
+            'kode_kategori' => 'FTR'
         ]);
         Kategori::create([
-            'nama_kategori' => 'buku',
-            'kode_kategori' => 'BUK'
+            'nama_kategori' => 'Teknologi',
+            'kode_kategori' => 'TKL'
+        ]);
+        Kategori::create([
+            'nama_kategori' => 'Keamanan dan Keselamatan',
+            'kode_kategori' => 'KDK'
         ]);
     }
 }

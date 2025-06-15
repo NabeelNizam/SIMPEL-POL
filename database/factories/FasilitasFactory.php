@@ -26,9 +26,10 @@ class FasilitasFactory extends Factory
     public function definition(): array
     {
         // $random = fake()->randomElement(['Meja', 'PC', 'Papan Tulis', 'Kursi', 'Pintu', 'Proyektor']);
-        $elements =['elektronik'=>['PC', 'Proyektor', 'Kipas Angin', 'AC'],
-            'furniture'=>['Meja', 'Kursi', 'Papan Tulis'],
-            'buku'=>['Buku', 'Majalah', 'Kamus']
+        $elements =['Elektronik'=>['Proyektor', 'Kipas Angin', 'AC'],
+            'Furniture'=>['Meja', 'Kursi', 'Papan Tulis'],
+            'Teknologi'=>['PC', 'Monitor'],
+            'Keamanan dan Keselamatan'=>['CCTV','Apar']
         ];
         $kategori = Kategori::all()->random();
         $nama_fasilitas = fake()->randomElement($elements[$kategori->nama_kategori]);

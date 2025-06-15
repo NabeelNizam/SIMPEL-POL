@@ -24,9 +24,26 @@ class FasilitasSeeder extends Seeder
      */
     public function run(): void
     {
-        $fasilitas =  Fasilitas::factory()->count(10)->create();
+        $fasilitas =  Fasilitas::factory()->count(20)->create();
+
+        // $fasilitas = [];
+
+        // $fasilitas[] = Fasilitas::create([
+        //     'id_kategori' => 1,
+        //     'nama_fasilitas' => 'AC Panasonic 2 PK',
+        //     'kode_fasilitas' => 'ELK-',
+        //     'kondisi' => Kondisi::LAYAK,
+        //     'urgensi' => Urgensi::DARURAT,
+        //     'id_periode' => Periode::find(1)->id_periode,
+        //     'id_ruangan' => fake()->randomElement(Ruangan::pluck('id_ruangan')),
+        //     'foto_fasilitas' => fake()->imageUrl(640, 480, 'business', true, 'Fasilitas', true),
+        //     'deskripsi' => fake()->paragraph(2),
+        // ]);
 
         foreach ($fasilitas as $item) {
+            if(fake()->boolean()){
+                continue;
+            }
             Inspeksi::factory()->create([
                 'id_fasilitas' => $item->id_fasilitas,
             ]);
