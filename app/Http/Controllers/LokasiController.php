@@ -131,15 +131,17 @@ class LokasiController extends Controller
             }
 
             $gedung->delete();
-            return response()->json([
-                'status' => true,
-                'message' => 'gedung berhasil dihapus.'
-            ]);
+            // return response()->json([
+            //     'status' => true,
+            //     'message' => 'gedung berhasil dihapus.'
+            // ]);
+            return redirect()->route('admin.lokasi')->with('success', 'gedung berhasil dihapus.');
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ], 500);
+            // return response()->json([
+            //     'status' => false,
+            //     'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            // ], 500);
+            return redirect()->route('admin.lokasi')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -172,9 +174,9 @@ class LokasiController extends Controller
     {
         // dd($request->all());
         $validation = Validator::make($request->all(), [
-            'nama_gedung' => ['required', 'string', 'max:30'],
-            'lantai.*.nama_lantai' => ['required', 'string', 'max:30'],
-            'lantai.*.ruangan.*.nama_ruangan' => ['required', 'string', 'max:30'],
+            'nama_gedung' => ['required', 'string', 'max:100'],
+            'lantai.*.nama_lantai' => ['required', 'string', 'max:100'],
+            'lantai.*.ruangan.*.nama_ruangan' => ['required', 'string', 'max:100'],
         ]);
         // dd($validation->errors());
         if ($validation->fails()) {

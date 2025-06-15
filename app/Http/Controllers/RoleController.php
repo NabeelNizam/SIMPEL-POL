@@ -100,15 +100,9 @@ public function index(Request $request)
     {
         try {
             $role->delete();
-            return response()->json([
-                'status' => true,
-                'message' => 'Role berhasil dihapus.'
-            ]);
+            return redirect()->route('admin.role')->with('success', 'Role berhasil dihapus.');
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ], 500);
+            return redirect()->back()->withErrors(['general' => 'Tindakan terlarang: Ada user yang terhubung dengan role ini.']);
         }
     }
 
@@ -157,10 +151,11 @@ public function index(Request $request)
                 'nama_role' => $request->nama_role
             ]);
 
-            return response()->json([
-                'status' => true,
-                'message' => 'Data Role berhasil diperbarui',
-            ]);        
+            // return response()->json([
+            //     'status' => true,
+            //     'message' => 'Data Role berhasil diperbarui',
+            // ]);
+            return redirect()->route('admin.role')->with('success', 'Data Role berhasil diperbarui');
     }
 
     public function import_ajax()
@@ -273,7 +268,7 @@ public function index(Request $request)
     //     );
     //     return $sheet->toPdf();
     // }
-    
+
     // public function export_excel()
     // {
 
