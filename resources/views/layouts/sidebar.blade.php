@@ -101,13 +101,6 @@
                                 alt="Periode" class="mr-2 w-5">
                             Periode
                         </a>
-                        <a href="#"
-                            class="flex items-center p-2 w-full {{ $activeMenu == 'kriteria' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
-                            style="{{ $activeMenu == 'kriteria' ? 'border-color: #F99D1C;' : '' }}">
-                            <img src="{{ $activeMenu == 'kriteria' ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}"
-                                alt="Kriteria" class="mr-2 w-5">
-                            Kriteria Prioritas Perbaikan
-                        </a>
                         <a href="{{ route('admin.sop') }}"
                             class="flex items-center p-2 w-full {{ $activeMenu == 'sop' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
                             style="{{ $activeMenu == 'sop' ? 'border-color: #F99D1C;' : '' }}">
