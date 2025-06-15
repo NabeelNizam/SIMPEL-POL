@@ -2,8 +2,8 @@
     <x-slot name="head">
         <tr>
             <x-table.heading>No</x-table.heading>
+            <x-table.heading>Kode Fasilitas</x-table.heading>
             <x-table.heading>Nama Fasilitas</x-table.heading>
-            <x-table.heading>Kategori</x-table.heading>
             <x-table.heading>Lokasi</x-table.heading>
             <x-table.heading>Nama Teknisi</x-table.heading>
             <x-table.heading>Tanggal Mulai</x-table.heading>
@@ -17,8 +17,8 @@
         @forelse ($perbaikan as $index => $p)
             <x-table.row>
                 <x-table.cell>{{ $perbaikan->firstItem() + $index }}</x-table.cell>
+                <x-table.cell>{{ ucfirst($p->kode_fasilitas) ?? '-' }}</x-table.cell>
                 <x-table.cell>{{ $p->nama_fasilitas ?? '-' }}</x-table.cell>
-                <x-table.cell>{{ ucfirst($p->kategori->nama_kategori) ?? '-' }}</x-table.cell>
                 @php
                     $ruangan = $p->ruangan;
                     $lantai = $ruangan->lantai;
