@@ -4,7 +4,7 @@
     <div class="min-h-screen bg-gray-50">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6" name="laporan">
             {{-- Total Laporan --}}
-            <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
+            <div class="bg-white rounded-lg shadow border-l-6 border-black p-4">
                 <p class="text-sm text-gray-500">TOTAL LAPORAN</p>
                 <h2 class="text-2xl font-bold text-gray-800">{{ $totalLaporan }}</h2>
                 <p class="text-xs text-gray-400 mt-1">
@@ -13,7 +13,7 @@
             </div>
 
             {{-- Tertunda --}}
-            <div class="bg-white rounded-lg shadow border-l-4 border-yellow-400 p-4">
+            <div class="bg-white rounded-lg shadow border-l-6 border-yellow-400 p-4">
                 <p class="text-sm text-gray-500">TERTUNDA</p>
                 <h2 class="text-2xl font-bold text-gray-800">{{ $tertunda }}</h2>
                 <p class="text-xs text-gray-400 mt-1">
@@ -21,7 +21,7 @@
             </div>
 
             {{-- Dalam Proses --}}
-            <div class="bg-white rounded-lg shadow border-l-4 border-blue-500 p-4">
+            <div class="bg-white rounded-lg shadow border-l-6 border-blue-500 p-4">
                 <p class="text-sm text-gray-500">DALAM PROSES</p>
                 <h2 class="text-2xl font-bold text-gray-800">{{ $dalamProses }}</h2>
                 <p class="text-xs text-gray-400 mt-1">
@@ -29,7 +29,7 @@
             </div>
 
             {{-- Selesai --}}
-            <div class="bg-white rounded-lg shadow border-l-4 border-green-500 p-4">
+            <div class="bg-white rounded-lg shadow border-l-6 border-green-500 p-4">
                 <p class="text-sm text-gray-500">SELESAI</p>
                 <h2 class="text-2xl font-bold text-gray-800">{{ $selesai }}</h2>
                 <p class="text-xs text-gray-400 mt-1">
