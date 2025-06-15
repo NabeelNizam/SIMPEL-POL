@@ -30,23 +30,83 @@ class Perbaikan extends Model
     }
     public function getStatusAttribute()
     {
-        if($this->tanggal_selesai != null){
+        if ($this->tanggal_selesai != null) {
             return 'SELESAI';
-        }else{
+        } else {
             return 'PROSES';
         }
     }
     public function getTeknisiSelesaiAttribute()
     {
-         if($this->tanggal_selesai != null){
+        if ($this->tanggal_selesai != null) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
     public function getSarprasSelesaiAttribute()
     {
-        
+
+    } 
+protected function buildAduanTertanganiQuery()
+    {
+        // Ambil id_fasilitas dari relasi inspeksi
+        $idFasilitas = $this->inspeksi->id_fasilitas;
+        $currentWaktuSelesai = $this->periode->tanggal_selesai;
+
+        // Cari perbaikan sebelumnya dengan id_fasilitas yang sama (melalui inspeksi)
+        $previousPerbaikan = Perbaikan::whereHas('inspeksi', function ($query) use ($idFasilitas) {
+                $query->where('id_fasilitas', $idFasilitas);
+            })
+            ->whereHas('periode', function ($query) use ($currentWaktuSelesai) {
+                $query->where('tanggal_selesai', '<', $currentWaktuSelesai);
+            })
+            // ->with('periode')
+            ->orderByDesc('tanggal_selesai')
+            ->first();
+
+        $waktuBawah = $previousPerbaikan ? $previousPerbaikan->periode->tanggal_selesai : null;
+
+        // Query untuk aduan
+        $query = Aduan::where('id_fasilitas', $idFasilitas)
+            ->whereHas('periode', function ($query) use ($currentWaktuSelesai) {
+                $query->where('tanggal_selesai', '<', $currentWaktuSelesai);
+            });
+
+        if ($waktuBawah) {
+            $query->whereHas('periode', function ($query) use ($waktuBawah) {
+                $query->where('tanggal_selesai', '>', $waktuBawah);
+            });
+        }
+
+        return $query;
     }
 
+    // Accessor untuk koleksi aduan tertangani
+    public function getAduanTertanganiAttribute()
+    {
+        return $this->buildAduanTertanganiQuery()->get();
+    }
+
+    // Accessor untuk jumlah aduan tertangani
+    public function getJumlahAduanTertanganiAttribute()
+    {
+        return $this->buildAduanTertanganiQuery()->count();
+    }
+    public function getUmpanBalikTertanganiAttribute()
+    {
+        $aduanIds = $this->buildAduanTertanganiQuery()->pluck('id_aduan')->toArray();
+        return UmpanBalik::whereIn('id_aduan', $aduanIds)->get();
+    }
+    public function getJumlahUmpanBalikTertanganiAttribute()
+    {
+        $aduanIds = $this->buildAduanTertanganiQuery()->pluck('id_aduan')->toArray();
+        return UmpanBalik::whereIn('id_aduan', $aduanIds)->count();
+    }
+
+    public function getRataRataRatingAttribute()
+    {
+        $aduanIds = $this->buildAduanTertanganiQuery()->pluck('id_aduan')->toArray();
+        return UmpanBalik::whereIn('id_aduan', $aduanIds)->avg('rating');
+    }
 }

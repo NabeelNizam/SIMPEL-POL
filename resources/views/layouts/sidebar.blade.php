@@ -84,9 +84,9 @@
                     <div>
                         <p class="mb-1 text-xs text-gray-500 uppercase">Laporan</p>
                         <a href="{{ route('admin.aduan') }}"
-                            class="flex items-center p-2 w-full {{ $activeMenu == 'aduan' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
-                            style="{{ $activeMenu == 'aduan' ? 'border-color: #F99D1C;' : '' }}">
-                            <img src="{{ $activeMenu == 'aduan' ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}"
+                            class="flex items-center p-2 w-full {{ $activeMenu == 'riwayat' ? 'bg-blue-800 text-white border-r-4' : 'hover:bg-gray-100' }} rounded-none"
+                            style="{{ $activeMenu == 'riwayat' ? 'border-color: #F99D1C;' : '' }}">
+                            <img src="{{ $activeMenu == 'riwayat' ? asset('icons/solid/Document.svg') : asset('icons/light/Document.svg') }}"
                                 alt="Laporan Perbaikan" class="mr-2 w-5">
                             Laporan Perbaikan
                         </a>
@@ -258,7 +258,7 @@
                             style="{{ $activeMenu == 'riwayat' ? 'border-color: #F99D1C;' : '' }}">
                             <img src="{{ $activeMenu == 'riwayat' ? asset('icons/solid/Layers.svg') : asset('icons/light/Layers.svg') }}"
                                 alt="Form Pelaporan" class="mr-2 w-5">
-                            Riwayat Laporan
+                            Riwayat Perbaikan
                         </a>
                         {{-- Tes SPK --}}
                         {{-- <a href="/tes-spk"

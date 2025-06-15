@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Sheet\Sheet;
 use App\Models\Aduan;
 use App\Models\Fasilitas;
+use App\Models\Perbaikan;
 use App\Models\Periode;
 use App\Models\UmpanBalik;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class RiwayatSarprasController extends Controller
     public function index(Request $request)
     {
         $breadcrumb = (object) [
-            'title' => 'Manajemen Riwayat Perbaikan',
+            'title' => 'Riwayat Perbaikan',
             'list' => ['Home', 'Riwayat Perbaikan']
         ];
 
@@ -25,7 +26,8 @@ class RiwayatSarprasController extends Controller
         $activeMenu = 'riwayat';
 
         // Query untuk aduan dengan status selesai
-        $query = Aduan::with(['fasilitas', 'fasilitas.inspeksi.perbaikan', 'fasilitas.ruangan'])->where('status', 'Selesai');
+        $query = Perbaikan::with(['periode', 'inspeksi', 'inspeksi.fasilitas'])
+            ->whereNotNull('tanggal_selesai');
 
         // Filter berdasarkan pencarian
         if ($request->search) {
@@ -40,70 +42,79 @@ class RiwayatSarprasController extends Controller
         }
 
         // Sorting
-        $sortColumn = $request->sort_column ?? 'tanggal_aduan';
+        $sortColumn = $request->sort_column ?? 'tanggal_selesai';
         $sortDirection = $request->sort_direction ?? 'asc';
         $query->orderBy($sortColumn, $sortDirection);
 
         // Pagination
         $perPage = $request->input('per_page', 10);
-        $aduan = $query->paginate($perPage);
-        $aduan->appends(request()->query());
+        $perbaikan = $query->paginate($perPage);
+        $perbaikan->appends(request()->query());
 
         // ambil data periode untuk filter
         $periode = Periode::all();
 
         if ($request->ajax()) {
-            $html = view('sarpras.riwayat.riwayat_table', compact('aduan'))->render();
+            $html = view('sarpras.riwayat.riwayat_table', compact('perbaikan'))->render();
             return response()->json(['html' => $html]);
         }
 
 
-        return view('sarpras.riwayat.index', compact('breadcrumb', 'page', 'activeMenu', 'aduan', 'periode'));
+        return view('sarpras.riwayat.index', compact('breadcrumb', 'page', 'activeMenu', 'perbaikan', 'periode'));
     }
 
-    public function show_ajax($id_fasilitas)
+    public function show_ajax(Perbaikan $perbaikan)
     {
         // Ambil data aduan berdasarkan id_fasilitas
-        $aduan = Aduan::with(['fasilitas.inspeksi.perbaikan', 'fasilitas.inspeksi.biaya', 'fasilitas.ruangan.lantai.gedung',])
-            ->where('id_fasilitas', $id_fasilitas)
-            ->firstOrFail();
+        // $aduan = Aduan::with(['fasilitas.inspeksi.perbaikan', 'fasilitas.inspeksi.biaya', 'fasilitas.ruangan.lantai.gedung',])
+        //     ->where('id_fasilitas', $id_fasilitas)
+        //     ->firstOrFail();
 
-        // Ambil data perbaikan terkait aduan
-        $perbaikan = $aduan->fasilitas->inspeksi->first()->perbaikan;
-        $biaya = $aduan->fasilitas->inspeksi->first()->biaya;
+        // // Ambil data perbaikan terkait aduan
+        // $perbaikan = $aduan->fasilitas->inspeksi->first()->perbaikan;
+        // $biaya = $aduan->fasilitas->inspeksi->first()->biaya;
 
-        $fasilitas = Fasilitas::with('kategori')->findOrFail($id_fasilitas); // Ambil fasilitas beserta kategori
-        $kategori = $fasilitas->kategori;
+        // $fasilitas = Fasilitas::with('kategori')->findOrFail($perbaikan->inspeksi->fasilitas->id_fasilitas); // Ambil fasilitas beserta kategori
+        // $kategori = $fasilitas->kategori;
 
-        $jumlahAduan = Aduan::where('id_fasilitas', $id_fasilitas)->count();
+        // $jumlahAduan = Aduan::where('id_fasilitas', $perbaikan->inspeksi->fasilitas->id_fasilitas)->count();
 
-        // Ambil rata-rata rating untuk fasilitas & tanggal aduan yang sama
-        $avgRating = null;
-        if ($aduan) {
-            $avgRating = UmpanBalik::whereHas('aduan', function ($q) use ($aduan) {
-                $q->where('id_fasilitas', $aduan->id_fasilitas)
-                    ->where('tanggal_aduan', $aduan->tanggal_aduan);
-            })->avg('rating');
-            $avgRating = $avgRating ? number_format($avgRating, 1) : null;
-        }
+        // // Ambil rata-rata rating untuk fasilitas & tanggal aduan yang sama
+        // $avgRating = null;
+        // if ($aduan) {
+        //     $avgRating = UmpanBalik::whereHas('aduan', function ($q) use ($aduan) {
+        //         $q->where('id_fasilitas', $aduan->id_fasilitas)
+        //             ->where('tanggal_aduan', $aduan->tanggal_aduan);
+        //     })->avg('rating');
+        //     $avgRating = $avgRating ? number_format($avgRating, 1) : null;
+        // }
 
-        return view('sarpras.riwayat.detail', compact('aduan', 'biaya', 'perbaikan', 'fasilitas', 'avgRating', 'jumlahAduan'))->render();
+        // return view('sarpras.riwayat.detail', compact('aduan', 'biaya', 'perbaikan', 'fasilitas', 'avgRating', 'jumlahAduan'))->render();
+
+        // $aduan = $perbaikan->aduan_tertangani;
+
+        return view('sarpras.riwayat.detail')->with([
+            'aduan' => $perbaikan->aduan_tertangani,  
+            'perbaikan' => $perbaikan
+        ]);
     }
 
-    public function comment_ajax($id_fasilitas)
+    public function comment_ajax(Perbaikan $perbaikan)
     {
-        // Ambil semua aduan berdasarkan id_fasilitas
-        $aduan = Aduan::with(['pelapor', 'fasilitas', 'umpan_balik'])
-            ->where('id_fasilitas', $id_fasilitas)
-            ->get();
+        // // Ambil semua aduan berdasarkan id_fasilitas
+        // $aduan = Aduan::with(['pelapor', 'fasilitas', 'umpan_balik'])
+        //     ->where('id_fasilitas', $id_fasilitas)
+        //     ->get();
 
-        // Ambil semua umpan balik terkait aduan di fasilitas ini
-        $umpanBalik = UmpanBalik::whereIn('id_aduan', $aduan->pluck('id_aduan'))->get();
+        // // Ambil semua umpan balik terkait aduan di fasilitas ini
+        // $umpanBalik = UmpanBalik::whereIn('id_aduan', $aduan->pluck('id_aduan'))->get();
 
-        return view('sarpras.riwayat.comment', [
-            'aduan' => $aduan,
-            'umpan_balik' => $umpanBalik,
-        ])->render();
+        // $aduan = $perbaikan->aduan_tertangani;
+
+        return view('sarpras.riwayat.comment')->with ([
+            'aduan' => $perbaikan->aduan_tertangani,
+            'perbaikan' => $perbaikan,
+        ]);
     }
 
     private function set_sheet()

@@ -13,12 +13,12 @@
         <div class="border-b border-gray-200 mb-6">
             <nav class="-mb-px flex space-x-8">
                 <button id="tab-aduan"
-                    class="tab-button active py-2 px-1 border-b-2 border-orange-500 font-medium text-sm text-blue-600 hover:border-gray-300">
-                    Aduan ({{ $aduan->count() }})
+                    class="tab-button active py-2 px-1 border-b-2 border-orange-500 font-medium text-sm text-blue-600 hover:border-gray-300 cursor-pointer">
+                    Aduan ({{ $perbaikan->jumlah_aduan_tertangani }})
                 </button>
                 <button id="tab-ulasan"
-                    class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:border-gray-300">
-                    Ulasan ({{ $umpan_balik->count() }})
+                    class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:border-gray-300 cursor-pointer">
+                    Ulasan ({{ $perbaikan->jumlah_umpan_balik_tertangani }})
                 </button>
             </nav>
         </div>
@@ -26,7 +26,7 @@
         {{-- Tab Content Aduan --}}
         <div id="content-aduan" class="tab-content">
             <div class="mb-6">
-                @if($aduan->count())
+                @if($perbaikan->jumlah_aduan_tertangani)
                     <div>
                         @foreach($aduan as $item)
                             <div class="mb-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
@@ -41,14 +41,14 @@
 
                                 @if($item->bukti_foto)
                                     <div class="mb-2">
-                                        <img src="{{ asset('storage/' . $item->bukti_foto) }}" alt="Bukti Foto"
+                                        <img src="{{ asset($item->bukti_foto) }}" alt="Bukti Foto"
                                             class="w-32 h-24 object-cover rounded shadow cursor-pointer hover:shadow-lg transition-shadow"
-                                            onclick="showImageModal('{{ asset('storage/' . $item->bukti_foto) }}')">
+                                            onclick="showImageModal('{{ asset($item->bukti_foto) }}')">
                                     </div>
                                 @endif
 
                                 <div class="flex items-center justify-between text-xs text-gray-500">
-                                    <span>{{ $item->fasilitas->nama ?? '-' }}</span>
+                                    <span>{{ $item->fasilitas->nama_fasilitas ?? '-' }}</span>
                                     @if($item->pelapor->email)
                                         <span>{{ $item->pelapor->email }}</span>
                                     @endif
@@ -68,9 +68,9 @@
         {{-- Tab Content Ulasan --}}
         <div id="content-ulasan" class="tab-content hidden">
             <div class="mb-6">
-                @if($umpan_balik->count())
+                @if($perbaikan->jumlah_umpan_balik_tertangani)
                     <div class="space-y-4">
-                        @foreach($umpan_balik as $umpanBalik)
+                        @foreach($perbaikan->umpan_balik_tertangani as $umpanBalik)
                             <div class="p-4 border border-gray-200 rounded-lg bg-gray-50">
                                 <div class="flex justify-between items-start mb-2">
                                     <div class="font-semibold text-gray-800">{{ $umpanBalik->aduan->pelapor->nama ?? '-' }}
