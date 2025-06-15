@@ -27,20 +27,21 @@ class PenugasanSarprasController extends Controller
 
         $tanggalSekarang = Carbon::now()->day;
 
-        if($tanggalSekarang <= 15) {
-            $breadcrumb = (object) [
-                'title' => '',
-                'list' => []
-            ];
+        // ini jangan dihapus
+        // if($tanggalSekarang <= 15) {
+        //     $breadcrumb = (object) [
+        //         'title' => '',
+        //         'list' => []
+        //     ];
 
-            $pesan = 'Maaf, Anda tidak dapat mengakses menu ini sebelum tanggal <span class="font-semibold">16</span>';
+        //     $pesan = 'Maaf, Anda tidak dapat mengakses menu ini sebelum tanggal <span class="font-semibold">16</span>';
 
-            return view ('access.denied', [
-                'activeMenu' => $activeMenu, 
-                'breadcrumb' => $breadcrumb,
-                'pesan' => $pesan,
-            ]);
-        }
+        //     return view ('access.denied', [
+        //         'activeMenu' => $activeMenu,
+        //         'breadcrumb' => $breadcrumb,
+        //         'pesan' => $pesan,
+        //     ]);
+        // }
 
         $breadcrumb = (object) [
             'title' => 'Laporan Penugasan',
@@ -83,7 +84,7 @@ class PenugasanSarprasController extends Controller
         // Konversi ke array dan tambahkan user_count, laporan_berulang, dan bobot_pelapor
         $inspeksi = $inspeksiCollection->map(function ($item) {
             $data = $item->toArray();
-            $data['user_count'] = $item->user_count; 
+            $data['user_count'] = $item->user_count;
             $data['laporan_berulang'] = $item->skor_laporan_berulang;
             $data['bobot_pelapor'] = $item->bobot_pelapor;
             return $data;
@@ -98,8 +99,8 @@ class PenugasanSarprasController extends Controller
         if ($request->id_periode || $request->search) {
             $inspeksi = array_filter($inspeksi, function ($item) use ($request) {
                 $periodeMatch = !$request->id_periode || $item['periode']['id_periode'] == $request->id_periode;
-                $searchMatch = !$request->search || 
-                            (isset($item['fasilitas']['nama_fasilitas']) && 
+                $searchMatch = !$request->search ||
+                            (isset($item['fasilitas']['nama_fasilitas']) &&
                                 stripos($item['fasilitas']['nama_fasilitas'], $request->search) !== false);
                 return $periodeMatch && $searchMatch;
             });
@@ -166,7 +167,7 @@ class PenugasanSarprasController extends Controller
             foreach ($aduan as $a) {
                 $a->update(['status' => Status::SEDANG_DIPERBAIKI->value]);
 
-                // Notifikasi ke pelapor 
+                // Notifikasi ke pelapor
                 Notifikasi::create([
                     'pesan' => 'Fasilitas <b class="text-red-500">' . $fasilitas . '</b> yang Anda laporkan saat ini sedang dalam proses perbaikan oleh teknisi.',
                     'waktu_kirim' => now(),
@@ -176,7 +177,7 @@ class PenugasanSarprasController extends Controller
                 ]);
             }
 
-            // Notifikasi ke teknisi 
+            // Notifikasi ke teknisi
             Notifikasi::create([
                 'pesan' => 'Anda ditugaskan untuk melakukan perbaikan fasilitas <b class="text-red-500">' . $fasilitas . '</b> berdasarkan hasil inspeksi sebelumnya.',
                 'waktu_kirim' => now(),
