@@ -112,10 +112,7 @@ class PengaduanSarprasController extends Controller
         // Urutkan berdasarkan skor bobot secara menurun
         $query->orderBy('skor_bobot', 'desc')->limit(10);
 
-        // Pagination
-        $perPage = 10;
-        $pengaduan = $query->paginate($perPage);
-        $pengaduan->appends(request()->query());
+        $pengaduan = $query->get();
 
         if ($request->ajax()) {
             $html = view('sarpras.pengaduan.table', compact('pengaduan', 'pelapor'))->render();

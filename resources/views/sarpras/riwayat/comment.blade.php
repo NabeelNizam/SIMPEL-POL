@@ -13,11 +13,11 @@
         <div class="border-b border-gray-200 mb-6">
             <nav class="-mb-px flex space-x-8">
                 <button id="tab-aduan"
-                    class="tab-button active py-2 px-1 border-b-2 border-orange-500 font-medium text-sm text-blue-600 hover:border-gray-300">
+                    class="tab-button active py-2 px-1 border-b-2 border-orange-500 font-medium text-sm text-blue-600 hover:border-gray-300 cursor-pointer">
                     Aduan ({{ $aduan->count() }})
                 </button>
                 <button id="tab-ulasan"
-                    class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:border-gray-300">
+                    class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:border-gray-300 cursor-pointer">
                     Ulasan ({{ $umpan_balik->count() }})
                 </button>
             </nav>
@@ -45,6 +45,7 @@
                                             class="w-32 h-24 object-cover rounded shadow cursor-pointer hover:shadow-lg transition-shadow"
                                             onclick="showImageModal('{{ asset( $item->bukti_foto) }}')">
                                     </div>
+
                                 @endif
 
                                 <div class="flex items-center justify-between text-xs text-gray-500">
