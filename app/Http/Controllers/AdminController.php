@@ -113,7 +113,7 @@ class AdminController extends Controller
             'sedangLogin'
         ));
     }
-    
+
     public function pengguna(Request $request)
     {
         $breadcrumb = (object) [
@@ -160,7 +160,7 @@ class AdminController extends Controller
             $html = view('admin.pengguna.user_table', compact('users'))->render();
             return response()->json(['html' => $html]);
         }
-        
+
         return view('admin.pengguna.user', [
             'breadcrumb' => $breadcrumb,
             'page' => $page,
@@ -455,6 +455,7 @@ class AdminController extends Controller
                 'headers' => $headers,
                 'title' => 'Daftar Pengguna',
                 'filename' => 'daftar_pengguna_' . now()->format('Ymd_His') . '.xlsx',
+                'is_landscape' => true
             ]
         );
         return $sheet;

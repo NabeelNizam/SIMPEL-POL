@@ -77,30 +77,6 @@
 
     <div id="myModal" class="fixed inset-0 z-50 hidden items-center justify-center backdrop-blur-sm bg-white/30"></div>
 
-
-    @if (session('success'))
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil',
-                text: '{{ session('success') }}',
-            }).then(() => {
-                location.reload();
-            });
-        </script>
-    @endif
-
-    @if ($errors->any())
-        <script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal',
-                html: `{!! implode('<br>', $errors->all()) !!}`,
-            }).then(() => {
-                location.reload();
-            });
-        </script>
-    @endif
 @endsection
 
 @push('js')
