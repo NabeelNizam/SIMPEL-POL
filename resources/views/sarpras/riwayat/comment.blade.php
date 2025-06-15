@@ -39,14 +39,13 @@
 
                                 <div class="text-gray-700 mb-2">{{ $item->deskripsi ?? '-' }}</div>
 
-                                @if(!empty($item->bukti_foto) && file_exists(public_path($item->bukti_foto)))
-                                    <img src="{{ asset('storage/' . $item->bukti_foto) }}" alt="Foto Fasilitas"
-                                        class="w-32 h-24 object-cover rounded shadow cursor-pointer hover:shadow-lg transition-shadow"
-                                        onclick="showImageModal('{{ asset('storage/' . $item->bukti_foto) }}')">
-                                @else
-                                    <img src="{{ asset('img/no-image.svg') }}" alt="No Image"
-                                        class="w-32 h-24 object-cover rounded shadow cursor-pointer hover:shadow-lg transition-shadow"
-                                        onclick="showImageModal('{{ asset('img/no-image.svg') }}')">
+                                @if($item->bukti_foto)
+                                    <div class="mb-2">
+                                        <img src="{{ asset( $item->bukti_foto) }}" alt="Bukti Foto"
+                                            class="w-32 h-24 object-cover rounded shadow cursor-pointer hover:shadow-lg transition-shadow"
+                                            onclick="showImageModal('{{ asset( $item->bukti_foto) }}')">
+                                    </div>
+
                                 @endif
 
                                 <div class="flex items-center justify-between text-xs text-gray-500">

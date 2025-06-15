@@ -5,7 +5,7 @@
                 <!-- gambar -->
                 <div class="flex-shrink-0">
                     @if(!empty($item->fasilitas->foto_fasilitas) && file_exists(public_path($item->fasilitas->foto_fasilitas)))
-                        <img src="{{ asset('storage/' . $item->fasilitas->foto_fasilitas) }}" alt="Foto Fasilitas"
+                        <img src="{{ asset( $item->fasilitas->foto_fasilitas) }}" alt="Foto Fasilitas"
                             class="w-32 h-24 object-cover rounded-lg shadow">
                     @else
                         <img src="{{ asset('img/no-image.svg') }}" alt="No Image"
