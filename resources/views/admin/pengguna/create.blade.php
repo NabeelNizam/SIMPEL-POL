@@ -75,10 +75,10 @@
             <span id="username-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
 
-        <div>
+        <div hidden>
             <label class="block text-sm font-medium mb-1">Password <span class="text-red-500">*</span></label>
             <input type="password" name="password" id="password" class="w-full border rounded-md px-3 py-2 text-sm"
-                placeholder="Password" @if ($erril_test) value={{ 'password' }} @endif>
+                placeholder="Password" value='password' >
             <span id="password-error" class="text-xs text-red-500 mt-1 error-text"></span>
         </div>
 
