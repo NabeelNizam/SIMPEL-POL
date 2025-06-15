@@ -19,8 +19,8 @@ class PeriodeSeeder extends Seeder
             ],
             [
                 'kode_periode' => '2025-IV',
-                'tanggal_mulai' => '2024-04-01',
-                'tanggal_selesai' => '2024-04-30'
+                'tanggal_mulai' => '2025-04-01',
+                'tanggal_selesai' => '2025-04-30'
             ]
         );
         Periode::updateOrCreate(
@@ -29,8 +29,8 @@ class PeriodeSeeder extends Seeder
             ],
             [
                 'kode_periode' => '2025-V',
-                'tanggal_mulai' => '2024-05-01',
-                'tanggal_selesai' => '2024-05-30'
+                'tanggal_mulai' => '2025-05-01',
+                'tanggal_selesai' => '2025-05-30'
             ]
         );
         Periode::updateOrCreate(

@@ -19,8 +19,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // make admin
-        User::create([
-            'id_user' => 1,
+        $admin = User::create([
             'nama' => 'Nabeela Nizama',
             'email' => 'nabeela@lucu.com',
             'email_verified_at' => now(),
@@ -33,13 +32,12 @@ class UserSeeder extends Seeder
             'id_jurusan' => 1
         ]);
         Pegawai::create([
-            'id_user' => 1,
+            'id_user' => $admin->id_user,
             'nip' => '9091909190',
         ]);
 
         // make teknisi
-        User::create([
-            'id_user' => 2,
+        $teknisi = User::create([
             'nama' => 'Atta Halilin',
             'email' => 'atta@lucu.com',
             'email_verified_at' => now(),
@@ -52,13 +50,12 @@ class UserSeeder extends Seeder
             'id_jurusan' => 1
         ]);
         Pegawai::create([
-            'id_user' => 2,
+            'id_user' => $teknisi->id_user,
             'nip' => '9095909590',
         ]);
 
         // make sarpras
-        User::create([
-            'id_user' => 3,
+        $sarpras = User::create([
             'nama' => 'Orochimaru',
             'email' => 'oo@lucu.com',
             'email_verified_at' => now(),
@@ -71,16 +68,16 @@ class UserSeeder extends Seeder
             'id_jurusan' => 1
         ]);
         Pegawai::create([
-            'id_user' => 3,
+            'id_user' => $sarpras->id_user,
             'nip' => '9094909490',
         ]);
 
-        User::create([
-            'id_user' => 4,
-            'nama' => 'Garaga',
-            'email' => 'garaga@lucu.com',
+        // make mahasiswa
+        $mahasiswa1 = User::create([
+            'nama' => 'Aditya Atadewa',
+            'email' => 'aditya@gmail.com',
             'email_verified_at' => now(),
-            'username' => 'garaga',
+            'username' => 'atadewa',
             'no_hp' => fake()->phoneNumber(),
             'foto_profil' => fake()->image(),
             'id_role' => Role::where('nama_role', 'MAHASISWA')->first()->id_role,
@@ -88,14 +85,79 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
             'id_jurusan' => 1
         ]);
-        Mahasiswa
-            ::create([
-                'id_user' => 4,
-                'nim' => '9093909390',
+        Mahasiswa::create([
+                'id_user' => $mahasiswa1->id_user,
+                'nim' => '2341720174',
             ]);
-
-
-        // make pelapor
+ 
+        $mahasiswa2 = User::create([
+            'nama' => 'Muhammad Erril',
+            'email' => 'eril@gmail.com',
+            'email_verified_at' => now(),
+            'username' => 'user_erril',
+            'no_hp' => fake()->phoneNumber(),
+            'foto_profil' => fake()->image(),
+            'id_role' => Role::where('nama_role', 'MAHASISWA')->first()->id_role,
+            'password' => 'password', // password
+            'remember_token' => Str::random(10),
+            'id_jurusan' => 1
+        ]);
+        Mahasiswa::create([
+                'id_user' => $mahasiswa2->id_user,
+                'nim' => '2341720114',
+            ]);
+ 
+        $mahasiswa3 = User::create([
+            'nama' => 'DhanilHaq',
+            'email' => 'sopojarwo@gmail.com',
+            'email_verified_at' => now(),
+            'username' => 'user_dhanil',
+            'no_hp' => fake()->phoneNumber(),
+            'foto_profil' => fake()->image(),
+            'id_role' => Role::where('nama_role', 'MAHASISWA')->first()->id_role,
+            'password' => 'password', // password
+            'remember_token' => Str::random(10),
+            'id_jurusan' => 1
+        ]);
+        Mahasiswa::create([
+                'id_user' => $mahasiswa3->id_user,
+                'nim' => '2341720124',
+            ]);
+ 
+        $mahasiswa4 = User::create([
+            'nama' => 'Nabeel Nizam',
+            'email' => 'nabeel@gmail.com',
+            'email_verified_at' => now(),
+            'username' => 'user_nabeel',
+            'no_hp' => fake()->phoneNumber(),
+            'foto_profil' => fake()->image(),
+            'id_role' => Role::where('nama_role', 'MAHASISWA')->first()->id_role,
+            'password' => 'password', // password
+            'remember_token' => Str::random(10),
+            'id_jurusan' => 1
+        ]);
+        Mahasiswa::create([
+                'id_user' => $mahasiswa4->id_user,
+                'nim' => '2341720004',
+            ]);
+ 
+        $mahasiswa5 = User::create([
+            'nama' => 'Khoirotun Nisa',
+            'email' => 'iir@gmail.com',
+            'email_verified_at' => now(),
+            'username' => 'user_iir',
+            'no_hp' => fake()->phoneNumber(),
+            'foto_profil' => fake()->image(),
+            'id_role' => Role::where('nama_role', 'MAHASISWA')->first()->id_role,
+            'password' => 'password', // password
+            'remember_token' => Str::random(10),
+            'id_jurusan' => 1
+        ]);
+        Mahasiswa::create([
+                'id_user' => $mahasiswa5->id_user,
+                'nim' => '2341720001',
+            ]);
+ 
         UserFactory::new()->count(20)->create();
     }
 }
