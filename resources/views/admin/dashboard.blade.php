@@ -80,32 +80,32 @@
                                         </svg>
                                     </div>
                                     <div class="ml-3">
-                                        <h3 class="text-sm font-medium text-blue-800">Tentang SOP Sarana Prasarana</h3>
+                                        <h3 class="text-sm font-medium text-blue-800">Tentang SOP Admin</h3>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="prose max-w-none text-gray-700">
                                 <p class="mb-4">
-                                    SOP Sarana Prasarana adalah panduan prosedur standar
+                                    SOP Admin adalah panduan prosedur standar
                                     untuk pengelolaan, pemeliharaan, dan penggunaan fasilitas
                                     di lingkungan Politeknik Negeri Malang.
                                     SOP ini bertujuan untuk memastikan proses pengelolaan
-                                    sarana dan prasarana berjalan efektif, efisien, dan sesuai
+                                    Admin berjalan efektif, efisien, dan sesuai
                                     dengan regulasi yang berlaku.
                                 </p>
 
                                 <p class="mb-4">
                                     Seluruh staff dan mahasiswa Polinema diharapkan
                                     mengikuti SOP ini dalam penggunaan dan pengelolaan
-                                    sarana prasarana kampus. Untuk mengakses dokumen SOP
+                                    Fasilitas kampus. Untuk mengakses dokumen SOP
                                     lengkap, silakan beralih ke tab "Dokumen SOP".
                                 </p>
                             </div>
                         </div>
 
                         <div id="content-dokumen" class="tab-content hidden">
-                            <p class="text-gray-600 mb-4">Berikut adalah daftar dokumen SOP Sarana Prasarana yang dapat
+                            <p class="text-gray-600 mb-4">Berikut adalah daftar dokumen SOP Admin yang dapat
                                 diunduh:</p>
 
                             <div class="space-y-3">

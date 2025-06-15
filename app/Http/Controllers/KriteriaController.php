@@ -15,7 +15,7 @@ class KriteriaController extends Controller
     {
         $breadcrumb = (object) [
             'title' => 'Kelola Bobot Prioritas Perbaikan',
-            'list' => ['Home']
+            'list' => ['Home', 'Bobot Prioritas Perbaikan']
         ];
 
         $page = (object) [

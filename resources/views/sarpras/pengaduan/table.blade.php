@@ -13,7 +13,7 @@
     <x-slot name="body">
         @forelse ($pengaduan as $index => $p)
             <x-table.row>
-                <x-table.cell>{{ $pengaduan->firstItem() + $index }}</x-table.cell>
+                <x-table.cell>{{ $index + 1 }}</x-table.cell>
                 <x-table.cell>{{ strtoupper($p->kode_fasilitas) }}</x-table.cell>
                 <x-table.cell>{{ $p->nama_fasilitas }}</x-table.cell>
                 <x-table.cell>{{ ucfirst($p->kategori->nama_kategori ?? '-')}}</x-table.cell>
@@ -73,5 +73,5 @@
 </x-table>
 
 <div class="mt-4">
-    {{ $pengaduan->links() }}
+    {{-- {{ $pengaduan->links() }} --}}
 </div>
