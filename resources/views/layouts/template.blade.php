@@ -121,7 +121,7 @@
         <script>
             Swal.fire({
                 icon: 'error',
-                title: 'Validasi Gagal',
+                title: 'Gagal',
                 html: `{!! implode('<br>', $errors->all()) !!}`,
             }).then(()=> {
                 location.reload();

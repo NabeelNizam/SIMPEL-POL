@@ -14,6 +14,7 @@ use App\Models\Notifikasi;
 use App\Models\Perbaikan;
 use App\Models\Periode;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\In;
@@ -22,6 +23,25 @@ class PenugasanSarprasController extends Controller
 {
     public function index(Request $request)
     {
+        $activeMenu = 'penugasan';
+
+        $tanggalSekarang = Carbon::now()->day;
+
+        if($tanggalSekarang <= 15) {
+            $breadcrumb = (object) [
+                'title' => '',
+                'list' => []
+            ];
+
+            $pesan = 'Maaf, Anda tidak dapat mengakses menu ini sebelum tanggal <span class="font-semibold">16</span>';
+
+            return view ('access.denied', [
+                'activeMenu' => $activeMenu, 
+                'breadcrumb' => $breadcrumb,
+                'pesan' => $pesan,
+            ]);
+        }
+
         $breadcrumb = (object) [
             'title' => 'Laporan Penugasan',
             'list' => ['Home', 'Laporan Penugasan']
@@ -30,8 +50,6 @@ class PenugasanSarprasController extends Controller
         $page = (object) [
             'title' => 'Daftar penugasan yang terdaftar dalam sistem'
         ];
-
-        $activeMenu = 'penugasan';
 
         // Ambil data kriteria
         $kriteria = Kriteria::all()->keyBy('nama_kriteria')->toArray();
