@@ -56,18 +56,3 @@
         }
     </style>
 @endpush
-
-@push('js')
-    <script>
-        function modalAction(url = '') {
-            $.get(url, function (response) {
-                $('#myModal').html(response).removeClass('hidden').addClass('flex');
-            });
-        }
-
-        // Untuk menutup modal
-        $(document).on('click', '#modal-close', function () {
-            $('#myModal').addClass('hidden').removeClass('flex').html('');
-        });
-    </script>
-@endpush

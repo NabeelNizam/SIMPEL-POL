@@ -1,5 +1,5 @@
 <div class="bg-white rounded-lg shadow-lg w-[400px] max-h-[90vh] overflow-y-auto p-5 relative">
-    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl">
+    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl cursor-pointer">
         <i class="fas fa-times"></i>
     </button>
     <h2 class="text-xl font-semibold text-center">Tambah Data Lokasi</h2>
@@ -33,7 +33,7 @@
 
         <!-- Tombol Submit -->
         <div class="mt-6">
-            <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700">
+            <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 cursor-pointer">
                 Tambah
             </button>
         </div>
@@ -59,7 +59,7 @@
                 <div class="font-medium">${lantaiNama}</div>
                 <input type="hidden" name="lantai[${lantaiCounter}][nama_lantai]" value="${lantaiNama}">
                 <div class="flex items-center gap-2">
-                    <button onclick="hapusLantai(event, '${lantaiId}')" class="text-red-500 hover:text-red-700" title="Hapus Lantai">
+                    <button onclick="hapusLantai(event, '${lantaiId}')" class="text-red-500 hover:text-red-700 cursor-pointer" title="Hapus Lantai">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
@@ -71,11 +71,11 @@
                           <input type="text" name="lantai[${lantaiCounter}][ruangan][]" placeholder="Contoh: LPR 1"
                               class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400">
                       </div>
-                      <button type="button" onclick="hapusRuangan(this)" class="text-red-500 hover:text-red-700 ml-3">
+                      <button type="button" onclick="hapusRuangan(this)" class="text-red-500 hover:text-red-700 ml-3 cursor-pointer">
                           <i class="fa-solid fa-trash"></i>
                       </button>
                   </div>
-                <button type="button" onclick="tambahRuangan(this, ${lantaiCounter})" class="text-blue-600 text-sm hover:underline">
+                <button type="button" onclick="tambahRuangan(this, ${lantaiCounter})" class="text-blue-600 text-sm hover:underline cursor-pointer">
                     <i class="fa-solid fa-square-plus"></i> Tambah Ruangan
                 </button>
             </div>
@@ -101,7 +101,7 @@
             <input type="text" name="lantai[${lantaiId}][ruangan][]" placeholder="Contoh: LPR 1"
                 class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400">
         </div>
-        <button type="button" onclick="hapusRuangan(this)" class="text-red-500 hover:text-red-700 ml-3">
+        <button type="button" onclick="hapusRuangan(this)" class="text-red-500 hover:text-red-700 ml-3 cursor-pointer">
             <i class="fa-solid fa-trash"></i>
         </button>
     `;

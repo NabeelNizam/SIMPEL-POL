@@ -18,11 +18,11 @@
                         <div class="border-b border-gray-200 mb-6">
                             <nav class="-mb-px flex space-x-8">
                                 <button id="tab-penjelasan"
-                                    class="tab-button active py-2 px-1 border-b-2 border-orange-500 font-medium text-sm text-blue-600 hover:border-gray-300">
+                                    class="tab-button active py-2 px-1 border-b-2 border-orange-500 font-medium text-sm text-blue-600 hover:border-gray-300 cursor-pointer">
                                     Penjelasan
                                 </button>
                                 <button id="tab-dokumen"
-                                    class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:border-gray-300">
+                                    class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:border-gray-300 cursor-pointer">
                                     Dokumen SOP
                                 </button>
                             </nav>

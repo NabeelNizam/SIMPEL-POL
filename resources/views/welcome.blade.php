@@ -5,6 +5,7 @@
 
     <div class="bg-[#132145] flex flex-col items-center justify-start pt-64 relative min-h-[850px] w-full mt-16 overflow-hidden" id="beranda">
         <img src="/img/polinema-gb.svg" alt="" class="absolute bottom-0 left-0 w-full h-auto pt-16 opacity-[0.30]">
+        {{-- <img src="/img/logo putih.svg" alt="logo putih" class="absolute top-30 z-10" width="120" height="120"> --}}
         <h1 class="text-4xl font-bold z-10 text-white text-center">Laporkan, Pantau, Perbaiki</h1>
         <p class="text-center mt-4 max-w-3xl px-4 mb-8 z-10 text-white">
             SIMPEL-POL adalah solusi terpadu untuk manajemen pelaporan dan perbaikan fasilitas di lingkungan kampus Politeknik Negeri Malang. Lapor kerusakan, pantau proses perbaikan, dan nikmati manfaat dari fasilitas yang terawat dengan baik.
@@ -13,7 +14,7 @@
           <a href="{{ route('login') }}" class="text-[#1E3F8A] bg-white border border-[#1E3F8A] hover:bg-[#1E3F8A] hover:text-white focus:ring-4 focus:ring-blue-100 font-medium rounded-lg text-sm px-6 py-2.5 me-2 mb-2 focus:outline-none transition-colors duration-300 inline-block text-center">
               Masuk
           </a>
-            <button type="button" class="text-white border border-white hover:bg-white hover:text-[#132145] focus:ring-4 focus:ring-white font-medium rounded-lg text-sm px-6 py-2.5 mb-2 focus:outline-none">
+            <button type="button" class="text-white border border-white hover:bg-white hover:text-[#132145] focus:ring-4 focus:ring-white font-medium rounded-lg text-sm px-6 py-2.5 mb-2 focus:outline-none cursor-pointer">
                 Pelajari lebih lanjut
             </button>
         </div>
@@ -150,7 +151,7 @@
           </div>
       </section>
 
-      <section class="py-16 bg-white pb-32 pt-32">
+      <section class="py-16 bg-white pb-3 pt-32">
         <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
           
           <!-- Statistik 1 -->
@@ -295,8 +296,8 @@
           <div>
             <h2 class="text-lg font-semibold mb-2">Tautan</h2>
             <ul class="text-sm text-gray-300 space-y-2">
-              <li><a href="#">Website Polinema</a></li>
-              <li><a href="#">Jurusan TI Polinema</a></li>
+              <li><a href="https://www.polinema.ac.id/">Website Polinema</a></li>
+              <li><a href="https://jti.polinema.ac.id/">Jurusan TI Polinema</a></li>
               <li><a href="#">Manual Penggunaan</a></li>
               <li><a href="#">Kebijakan Privasi</a></li>
             </ul>

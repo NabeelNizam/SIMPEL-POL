@@ -76,18 +76,6 @@
 
 @push('js')
     <script>
-        // Function to open modal with content from URL
-        function modalAction(url = '') {
-            $.get(url, function(response) {
-                $('#myModal').html(response).removeClass('hidden').addClass('flex');
-            });
-        }
-
-        // Event listener for modal close button
-        $(document).on('click', '#modal-close', function() {
-            $('#myModal').addClass('hidden').removeClass('flex').html('');
-        });
-
         // Function to reload data based on filters and search
         function reloadData() {
             $.ajax({

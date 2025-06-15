@@ -5,7 +5,7 @@
 
         <div class="mb-4 p-4 flex items-center justify-between">
             <h2 class="text-gray-800 font-medium text-lg">Daftar SOP</h2>
-            <button onclick="modalAction('{{ route('sop.edit') }}')" class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-1 rounded-md text-sm font-semibold">
+            <button onclick="modalAction('{{ route('sop.edit') }}')" class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-1 rounded-md text-sm font-semibold cursor-pointer">
                 <i class="fa-solid fa-pen text-xs" style="color: #ffffff;"></i> Edit
             </button>
         </div>
@@ -246,15 +246,6 @@
             });
         });
 
-         function modalAction(url = '') {
-        $.get(url, function(response) {
-            $('#myModal').html(response).removeClass('hidden').addClass('flex');
-        });
-    }
-
-    // Untuk menutup modal
-    $(document).on('click', '#modal-close', function () {
-        $('#myModal').addClass('hidden').removeClass('flex').html('');
-    });
+         
     </script>
 @endpush

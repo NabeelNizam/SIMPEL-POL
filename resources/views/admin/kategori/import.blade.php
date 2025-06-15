@@ -34,7 +34,7 @@
     </form>
 
     <!-- Tombol close pojok kanan atas -->
-    <button id="modal-close" class="absolute top-2 right-2 text-gray-500 hover:text-red-600">
+    <button id="modal-close" class="absolute top-2 right-2 text-gray-500 hover:text-red-600 cursor-pointer">
         <i class="fas fa-times"></i>
     </button>
 </div>

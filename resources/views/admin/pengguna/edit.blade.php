@@ -1,7 +1,7 @@
 <!-- Modal Konten Edit -->
 <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 relative">
 
-    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+    <button id="modal-close" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 cursor-pointer">
         <i class="fas fa-times"></i>
     </button>
 
@@ -59,7 +59,7 @@
         </div>
 
         <div class="col-span-2 text-right mt-4">
-            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">Update</button>
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md cursor-pointer">Update</button>
         </div>
     </form>
 </div>
