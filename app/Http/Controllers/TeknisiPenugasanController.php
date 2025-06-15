@@ -10,6 +10,7 @@ use App\Models\Inspeksi;
 use App\Models\Notifikasi;
 use App\Models\Perbaikan;
 use App\Models\Periode;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -21,6 +22,25 @@ class TeknisiPenugasanController extends Controller
 {
     public function index(Request $request)
     {
+        $activeMenu = 'penugasan';
+
+        $tanggalSekarang = Carbon::now()->day;
+
+        if($tanggalSekarang > 15) {
+            $breadcrumb = (object) [
+                'title' => '',
+                'list' => []
+            ];
+
+            $pesan = 'Maaf, Anda tidak dapat mengakses menu ini setelah tanggal 15. Silakan tunggu hingga periode berikutnya pada tanggal <span class="font-semibold">1–15</span>.';
+
+            return view ('access.denied', [
+                'activeMenu' => $activeMenu, 
+                'breadcrumb' => $breadcrumb,
+                'pesan' => $pesan,
+            ]);
+        }
+
         $breadcrumb = (object) [
             'title' => 'Dashboard Teknisi',
             'list' => ['Home', 'dashboard']
@@ -29,8 +49,6 @@ class TeknisiPenugasanController extends Controller
         $page = (object) [
             'title' => 'Daftar penugasan yang terdaftar dalam sistem'
         ];
-
-        $activeMenu = 'penugasan';
 
         $periode = Periode::all();
 

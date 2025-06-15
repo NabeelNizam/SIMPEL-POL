@@ -309,4 +309,5 @@ Route::prefix('teknisi')->middleware(['authorize:TEKNISI'])->group(function () {
     });
 });
 
-//Route::get('/tes-spk', [PrometheeController::class, 'tesPerhitungan'])->name('tes-spk');
+// tes spk
+Route::get('/tes-spk', [PrometheeController::class, 'tesPerhitungan'])->name('tes-spk');
