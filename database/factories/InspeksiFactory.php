@@ -30,7 +30,9 @@ class InspeksiFactory extends Factory
                 $query->where('nama_role', 'sarpras');
             })->inRandomOrder()->first();
 
+
         $fasilitas = Fasilitas::all()->random();
+        
         $periode = Periode::find(3);
 
         $taggalMulai = fake()->dateTimeBetween($periode->tanggal_mulai, $periode->tanggal_selesai);

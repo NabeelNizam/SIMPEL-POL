@@ -21,7 +21,7 @@
                     {{ $item->fasilitas->ruangan->nama_ruangan ?? '-' }}
                 </x-table.cell>
                 <x-table.cell>
-                    <span class="px-2 py-1 rounded text-white               
+                    <span class="px-2 py-1 rounded text-white
                         @if ($item->fasilitas->urgensi === \App\Http\Enums\URGENSI :: DARURAT) bg-red-500
                         @elseif ($item->fasilitas->urgensi === \App\Http\Enums\URGENSI :: PENTING) bg-yellow-500
                         @elseif ($item->fasilitas->urgensi === \App\Http\Enums\URGENSI :: BIASA ) bg-blue-500
@@ -35,21 +35,23 @@
                         @elseif ($item->tingkat_kerusakan === \App\Http\Enums\TingkatKerusakan :: SEDANG) bg-yellow-500
                         @elseif ($item->tingkat_kerusakan === \App\Http\Enums\TingkatKerusakan :: RINGAN) bg-blue-500
                         @endif">
-                        {{ $item->tingkat_kerusakan }}
+                        {{ $item->tingkat_kerusakan ?? '-' }}
                     </span>
                 </x-table.cell>
                 <x-table.cell>
-                    <button onclick="modalAction('{{ route('teknisi.penugasan.show_ajax', $item->id_inspeksi) }}')"
-                        class="cursor-pointer text-blue-600 hover:underline text-sm">
-                        <img src="{{ asset('icons/solid/Detail.svg') }}" alt="Detail"
-                            class="h-7 w-7 min-h-[29px] min-w-[29px]">
-                    </button>
-                    <!-- Tombol Edit -->
-                    <button onclick="modalAction('{{ route('teknisi.penugasan.edit_ajax', $item->id_inspeksi) }}')"
-                        class="cursor-pointer text-blue-600 hover:underline text-sm">
-                        <img src="{{ asset('icons/solid/Edit.svg') }}" alt="Edit"
-                            class="h-7 w-7 min-h-[29px] min-w-[29px]">
-                    </button>
+                    <div class="flex min-w-[90px] items-center gap-2">
+                        <button onclick="modalAction('{{ route('teknisi.penugasan.show_ajax', $item->id_inspeksi) }}')"
+                            class="cursor-pointer text-blue-600 hover:underline text-sm">
+                            <img src="{{ asset('icons/solid/Detail.svg') }}" alt="Detail"
+                                class="h-7 w-7 min-h-[29px] min-w-[29px]">
+                        </button>
+                        <!-- Tombol Edit -->
+                        <button onclick="modalAction('{{ route('teknisi.penugasan.edit_ajax', $item->id_inspeksi) }}')"
+                            class="cursor-pointer text-blue-600 hover:underline text-sm">
+                            <img src="{{ asset('icons/solid/Edit.svg') }}" alt="Edit"
+                                class="h-7 w-7 min-h-[29px] min-w-[29px]">
+                        </button>
+                    </div>
                 </x-table.cell>
             </x-table.row>
         @empty
