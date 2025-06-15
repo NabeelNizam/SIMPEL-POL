@@ -29,7 +29,7 @@ class FasilitasFactory extends Factory
         $elements =['Elektronik'=>['Proyektor', 'Kipas Angin', 'AC'],
             'Furniture'=>['Meja', 'Kursi', 'Papan Tulis'],
             'Teknologi'=>['PC', 'Monitor'],
-            'Keamanan dan Keselamatan'=>['CCTV','Apar']
+            'Keamanan dan Keselamatan'=>['CCTV','APAR']
         ];
         $kategori = Kategori::all()->random();
         $nama_fasilitas = fake()->randomElement($elements[$kategori->nama_kategori]);
@@ -41,8 +41,8 @@ class FasilitasFactory extends Factory
             'urgensi' => fake()->randomElement(Urgensi::cases()),
             'id_periode' => Periode::find(1)->id_periode,
             'id_ruangan' => fake()->randomElement(Ruangan::pluck('id_ruangan')),
-            'foto_fasilitas' => fake()->imageUrl(640, 480, 'business', true, 'Fasilitas', true),
             'deskripsi' => fake()->paragraph(2),
+            'foto_fasilitas' => 'storage/uploads/img/foto_fasilitas/'. $nama_fasilitas . '.jpg',
         ];
     }
     public function configure()

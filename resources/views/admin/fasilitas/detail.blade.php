@@ -10,7 +10,7 @@
 
     <!-- Gambar Fasilitas -->
     <div class="w-full flex justify-center mb-6">
-        <img src="{{ $fasilitas->foto_fasilitas === '0' ? asset('img/no-image.svg') : asset('storage/uploads/img/foto_fasilitas/' . $fasilitas->foto_fasilitas) }}" alt="Foto Fasilitas" class="rounded-lg w-64 h-auto object-cover">
+        <img src="{{ $fasilitas->foto_fasilitas === '0' ? asset('img/no-image.svg') : asset($fasilitas->foto_fasilitas) }}" alt="Foto Fasilitas" class="rounded-lg w-64 h-auto object-cover">
     </div>
 
     <!-- Detail Informasi -->
