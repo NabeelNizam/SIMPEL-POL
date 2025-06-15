@@ -35,7 +35,7 @@ class TeknisiPenugasanController extends Controller
             $pesan = 'Maaf, Anda tidak dapat mengakses menu ini setelah tanggal 15. Silakan tunggu hingga periode berikutnya pada tanggal <span class="font-semibold">1–15</span>.';
 
             return view ('access.denied', [
-                'activeMenu' => $activeMenu, 
+                'activeMenu' => $activeMenu,
                 'breadcrumb' => $breadcrumb,
                 'pesan' => $pesan,
             ]);
@@ -128,16 +128,17 @@ class TeknisiPenugasanController extends Controller
         // Data untuk view
         return view('teknisi.penugasan.detail', compact('inspeksi', 'fasilitas', 'biaya', 'statusAduan'))->render();
     }
-    public function edit_ajax($id_inspeksi)
+    public function edit_ajax(Inspeksi $inspeksi)
     {
 
         // Ambil data inspeksi beserta relasi terkait
-        $inspeksi = Inspeksi::with([
-            'fasilitas.ruangan.lantai.gedung',
-            'fasilitas.kategori',
-            'biaya', // Relasi ke biaya
-            'perbaikan' // Relasi ke perbaikan
-        ])->findOrFail($id_inspeksi);
+        // $inspeksi = Inspeksi::with([
+        //     'fasilitas.ruangan.lantai.gedung',
+        //     'fasilitas.kategori',
+        //     'biaya', // Relasi ke biaya
+        //     'perbaikan' // Relasi ke perbaikan
+        // ])->find($id_inspeksi);
+
 
         // Ambil data fasilitas
         $fasilitas = $inspeksi->fasilitas;
@@ -146,11 +147,9 @@ class TeknisiPenugasanController extends Controller
         $biaya = $inspeksi->biaya;
 
         // Ambil status aduan berdasarkan fasilitas dan periode yang sama
-        $aduan = $fasilitas->aduan()
-            ->where('id_periode', $inspeksi->id_periode)
-            ->firstOrFail();
 
-        $statusAduan = $aduan->status->value ?? '-';
+        $statusAduan = "SEDANG INSPEKSI";
+
 
         // Return view edit
         return view('teknisi.penugasan.edit', compact('inspeksi', 'fasilitas', 'biaya', 'statusAduan'));
@@ -192,6 +191,7 @@ class TeknisiPenugasanController extends Controller
                     ]);
                 }
             }
+            $inspeksi->tanggal_selesai = now();
             $inspeksi->update();
 
             $fasilitas = Fasilitas::where('id_fasilitas', $inspeksi->id_fasilitas)->value('nama_fasilitas');
