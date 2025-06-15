@@ -1,9 +1,9 @@
 <nav class="bg-white border-gray-200 fixed top-0 left-0 right-0 z-50 shadow-sm">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
   <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-      <span class="text-lg font-bold text-black-800 flex items-center">
+      <span class="text-lg font-bold flex items-center">
           <img src="{{ asset('img/logo landing.svg') }}" alt="SIMPEL-POL Logo" class="h-8 mr-6">
-          SIMPEL-POL
+          <span class="text-yellow-600">SIMPEL-</span><span class="text-blue-900">POL</span>
       </span>
   </a>
   <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
