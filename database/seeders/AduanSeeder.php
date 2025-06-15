@@ -22,12 +22,14 @@ class AduanSeeder extends Seeder
             if ($f->inspeksi->isEmpty()) {
                 for ($i = 0; $i < fake()->numberBetween(2, 7); $i++) {
                     Aduan::create([
-                        'id_periode' => $f->periode->id_periode,
+                        'id_periode' => 2,
                         'id_fasilitas' => $f->id_fasilitas,
                         'tanggal_aduan' => fake()->dateTimeBetween('2025-05-01', '2025-05-31'),
                         'status' => Status::MENUNGGU_DIPROSES,
                         'id_user_pelapor' => User::query()->whereHas('role', function ($query) {
-                            $query->where('nama_role', '!=', ['teknisi', 'sarpras', 'admin']);
+                            $query->where('nama_role', 'mahasiswa')
+                                ->orWhere('nama_role', 'dosen')
+                                ->orWhere('nama_role', 'tendik');
                         })->inRandomOrder()->first()->id_user,
                         'deskripsi' => fake()->paragraph(2),
                         'bukti_foto' => fake()->imageUrl(640, 480, 'business', true, 'Aduan', true),
@@ -35,7 +37,7 @@ class AduanSeeder extends Seeder
                 }
             }
             foreach ($f->inspeksi as $inspeksi) {
-                $periodeAduan = $inspeksi->periode;
+                // $periodeAduan = $inspeksi->periode;
                 $tanggalAduan = Carbon::parse($inspeksi->tanggal_mulai)->subDay()->toDateString();
 
                 // Tentukan status berdasarkan kondisi inspeksi
@@ -52,12 +54,14 @@ class AduanSeeder extends Seeder
                 }
                 for ($i = 0; $i < fake()->numberBetween(2, 7); $i++) {
                     $aduan = Aduan::create([
-                        'id_periode' => $periodeAduan->id_periode,
+                        'id_periode' => 2,
                         'id_fasilitas' => $f->id_fasilitas,
                         'tanggal_aduan' => $tanggalAduan,
                         'status' => $status,
                         'id_user_pelapor' => User::query()->whereHas('role', function ($query) {
-                            $query->where('nama_role', '!=', ['teknisi', 'sarpras', 'admin']);
+                            $query->where('nama_role', 'mahasiswa')
+                                ->orWhere('nama_role', 'dosen')
+                                ->orWhere('nama_role', 'tendik');
                         })->inRandomOrder()->first()->id_user,
                         'deskripsi' => fake()->paragraph(2),
                         'bukti_foto' => fake()->imageUrl(640, 480, 'business', true, 'Aduan', true),

@@ -27,7 +27,7 @@ class AduanFactory extends Factory
         return [
             'id_fasilitas' => Fasilitas::all()->random()->id_fasilitas,
             'id_user_pelapor' => User::all()->random()->id_user,
-            'id_periode' => Periode::find(1)->id_periode,
+            'id_periode' => Periode::find(2)->id_periode,
             'judul' => fake()->sentence(3),
             'deskripsi' => fake()->paragraph(2),
             'foto_aduan' => fake()->imageUrl(640, 480, 'business', true, 'Aduan', true),
