@@ -65,19 +65,28 @@ class PeriodeController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal',
+                'msgField' => $validator->errors()
+            ]);
         }
 
         try {
-            //simpan periode
             $periode = Periode::create([
                 'kode_periode' => $request->kode_periode,
                 'tanggal_mulai' => $request->tanggal_mulai,
                 'tanggal_selesai' => $request->tanggal_selesai,
             ]);
-            return redirect()->route('periode.index')->with('success', 'Periode berhasil disimpan.');
+            return response()->json([
+                'status' => true,
+                'message' => 'Periode berhasil disimpan.'
+            ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Periode gagal disimpan.');
+            return response()->json([
+                'status' => false,
+                'message' => 'Periode gagal disimpan: ' . $e->getMessage()
+            ]);
         }
     }
 
@@ -91,37 +100,36 @@ class PeriodeController extends Controller
 
     public function update_ajax(Request $request, Periode $periode)
     {
-        try {
-            $validator = Validator::make($request->all(), [
-                'kode_periode' => [
-                    'required',
-                    'string',
-                    'max:255',
-                ],
-                'tanggal_mulai' => [
-                    'required',
-                    'date',
-                ],
-                'tanggal_selesai' => [
-                    'required',
-                    'date',
-                    'after_or_equal:tanggal_mulai',
-                ],
+        $validator = Validator::make($request->all(), [
+            'kode_periode' => 'required|string|max:255',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal',
+                'msgField' => $validator->errors()
             ]);
+        }
 
-            if ($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput();
-            }
-
-            $new_data = [
+        try {
+            $periode->update([
                 'kode_periode' => $request->kode_periode,
                 'tanggal_mulai' => $request->tanggal_mulai,
                 'tanggal_selesai' => $request->tanggal_selesai,
-            ];
-            $periode->update($new_data);
-            return redirect()->route('periode.index')->with('success', 'Periode berhasil diperbarui.');
+            ]);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Periode berhasil diperbarui.'
+            ]);
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors('Terjadi kesalahan: ' . $e->getMessage());
+            return response()->json([
+                'status' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
         }
     }
 
@@ -151,7 +159,7 @@ class PeriodeController extends Controller
             return redirect()->back()->with('success', 'Periode berhasil dihapus.');
         } catch (\Exception $e) {
             // throw $e;
-            return redirect()->back()->withErrors( ['Tindakan terlarang:' , 'Ada data yang terhubung dengan periode ini.']);
+            return redirect()->back()->withErrors(['Tindakan terlarang:', 'Ada data yang terhubung dengan periode ini.']);
         }
     }
 }
