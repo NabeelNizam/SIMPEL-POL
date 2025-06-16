@@ -52,7 +52,7 @@ $(document).ready(function() {
         },
         messages: {
             kode_periode: "Kode Periode wajib diisi",
-            tannggal_mulai: {
+            tanggal_mulai: {
                 required: "Tanggal Mulai wajib diisi",
                 date: "Format tanggal tidak valid"
             },
